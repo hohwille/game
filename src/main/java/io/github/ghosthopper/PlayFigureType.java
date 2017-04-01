@@ -1,4 +1,4 @@
 package io.github.ghosthopper;
 
-public class PlayPlayerType {
+public class PlayFigureType {
 }
