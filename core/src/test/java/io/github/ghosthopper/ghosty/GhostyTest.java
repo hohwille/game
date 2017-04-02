@@ -3,6 +3,7 @@ package io.github.ghosthopper.ghosty;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
+import io.github.ghosthopper.Orientation;
 import io.github.ghosthopper.PlayBorder;
 import io.github.ghosthopper.PlayBorderTypeOpenGate;
 import io.github.ghosthopper.PlayBorderTypeWall;
@@ -15,9 +16,9 @@ public class GhostyTest extends Assertions {
 
     PlayFigureHuman mouse1 = new PlayFigureHuman(Ghosty.MOUSE);
     PlayFigureHuman rabbit1 = new PlayFigureHuman(Ghosty.RABBIT);
-    PlayBorder mouseHole1 = new PlayBorder(null, Ghosty.MOUSE_HOME, null);
-    PlayBorder wall1 = new PlayBorder(null, PlayBorderTypeWall.get(), null);
-    PlayBorder gate1 = new PlayBorder(null, PlayBorderTypeOpenGate.get(), null);
+    PlayBorder mouseHole1 = new PlayBorder(null, Ghosty.MOUSE_HOME, null, Orientation.HORIZONTAL);
+    PlayBorder wall1 = new PlayBorder(null, PlayBorderTypeWall.get(), null, Orientation.HORIZONTAL);
+    PlayBorder gate1 = new PlayBorder(null, PlayBorderTypeOpenGate.get(), null, Orientation.HORIZONTAL);
 
     assertThat(mouseHole1.canPass(mouse1)).isTrue();
     assertThat(mouseHole1.canPass(rabbit1)).isFalse();
