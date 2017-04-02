@@ -1,8 +1,16 @@
 package io.github.ghosthopper;
 
+/**
+ * A {@link PlayBorderType} that is an open gate so every {@link PlayFigureHuman human player}
+ * {@link #canPass(PlayFigureHuman, PlayBorder) can always pass through}.
+ */
 public class PlayBorderTypMagicDoor extends PlayBorderType {
 
   private boolean open;
+
+  private PlayBorderTypMagicDoor() {
+    super();
+  }
 
   @Override
   public boolean canPass(PlayFigureHuman player, PlayBorder border) {
@@ -17,6 +25,14 @@ public class PlayBorderTypMagicDoor extends PlayBorderType {
       }
     }
     return false;
+  }
+
+  /**
+   * @return an instance of this border type.
+   */
+  public static PlayBorderTypMagicDoor get() {
+
+    return new PlayBorderTypMagicDoor();
   }
 
 }

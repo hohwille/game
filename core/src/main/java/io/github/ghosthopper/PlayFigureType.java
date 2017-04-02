@@ -1,4 +1,7 @@
 package io.github.ghosthopper;
 
-public class PlayFigureType {
+/**
+ * The {@link PlayFigure#getType() type} of a {@link PlayField}.
+ */
+public abstract class PlayFigureType {
 }
