@@ -3,11 +3,12 @@
   <parent>
     <groupId>io.github.ghosthopper</groupId>
     <artifactId>ghosthopper</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>dev-SNAPSHOT</version>
   </parent>
-  <artifactId>ghosthopper-core</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <artifactId>ghosthopper-data</artifactId>
+  <version>${ghosthopper.version}</version>
   <packaging>jar</packaging>
+  <description>The data for the game-engine (images and sounds).</description>
   
   <dependencies>
   </dependencies>

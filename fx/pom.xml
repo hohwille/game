@@ -3,16 +3,16 @@
   <parent>
     <groupId>io.github.ghosthopper</groupId>
     <artifactId>ghosthopper</artifactId>
-    <version>0.0.1-SNAPSHOT</version>
+    <version>dev-SNAPSHOT</version>
   </parent>
   <artifactId>ghosthopper-fx</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>${ghosthopper.version}</version>
   <packaging>jar</packaging>
   
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>ghosthopper-core</artifactId>
+      <artifactId>ghosthopper-games</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>

@@ -1,6 +1,7 @@
 package io.github.ghosthopper.border;
 
 import io.github.ghosthopper.PlayDirection;
+import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.figure.PlayFigure;
 
 /**
@@ -21,8 +22,10 @@ public class PlayBorderTypeMagicDoor extends PlayBorderType {
     if (this.open) {
       return true;
     }
-    if (border.getSourceField().hasHumanFigure()) {
-      if (border.getTargetField().hasHumanFigure()) {
+    PlayField sourceField = border.getSourceField();
+    if ((sourceField != null) && sourceField.hasHumanFigure()) {
+      PlayField targetField = border.getTargetField();
+      if ((targetField != null) && targetField.hasHumanFigure()) {
         this.open = true;
         return true;
       }

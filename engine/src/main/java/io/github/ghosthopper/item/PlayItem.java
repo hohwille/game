@@ -2,6 +2,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.item;
 
+import io.github.ghosthopper.PlayColor;
 import io.github.ghosthopper.PlayObjectWithColor;
 import io.github.ghosthopper.game.PlayGame;
 
@@ -19,6 +20,17 @@ public class PlayItem extends PlayObjectWithColor {
    */
   public PlayItem(PlayItemType type) {
     super();
+    this.type = type;
+  }
+
+  /**
+   * The constructor.
+   *
+   * @param color - see {@link #getColor()}.
+   * @param type the {@link PlayItemType} of this item.
+   */
+  public PlayItem(PlayColor color, PlayItemType type) {
+    super(color);
     this.type = type;
   }
 

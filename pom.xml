@@ -7,15 +7,20 @@
   </parent>
   <groupId>io.github.ghosthopper</groupId>
   <artifactId>ghosthopper</artifactId>
-  <version>0.0.1-SNAPSHOT</version>
+  <version>dev-SNAPSHOT</version>
   <packaging>pom</packaging>
-  
+  <description>The data for the game-engine (images and sounds).</description>
+
   <properties>
     <java.version>1.8</java.version>
+    <ghosthopper.version>1.0.0-SNAPSHOT</ghosthopper.version>
   </properties>
 
   <modules>
-    <module>core</module>
+    <module>i18n</module>
+    <module>data</module>
+    <module>engine</module>
+    <module>games</module>
     <module>fx</module>
     <module>android</module>
   </modules>
@@ -34,4 +39,35 @@
       <scope>test</scope>
     </dependency>
   </dependencies>
+  
+  <build>
+    <plugins>
+      <!-- http://mojo.codehaus.org/flatten-maven-plugin/ -->
+      <plugin>
+        <groupId>org.codehaus.mojo</groupId>
+        <artifactId>flatten-maven-plugin</artifactId>
+        <version>1.0.0</version>
+        <configuration>
+          <!--<flattenMode>bom</flattenMode>-->
+        </configuration>
+        <executions>
+          <execution>
+            <id>flatten</id>
+            <phase>process-test-resources</phase>
+            <goals>
+              <goal>flatten</goal>
+            </goals>
+          </execution>
+          <execution>
+            <id>flatten.clean</id>
+            <phase>clean</phase>
+            <goals>
+              <goal>clean</goal>
+            </goals>
+          </execution>
+        </executions>
+      </plugin>
+    </plugins>
+  </build>
+
 </project>

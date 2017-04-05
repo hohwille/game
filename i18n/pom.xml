@@ -5,15 +5,10 @@
     <artifactId>ghosthopper</artifactId>
     <version>dev-SNAPSHOT</version>
   </parent>
-  <artifactId>ghosthopper-android</artifactId>
+  <artifactId>ghosthopper-i18n</artifactId>
   <version>${ghosthopper.version}</version>
   <packaging>jar</packaging>
   
   <dependencies>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>ghosthopper-games</artifactId>
-      <version>${project.version}</version>
-    </dependency>
   </dependencies>
 </project>
