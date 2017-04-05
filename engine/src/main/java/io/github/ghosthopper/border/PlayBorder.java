@@ -2,15 +2,17 @@ package io.github.ghosthopper.border;
 
 import io.github.ghosthopper.PlayDirection;
 import io.github.ghosthopper.PlayLevel;
+import io.github.ghosthopper.PlayObject;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.figure.PlayFigure;
+import io.github.ghosthopper.game.PlayGame;
 
 /**
  * A {@link PlayBorder} connects two {@link PlayField}s. A {@link #getSourceField() source field} is leading in the
  * {@link #getDirection() direction} towards the {@link #getTargetField() target field}. The {@link PlayBorder} has a
  * {@link #getType() type} that decides if a figure {@link #canPass(PlayFigure) can pass} the border.
  */
-public class PlayBorder {
+public class PlayBorder extends PlayObject {
 
   private final PlayField sourceField;
 
@@ -35,6 +37,18 @@ public class PlayBorder {
     this.targetField = targetField;
     this.type = type;
     this.direction = direction;
+  }
+
+  @Override
+  public PlayGame getGame() {
+
+    if (this.sourceField != null) {
+      return this.sourceField.getGame();
+    }
+    if (this.targetField != null) {
+      return this.targetField.getGame();
+    }
+    return super.getGame();
   }
 
   /**

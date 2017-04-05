@@ -25,9 +25,7 @@ public class PlayLevel extends PlayObjectWithId {
     this.startField = new PlayField(this);
   }
 
-  /**
-   * @return the {@link PlayGame} owning this {@link PlayLevel}.
-   */
+  @Override
   public PlayGame getGame() {
 
     return this.game;

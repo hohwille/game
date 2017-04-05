@@ -16,7 +16,7 @@ public class Ghosty extends PlayGameSimple {
 
   public static final PlayFigureType GHOST = new PlayFigureType("Ghost", ' ', true);
 
-  public static final PlayBorderTypeHole MOUSE_HOME = PlayBorderTypeHole.get(MOUSE);
+  public static final PlayBorderTypeHole MOUSE_HOLE = PlayBorderTypeHole.get(MOUSE);
 
   public static final PlayBorderTypeHole RABBIT_WINDOW = PlayBorderTypeHole.get(RABBIT);
 

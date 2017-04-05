@@ -12,15 +12,15 @@ import io.github.ghosthopper.Player;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.figure.PlayFigureType;
-import io.github.ghosthopper.game.DummyGame;
 import io.github.ghosthopper.game.PlayGame;
+import io.github.ghosthopper.game.PlayGameNone;
 import io.github.ghosthopper.item.PlayItem;
 import io.github.ghosthopper.item.PlayItemType;
 
 /**
  * Test for {@link PlayBorder} with arbitrary {@link PlayBorderType}s.
  */
-public class PlayBorderTypeTest extends Assertions {
+public class PlayBorderTest extends Assertions {
 
   private static final PlayFigureType MOUSE = new PlayFigureType("Mouse", 'M');
 
@@ -103,7 +103,7 @@ public class PlayBorderTypeTest extends Assertions {
 
     // given
     BLUE_MOUSE_FIGURE.getItems().add(RED_KEY);
-    PlayGame game = new DummyGame();
+    PlayGame game = new PlayGameNone();
     List<Player> players = game.getPlayers();
     players.add(BLUE_MOUSE);
     players.add(GREEN_RABBIT);

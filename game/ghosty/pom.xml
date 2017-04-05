@@ -2,18 +2,13 @@
   <modelVersion>4.0.0</modelVersion>
   <parent>
     <groupId>io.github.ghosthopper</groupId>
-    <artifactId>ghosthopper</artifactId>
+    <artifactId>ghosthopper-game</artifactId>
     <version>dev-SNAPSHOT</version>
   </parent>
-  <artifactId>ghosthopper-games</artifactId>
+  <artifactId>ghosthopper-game-ghosty</artifactId>
   <version>${ghosthopper.version}</version>
   <packaging>jar</packaging>
   
   <dependencies>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>ghosthopper-engine</artifactId>
-      <version>${project.version}</version>
-    </dependency>
   </dependencies>
 </project>

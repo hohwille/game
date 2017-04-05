@@ -14,11 +14,17 @@ import io.github.ghosthopper.PlayObjectWithId;
 import io.github.ghosthopper.Player;
 import io.github.ghosthopper.border.PlayBorderType;
 import io.github.ghosthopper.field.PlayField;
+import io.github.ghosthopper.i18n.PlayTranslator;
 
 /**
  * This is the main object and represents an actual game with its rules.
  */
 public abstract class PlayGame extends PlayObjectWithId {
+
+  /** @see #getCurrentGame() */
+  private static PlayGame currentGame = PlayGameNone.INSTANCE;
+
+  private final PlayTranslator translator;
 
   private final List<Player> players;
 
@@ -35,7 +41,35 @@ public abstract class PlayGame extends PlayObjectWithId {
    */
   public PlayGame(String id) {
     super(id);
+    this.translator = new PlayTranslator(this);
     this.players = new ArrayList<>();
+  }
+
+  /**
+   * @return the currentGame
+   */
+  public static PlayGame getCurrentGame() {
+
+    return currentGame;
+  }
+
+  @Override
+  public PlayGame getGame() {
+
+    return this;
+  }
+
+  public void start() {
+
+    currentGame = this;
+  }
+
+  /**
+   * @return the {@link PlayTranslator} used for localization.
+   */
+  public PlayTranslator getTranslator() {
+
+    return this.translator;
   }
 
   /**

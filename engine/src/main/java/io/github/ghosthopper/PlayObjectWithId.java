@@ -2,6 +2,8 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper;
 
+import java.util.Locale;
+
 /**
  * This is the interface for any item of this game that can be identified by and {@link #getId() ID}.
  */
@@ -25,6 +27,23 @@ public abstract class PlayObjectWithId extends PlayObject {
   public String getId() {
 
     return this.id;
+  }
+
+  /**
+   * @return the localized name of this object.
+   */
+  public String getLocalizedName() {
+
+    return getGame().getTranslator().translate(getId());
+  }
+
+  /**
+   * @param locale the explicit {@link Locale} to translate to.
+   * @return the localized name of this object.
+   */
+  public String getLocalizedName(Locale locale) {
+
+    return getGame().getTranslator().translate(getId(), locale);
   }
 
   @Override

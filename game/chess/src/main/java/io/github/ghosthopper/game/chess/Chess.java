@@ -15,15 +15,15 @@ import io.github.ghosthopper.game.PlayGameSimple;
  */
 public class Chess extends PlayGameSimple {
 
-  private static final PlayFigureType KING = new PlayFigureType("King", '♔');
+  private static final PlayFigureType KING = new PlayFigureType("ChessKing", '♔');
 
-  private static final PlayFigureType QUEEN = new PlayFigureType("Queen", '♕');
+  private static final PlayFigureType QUEEN = new PlayFigureType("ChessQueen", '♕');
 
-  private static final PlayFigureType ROOK = new PlayFigureType("Rook", '♖');
+  private static final PlayFigureType ROOK = new PlayFigureType("ChessRook", '♖');
 
-  private static final PlayFigureType BISHOB = new PlayFigureType("Bishob", '♗');
+  private static final PlayFigureType BISHOB = new PlayFigureType("ChessBishob", '♗');
 
-  private static final PlayFigureType KNIGHT = new PlayFigureType("Knight", '♘');
+  private static final PlayFigureType KNIGHT = new PlayFigureType("ChessKnight", '♘');
 
   private static final PlayFigureType PAWN = new PlayFigureType("Pawn", '♙');
 

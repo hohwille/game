@@ -20,7 +20,7 @@
     <module>i18n</module>
     <module>data</module>
     <module>engine</module>
-    <module>games</module>
+    <module>game</module>
     <module>fx</module>
     <module>android</module>
   </modules>

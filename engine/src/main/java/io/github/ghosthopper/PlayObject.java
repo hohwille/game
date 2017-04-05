@@ -2,6 +2,8 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper;
 
+import io.github.ghosthopper.game.PlayGame;
+
 /**
  * This is the interface for any object of this game.
  */
@@ -12,6 +14,14 @@ public abstract class PlayObject {
    */
   public PlayObject() {
     super();
+  }
+
+  /**
+   * @return the {@link PlayGame} owining this object.
+   */
+  public PlayGame getGame() {
+
+    return PlayGame.getCurrentGame();
   }
 
 }

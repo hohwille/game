@@ -6,15 +6,21 @@ import io.github.ghosthopper.PlayLevel;
 import io.github.ghosthopper.Player;
 
 /**
- * A {@link DummyGame} for testing.
+ * A dummy implementation of {@link PlayGame} only used as fall-back instance. Shall only be used internally or by
+ * tests.
  */
-public class DummyGame extends PlayGame {
+public class PlayGameNone extends PlayGame {
+
+  public static final String ID = "None";
+
+  /** The singleton instance. */
+  public static final PlayGameNone INSTANCE = new PlayGameNone();
 
   /**
    * The constructor.
    */
-  public DummyGame() {
-    super("DummyGame");
+  public PlayGameNone() {
+    super(ID);
   }
 
   @Override

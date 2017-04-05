@@ -44,6 +44,12 @@ public class PlayField extends PlayObjectWithColorAndItems {
     this.direction2borderMap = new HashMap<>();
   }
 
+  @Override
+  public PlayGame getGame() {
+
+    return this.level.getGame();
+  }
+
   /**
    * @return the {@link PlayLevel} owning this {@link PlayField}.
    */

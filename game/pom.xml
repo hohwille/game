@@ -1,0 +1,25 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+  <parent>
+    <groupId>io.github.ghosthopper</groupId>
+    <artifactId>ghosthopper</artifactId>
+    <version>dev-SNAPSHOT</version>
+  </parent>
+  <artifactId>ghosthopper-game</artifactId>
+  <packaging>pom</packaging>
+  <description>The available games.</description>
+
+  <modules>
+    <module>chess</module>
+    <module>ghosty</module>
+    <module>all</module>
+  </modules>
+
+  <dependencies>
+    <dependency>
+      <groupId>${project.groupId}</groupId>
+      <artifactId>ghosthopper-engine</artifactId>
+      <version>${project.version}</version>
+    </dependency>
+  </dependencies>
+</project>

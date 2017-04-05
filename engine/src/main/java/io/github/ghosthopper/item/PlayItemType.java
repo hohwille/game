@@ -10,10 +10,10 @@ import io.github.ghosthopper.PlayObjectWithId;
 public class PlayItemType extends PlayObjectWithId {
 
   /** A key to open doors. */
-  public static final PlayItemType KEY = new PlayItemType("key");
+  public static final PlayItemType KEY = new PlayItemType("Key");
 
   /** A key to open doors. */
-  public static final PlayItemType GEM = new PlayItemType("gem");
+  public static final PlayItemType GEM = new PlayItemType("Gem");
 
   /**
    * The constructor.
