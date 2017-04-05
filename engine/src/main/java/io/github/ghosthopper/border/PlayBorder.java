@@ -2,7 +2,7 @@ package io.github.ghosthopper.border;
 
 import io.github.ghosthopper.PlayDirection;
 import io.github.ghosthopper.PlayLevel;
-import io.github.ghosthopper.PlayObject;
+import io.github.ghosthopper.PlayObjectWithColorAndType;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.game.PlayGame;
@@ -12,7 +12,7 @@ import io.github.ghosthopper.game.PlayGame;
  * {@link #getDirection() direction} towards the {@link #getTargetField() target field}. The {@link PlayBorder} has a
  * {@link #getType() type} that decides if a figure {@link #canPass(PlayFigure) can pass} the border.
  */
-public class PlayBorder extends PlayObject {
+public class PlayBorder extends PlayObjectWithColorAndType {
 
   private final PlayField sourceField;
 
@@ -88,6 +88,7 @@ public class PlayBorder extends PlayObject {
   /**
    * @return the {@link PlayBorderType} of this border.
    */
+  @Override
   public PlayBorderType getType() {
 
     return this.type;

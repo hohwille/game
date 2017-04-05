@@ -4,11 +4,11 @@ package io.github.ghosthopper.game.chess;
 
 import io.github.ghosthopper.PlayColor;
 import io.github.ghosthopper.PlayLevel;
-import io.github.ghosthopper.Player;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.figure.PlayFigureType;
 import io.github.ghosthopper.game.PlayGameSimple;
+import io.github.ghosthopper.player.Player;
 
 /**
  * The game <em>chess</em>.

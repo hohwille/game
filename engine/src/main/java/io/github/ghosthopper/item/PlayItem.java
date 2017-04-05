@@ -3,13 +3,13 @@
 package io.github.ghosthopper.item;
 
 import io.github.ghosthopper.PlayColor;
-import io.github.ghosthopper.PlayObjectWithColor;
+import io.github.ghosthopper.PlayObjectWithColorAndType;
 import io.github.ghosthopper.game.PlayGame;
 
 /**
  * An item of the {@link PlayGame} such as a key or a gem.
  */
-public class PlayItem extends PlayObjectWithColor {
+public class PlayItem extends PlayObjectWithColorAndType {
 
   private final PlayItemType type;
 

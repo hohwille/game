@@ -11,15 +11,15 @@ import java.util.Set;
 import io.github.ghosthopper.PlayDirection;
 import io.github.ghosthopper.PlayLevel;
 import io.github.ghosthopper.PlayObjectWithId;
-import io.github.ghosthopper.Player;
 import io.github.ghosthopper.border.PlayBorderType;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.i18n.PlayTranslator;
+import io.github.ghosthopper.player.Player;
 
 /**
  * This is the main object and represents an actual game with its rules.
  */
-public abstract class PlayGame extends PlayObjectWithId {
+public class PlayGame extends PlayObjectWithId {
 
   /** @see #getCurrentGame() */
   private static PlayGame currentGame = PlayGameNone.INSTANCE;
@@ -120,7 +120,10 @@ public abstract class PlayGame extends PlayObjectWithId {
   /**
    * @param player the non-{@link Player#isHuman() human} {@link Player} to move.
    */
-  protected abstract void moveBotPlayer(Player player);
+  protected void moveBotPlayer(Player player) {
+
+    // should be overridden if bot players are supported by game.
+  }
 
   /**
    * @return the current {@link PlayLevel}.
@@ -145,7 +148,10 @@ public abstract class PlayGame extends PlayObjectWithId {
   /**
    * @return creates the first (and potentially single) {@link PlayLevel}.
    */
-  protected abstract PlayLevel createFirstLevel();
+  protected PlayLevel createFirstLevel() {
+
+    return new PlayLevel("Level 1", this);
+  }
 
   /**
    * @param level the {@link PlayLevel} to initialize.

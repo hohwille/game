@@ -10,20 +10,20 @@ import java.util.function.Predicate;
 import io.github.ghosthopper.PlayColor;
 import io.github.ghosthopper.PlayDirection;
 import io.github.ghosthopper.PlayLevel;
-import io.github.ghosthopper.PlayObjectWithColorAndItems;
-import io.github.ghosthopper.Player;
+import io.github.ghosthopper.PlayObjectWithColorAndTypeAndItems;
 import io.github.ghosthopper.border.PlayBorder;
 import io.github.ghosthopper.border.PlayBorderType;
 import io.github.ghosthopper.border.PlayBorderTypeWall;
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.game.PlayGame;
+import io.github.ghosthopper.player.Player;
 
 /**
  * A single field on the {@link #getLevel() level}. Such {@link PlayLevel} is a two-dimensional area divided into
  * {@link PlayField}s. Each {@link PlayField} has {@link PlayBorder}s that can be navigated via
  * {@link #getBorder(PlayDirection)} and also {@link #getField(PlayDirection)}.
  */
-public class PlayField extends PlayObjectWithColorAndItems {
+public class PlayField extends PlayObjectWithColorAndTypeAndItems {
 
   private final PlayLevel level;
 
@@ -58,9 +58,7 @@ public class PlayField extends PlayObjectWithColorAndItems {
     return this.level;
   }
 
-  /**
-   * @return the {@link PlayFieldType} of this {@link PlayField}.
-   */
+  @Override
   public PlayFieldType getType() {
 
     if (this.type == null) {

@@ -2,12 +2,12 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.field;
 
-import io.github.ghosthopper.PlayObjectWithId;
+import io.github.ghosthopper.PlayObjectType;
 
 /**
  * The type of a {@link PlayField}.
  */
-public class PlayFieldType extends PlayObjectWithId {
+public class PlayFieldType extends PlayObjectType {
 
   /** Type of a normal/regular {@link PlayField}. */
   public static final PlayFieldType NORMAL = new PlayFieldType("FieldNormal");

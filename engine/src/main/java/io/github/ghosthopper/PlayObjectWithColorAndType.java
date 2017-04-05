@@ -5,14 +5,14 @@ package io.github.ghosthopper;
 /**
  * This is the abstract base class for an object that optionally can have a {@link #getColor() color}.
  */
-public abstract class PlayObjectWithColor extends PlayObject implements PlayAttributeColor {
+public abstract class PlayObjectWithColorAndType extends PlayObject implements PlayAttributeColor {
 
   private PlayColor color;
 
   /**
    * The constructor.
    */
-  public PlayObjectWithColor() {
+  public PlayObjectWithColorAndType() {
     super();
   }
 
@@ -21,7 +21,7 @@ public abstract class PlayObjectWithColor extends PlayObject implements PlayAttr
    *
    * @param color - see {@link #getColor()}.
    */
-  public PlayObjectWithColor(PlayColor color) {
+  public PlayObjectWithColorAndType(PlayColor color) {
     super();
     this.color = color;
   }
@@ -38,6 +38,17 @@ public abstract class PlayObjectWithColor extends PlayObject implements PlayAttr
   public void setColor(PlayColor color) {
 
     this.color = color;
+  }
+
+  /**
+   * @return the type that classifies this object.
+   */
+  public abstract PlayObjectType getType();
+
+  @Override
+  protected String getId() {
+
+    return getType().getId();
   }
 
 }

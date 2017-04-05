@@ -1,14 +1,14 @@
 package io.github.ghosthopper.figure;
 
 import io.github.ghosthopper.PlayLevel;
-import io.github.ghosthopper.PlayObjectWithId;
+import io.github.ghosthopper.PlayObjectType;
 import io.github.ghosthopper.border.PlayBorderType;
 import io.github.ghosthopper.field.PlayField;
 
 /**
  * The {@link PlayFigure#getType() type} of a {@link PlayField}.
  */
-public class PlayFigureType extends PlayObjectWithId {
+public class PlayFigureType extends PlayObjectType {
 
   private final char asciiArt;
 

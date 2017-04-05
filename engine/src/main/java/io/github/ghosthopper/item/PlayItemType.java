@@ -2,12 +2,12 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.item;
 
-import io.github.ghosthopper.PlayObjectWithId;
+import io.github.ghosthopper.PlayObjectType;
 
 /**
  * The {@link PlayItem#getType() type} of a {@link PlayItem}. Such as
  */
-public class PlayItemType extends PlayObjectWithId {
+public class PlayItemType extends PlayObjectType {
 
   /** A key to open doors. */
   public static final PlayItemType KEY = new PlayItemType("Key");

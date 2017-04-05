@@ -10,14 +10,14 @@ import io.github.ghosthopper.item.PlayItem;
 /**
  * This is the abstract base class for an object that optionally can have a {@link #getColor() color}.
  */
-public abstract class PlayObjectWithColorAndItems extends PlayObjectWithColor {
+public abstract class PlayObjectWithColorAndTypeAndItems extends PlayObjectWithColorAndType {
 
   private final List<PlayItem> items;
 
   /**
    * The constructor.
    */
-  public PlayObjectWithColorAndItems() {
+  public PlayObjectWithColorAndTypeAndItems() {
     this(null);
   }
 
@@ -26,7 +26,7 @@ public abstract class PlayObjectWithColorAndItems extends PlayObjectWithColor {
    *
    * @param color - see {@link #getColor()}.
    */
-  public PlayObjectWithColorAndItems(PlayColor color) {
+  public PlayObjectWithColorAndTypeAndItems(PlayColor color) {
     super(color);
     this.items = new ArrayList<>();
   }

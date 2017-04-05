@@ -2,7 +2,7 @@ package io.github.ghosthopper.border;
 
 import io.github.ghosthopper.PlayDirection;
 import io.github.ghosthopper.PlayLevel;
-import io.github.ghosthopper.PlayObjectWithIdAndColor;
+import io.github.ghosthopper.PlayObjectType;
 import io.github.ghosthopper.figure.PlayFigure;
 
 /**
@@ -10,7 +10,7 @@ import io.github.ghosthopper.figure.PlayFigure;
  * {@link PlayBorder#canPass(PlayFigure)} delegates to {@link #canPass(PlayFigure, PlayBorder)} what makes the actual
  * decision according to this {@link PlayBorderType} and its potential state.
  */
-public abstract class PlayBorderType extends PlayObjectWithIdAndColor {
+public abstract class PlayBorderType extends PlayObjectType {
 
   /**
    * The constructor.

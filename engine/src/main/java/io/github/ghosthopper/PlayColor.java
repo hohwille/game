@@ -3,6 +3,7 @@
 package io.github.ghosthopper;
 
 import io.github.ghosthopper.figure.PlayFigureType;
+import io.github.ghosthopper.player.Player;
 
 /**
  * A color (e.g. of a {@link Player} or {@link PlayFigureType}).
@@ -10,28 +11,28 @@ import io.github.ghosthopper.figure.PlayFigureType;
 public class PlayColor extends PlayObjectWithId {
 
   /** Red. */
-  public static final PlayColor RED = new PlayColor("red", 255, 0, 0);
+  public static final PlayColor RED = new PlayColor("Red", 255, 0, 0);
 
   /** Green. */
-  public static final PlayColor GREEN = new PlayColor("green", 0, 255, 0);
+  public static final PlayColor GREEN = new PlayColor("Green", 0, 255, 0);
 
   /** Blue. */
-  public static final PlayColor BLUE = new PlayColor("blue", 0, 0, 255);
+  public static final PlayColor BLUE = new PlayColor("Blue", 0, 0, 255);
 
   /** Yellow. */
-  public static final PlayColor YELLOW = new PlayColor("yellow", 255, 255, 0);
+  public static final PlayColor YELLOW = new PlayColor("Yellow", 255, 255, 0);
 
   /** Cyan. */
-  public static final PlayColor CYAN = new PlayColor("cyan", 0, 255, 255);
+  public static final PlayColor CYAN = new PlayColor("Cyan", 0, 255, 255);
 
   /** Magenta. */
-  public static final PlayColor MAGENTA = new PlayColor("magenta", 255, 0, 255);
+  public static final PlayColor MAGENTA = new PlayColor("Magenta", 255, 0, 255);
 
   /** White. */
-  public static final PlayColor WHITE = new PlayColor("white", 255, 255, 255);
+  public static final PlayColor WHITE = new PlayColor("White", 255, 255, 255);
 
   /** Black. */
-  public static final PlayColor BLACK = new PlayColor("black", 0, 0, 0);
+  public static final PlayColor BLACK = new PlayColor("Black", 0, 0, 0);
 
   private final int red;
 

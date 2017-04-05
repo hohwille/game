@@ -8,7 +8,6 @@ import org.junit.Test;
 import io.github.ghosthopper.PlayColor;
 import io.github.ghosthopper.PlayDirection;
 import io.github.ghosthopper.PlayLevel;
-import io.github.ghosthopper.Player;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.figure.PlayFigureType;
@@ -16,6 +15,7 @@ import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.game.PlayGameNone;
 import io.github.ghosthopper.item.PlayItem;
 import io.github.ghosthopper.item.PlayItemType;
+import io.github.ghosthopper.player.Player;
 
 /**
  * Test for {@link PlayBorder} with arbitrary {@link PlayBorderType}s.

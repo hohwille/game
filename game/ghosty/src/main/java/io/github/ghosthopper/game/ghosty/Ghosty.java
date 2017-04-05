@@ -1,9 +1,9 @@
 package io.github.ghosthopper.game.ghosty;
 
-import io.github.ghosthopper.Player;
 import io.github.ghosthopper.border.PlayBorderTypeHole;
 import io.github.ghosthopper.figure.PlayFigureType;
 import io.github.ghosthopper.game.PlayGameSimple;
+import io.github.ghosthopper.player.Player;
 
 /**
  * The game <em>ghosty</em>: {@link Player}s of different {@link PlayFigureType}s hunt for the ghost.

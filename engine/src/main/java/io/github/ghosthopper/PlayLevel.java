@@ -2,6 +2,7 @@ package io.github.ghosthopper;
 
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.game.PlayGame;
+import io.github.ghosthopper.player.Player;
 
 /**
  * The {@link PlayLevel} represents a level or stage of a {@link #getGame() game}. It contains the

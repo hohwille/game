@@ -1,9 +1,9 @@
 package io.github.ghosthopper.figure;
 
-import io.github.ghosthopper.PlayObjectWithColorAndItems;
-import io.github.ghosthopper.Player;
+import io.github.ghosthopper.PlayObjectWithColorAndTypeAndItems;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.game.PlayGame;
+import io.github.ghosthopper.player.Player;
 
 /**
  * Any figure of an {@link Player#getFigures() owning} {@link Player}. Each {@link PlayFigure} has a {@link #getType()
@@ -11,7 +11,7 @@ import io.github.ghosthopper.game.PlayGame;
  * moment in time of the {@link PlayGame} each {@link PlayFigure} is {@link #getField() located on} a specific
  * {@link PlayField}.
  */
-public class PlayFigure extends PlayObjectWithColorAndItems {
+public class PlayFigure extends PlayObjectWithColorAndTypeAndItems {
 
   private final Player player;
 
@@ -32,9 +32,7 @@ public class PlayFigure extends PlayObjectWithColorAndItems {
     setColor(player.getColor());
   }
 
-  /**
-   * @return the type of this {@link PlayField}.
-   */
+  @Override
   public PlayFigureType getType() {
 
     return this.type;
@@ -46,6 +44,12 @@ public class PlayFigure extends PlayObjectWithColorAndItems {
   public Player getPlayer() {
 
     return this.player;
+  }
+
+  @Override
+  public PlayGame getGame() {
+
+    return this.player.getGame();
   }
 
   /**

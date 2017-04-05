@@ -2,6 +2,8 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper;
 
+import java.util.Locale;
+
 import io.github.ghosthopper.game.PlayGame;
 
 /**
@@ -22,6 +24,28 @@ public abstract class PlayObject {
   public PlayGame getGame() {
 
     return PlayGame.getCurrentGame();
+  }
+
+  /**
+   * @return the ID of this item used to find corresponding graphics or audio information.
+   */
+  protected abstract String getId();
+
+  /**
+   * @return the localized name of this object.
+   */
+  public String getLocalizedName() {
+
+    return getGame().getTranslator().translate(getId());
+  }
+
+  /**
+   * @param locale the explicit {@link Locale} to translate to.
+   * @return the localized name of this object.
+   */
+  public String getLocalizedName(Locale locale) {
+
+    return getGame().getTranslator().translate(getId(), locale);
   }
 
 }

@@ -47,19 +47,23 @@ public class PlayTranslator {
     this.game = game;
     this.creationLocale = locale;
     this.rootBundle = ResourceBundle.getBundle(BUNDLE_ROOT, locale);
-    ResourceBundle bundle = null;
+    this.gameBundle = getGameBundle(game, locale);
+  }
+
+  private static ResourceBundle getGameBundle(PlayGame game, Locale locale) {
+
     if (game != null) {
       String id = game.getId();
       if ((id != null) && !id.equals(PlayGameNone.ID)) {
         String baseName = BUNDLE_PREFIX + game.getId();
         try {
-          bundle = ResourceBundle.getBundle(baseName, locale);
+          return ResourceBundle.getBundle(baseName, locale);
         } catch (Exception e) {
           System.err.println(e.getMessage());
         }
       }
     }
-    this.gameBundle = bundle;
+    return null;
   }
 
   /**
@@ -85,13 +89,8 @@ public class PlayTranslator {
         text = translate(this.rootBundle, key, true);
       }
     } else {
-      ResourceBundle bundle;
-      try {
-        bundle = ResourceBundle.getBundle(BUNDLE_PREFIX + this.game.getId(), locale);
-        text = translate(bundle, key, false);
-      } catch (MissingResourceException e) {
-        // ignore
-      }
+      ResourceBundle bundle = getGameBundle(this.game, locale);
+      text = translate(bundle, key, false);
       if (text == null) {
         bundle = ResourceBundle.getBundle(BUNDLE_ROOT, locale);
         text = translate(bundle, key, true);

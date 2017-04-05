@@ -7,31 +7,89 @@ import java.util.Locale;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
+import io.github.ghosthopper.PlayColor;
+import io.github.ghosthopper.figure.PlayFigureType;
+import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.item.PlayItemType;
+import io.github.ghosthopper.player.Player;
 
 /**
  * Test of {@link PlayTranslator} (indirect).
  */
 public class PlayTranslatorTest extends Assertions {
 
-  /**
-   * Test of {@link PlayItemType#getLocalizedName()}.
-   */
+  private static final PlayGame STRANGE_GAME = new PlayGame("Strange");
+
+  private static final PlayFigureType MOUSE = new PlayFigureType("Mouse", 'M');
+
+  private static final Player STRANGE_PLAYER = new Player(PlayColor.BLUE, MOUSE);
+
+  static {
+    STRANGE_PLAYER.setGame(STRANGE_GAME);
+  }
+
+  /** Tests with {@link Locale#ENGLISH}. */
   @Test
-  public void testItems() {
+  public void testEnglish() {
 
-    Locale locale;
-    locale = Locale.ENGLISH;
+    // given
+    Locale locale = Locale.ENGLISH;
+
+    // when + then
     assertThat(PlayItemType.KEY.getLocalizedName(locale)).isEqualTo("Key");
+    assertThat(PlayItemType.GEM.getLocalizedName(locale)).isEqualTo("Gem");
+    assertThat(PlayColor.RED.getLocalizedName(locale)).isEqualTo("Red");
+    assertThat(STRANGE_GAME.getLocalizedName(locale)).isEqualTo("Strange Game");
+    assertThat(STRANGE_PLAYER.getLocalizedName(locale)).isEqualTo("Player");
+    assertThat(STRANGE_PLAYER.getFigures().get(0).getLocalizedName(locale)).isEqualTo("Strange Mouse");
+  }
 
-    locale = Locale.GERMAN;
+  /** Tests with {@link Locale#GERMAN}. */
+  @Test
+  public void testGerman() {
+
+    // given
+    Locale locale = Locale.GERMAN;
+
+    // when + then
     assertThat(PlayItemType.KEY.getLocalizedName(locale)).isEqualTo("Schlüssel");
+    assertThat(PlayItemType.GEM.getLocalizedName(locale)).isEqualTo("Edelstein");
+    assertThat(PlayColor.RED.getLocalizedName(locale)).isEqualTo("Rot");
+    assertThat(STRANGE_GAME.getLocalizedName(locale)).isEqualTo("Merkwürdiges Spiel");
+    assertThat(STRANGE_PLAYER.getLocalizedName(locale)).isEqualTo("Spieler");
+    assertThat(STRANGE_PLAYER.getFigures().get(0).getLocalizedName(locale)).isEqualTo("Merkwürdige Maus");
+  }
 
-    locale = Locale.FRENCH;
+  /** Tests with {@link Locale#FRENCH}. */
+  @Test
+  public void testFrench() {
+
+    // given
+    Locale locale = Locale.FRENCH;
+
+    // when + then
     assertThat(PlayItemType.KEY.getLocalizedName(locale)).isEqualTo("Clé");
+    assertThat(PlayItemType.GEM.getLocalizedName(locale)).isEqualTo("Gemme");
+    assertThat(PlayColor.RED.getLocalizedName(locale)).isEqualTo("Rouge");
+    assertThat(STRANGE_GAME.getLocalizedName(locale)).isEqualTo("Jeu étrange");
+    assertThat(STRANGE_PLAYER.getLocalizedName(locale)).isEqualTo("Joueur");
+    assertThat(STRANGE_PLAYER.getFigures().get(0).getLocalizedName(locale)).isEqualTo("Souris étrange");
+  }
 
-    locale = new Locale("es");
+  /** Tests with Spanish {@link Locale}. */
+  @Test
+  public void testSpanish() {
+
+    // given
+    Locale locale = new Locale("es");
+
+    // when + then
     assertThat(PlayItemType.KEY.getLocalizedName(locale)).isEqualTo("Llave");
+    assertThat(PlayItemType.GEM.getLocalizedName(locale)).isEqualTo("Joya");
+    assertThat(PlayColor.RED.getLocalizedName(locale)).isEqualTo("Rojo");
+    assertThat(STRANGE_GAME.getLocalizedName(locale)).isEqualTo("Juego extraño");
+    assertThat(STRANGE_PLAYER.getLocalizedName(locale)).isEqualTo("Jugador");
+    assertThat(STRANGE_PLAYER.getFigures().get(0).getLocalizedName(locale)).isEqualTo("Extraño ratón");
   }
 
 }
