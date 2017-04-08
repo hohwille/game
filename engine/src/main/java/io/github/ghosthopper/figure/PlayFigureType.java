@@ -1,16 +1,18 @@
 package io.github.ghosthopper.figure;
 
-import io.github.ghosthopper.PlayLevel;
-import io.github.ghosthopper.PlayObjectType;
-import io.github.ghosthopper.border.PlayBorderType;
+import java.util.List;
+
 import io.github.ghosthopper.field.PlayField;
+import io.github.ghosthopper.item.PlayPickItem;
+import io.github.ghosthopper.object.PlayObjectType;
+import io.github.ghosthopper.properties.PlayProperties;
+import io.github.ghosthopper.properties.PlayPropertyValueDouble;
+import io.github.ghosthopper.properties.PlayPropertyValueInt;
 
 /**
  * The {@link PlayFigure#getType() type} of a {@link PlayField}.
  */
 public class PlayFigureType extends PlayObjectType {
-
-  private final char asciiArt;
 
   private final boolean invisible;
 
@@ -18,31 +20,20 @@ public class PlayFigureType extends PlayObjectType {
    * The constructor.
    *
    * @param id - see {@link #getId()}.
-   * @param asciiArt - see {@link #getAsciiArt()}.
    */
-  public PlayFigureType(String id, char asciiArt) {
-    this(id, asciiArt, false);
+  public PlayFigureType(String id) {
+    this(id, false);
   }
 
   /**
    * The constructor.
    *
    * @param id - see {@link #getId()}.
-   * @param asciiArt - see {@link #getAsciiArt()}.
    * @param invisible - see {@link #isInvisible()}.
    */
-  public PlayFigureType(String id, char asciiArt, boolean invisible) {
+  public PlayFigureType(String id, boolean invisible) {
     super(id);
-    this.asciiArt = asciiArt;
     this.invisible = invisible;
-  }
-
-  /**
-   * @return the character used to represent this {@link PlayBorderType} in ASCII-Art of the {@link PlayLevel}.
-   */
-  public char getAsciiArt() {
-
-    return this.asciiArt;
   }
 
   /**
@@ -53,4 +44,28 @@ public class PlayFigureType extends PlayObjectType {
     return this.invisible;
   }
 
+  /**
+   * @param figure the {@link PlayFigure} to check. Has to be of this {@link PlayFigure#getType() type}.
+   * @param item the {@link PlayPickItem} to check (that shall potentially be added).
+   * @return {@code true} if this {@link PlayFigure} may {@link PlayFigure#pickItem(PlayPickItem) pick} and carry the
+   *         {@link PlayPickItem}, {@code false} otherwise.
+   */
+  public boolean isPickable(PlayFigure figure, PlayPickItem item) {
+
+    assert (figure.getType() == this);
+    PlayProperties properties = figure.getProperties();
+    int maxItems = properties.get(PlayPropertyValueInt.MAX_ITEMS).get();
+    List<PlayPickItem> items = figure.getItems();
+    if (items.size() >= maxItems) {
+      return false;
+    }
+    double maxWeight = properties.get(PlayPropertyValueDouble.MAX_WEIGHT).get();
+    if (maxWeight < Double.MAX_VALUE) {
+      double weight = items.stream().mapToDouble(i -> i.getWeight()).sum();
+      if ((weight + item.getWeight()) > maxWeight) {
+        return false;
+      }
+    }
+    return true;
+  }
 }

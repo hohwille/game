@@ -6,9 +6,9 @@ import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
-import io.github.ghosthopper.PlayObjectWithId;
 import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.game.PlayGameNone;
+import io.github.ghosthopper.object.PlayStateObjectWithId;
 
 /**
  * Localizes text messages to the current locale.
@@ -67,7 +67,7 @@ public class PlayTranslator {
   }
 
   /**
-   * @param key the key of the text message to get. Typically {@link PlayObjectWithId#getId()}.
+   * @param key the key of the text message to get. Typically {@link PlayStateObjectWithId#getId()}.
    * @return the text message translated to the {@link Locale#getDefault() default locale}.
    */
   public String translate(String key) {
@@ -76,7 +76,7 @@ public class PlayTranslator {
   }
 
   /**
-   * @param key the key of the text message to get. Typically {@link PlayObjectWithId#getId()}.
+   * @param key the key of the text message to get. Typically {@link PlayStateObjectWithId#getId()}.
    * @param locale the {@link Locale} to translate to.
    * @return the text message translated to the given {@link Locale}.
    */

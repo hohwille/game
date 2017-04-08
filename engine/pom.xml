@@ -8,13 +8,8 @@
   <artifactId>ghosthopper-engine</artifactId>
   <version>${ghosthopper.version}</version>
   <packaging>jar</packaging>
-  
+
   <dependencies>
-    <dependency>
-      <groupId>${project.groupId}</groupId>
-      <artifactId>ghosthopper-i18n</artifactId>
-      <version>${project.version}</version>
-    </dependency>
     <dependency>
       <groupId>${project.groupId}</groupId>
       <artifactId>ghosthopper-data</artifactId>

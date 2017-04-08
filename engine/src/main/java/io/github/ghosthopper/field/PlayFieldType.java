@@ -2,7 +2,9 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.field;
 
-import io.github.ghosthopper.PlayObjectType;
+import io.github.ghosthopper.figure.PlayFigure;
+import io.github.ghosthopper.item.PlayPickItem;
+import io.github.ghosthopper.object.PlayObjectType;
 
 /**
  * The type of a {@link PlayField}.
@@ -25,6 +27,16 @@ public class PlayFieldType extends PlayObjectType {
    */
   public PlayFieldType(String id) {
     super(id);
+  }
+
+  /**
+   * @param item the {@link PlayPickItem} to check.
+   * @return {@code true} if the given {@link PlayPickItem} may be {@link PlayFigure#dropItem() dropped} on this
+   *         {@link PlayField}.
+   */
+  public boolean isDroppable(PlayPickItem item) {
+
+    return true;
   }
 
 }

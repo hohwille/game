@@ -7,15 +7,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.function.Predicate;
 
-import io.github.ghosthopper.PlayColor;
-import io.github.ghosthopper.PlayDirection;
 import io.github.ghosthopper.PlayLevel;
-import io.github.ghosthopper.PlayObjectWithColorAndTypeAndItems;
 import io.github.ghosthopper.border.PlayBorder;
 import io.github.ghosthopper.border.PlayBorderType;
 import io.github.ghosthopper.border.PlayBorderTypeWall;
+import io.github.ghosthopper.color.PlayColor;
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.game.PlayGame;
+import io.github.ghosthopper.item.PlayPushItem;
+import io.github.ghosthopper.move.PlayDirection;
+import io.github.ghosthopper.object.PlayTypedObjectWithItems;
 import io.github.ghosthopper.player.Player;
 
 /**
@@ -23,7 +24,7 @@ import io.github.ghosthopper.player.Player;
  * {@link PlayField}s. Each {@link PlayField} has {@link PlayBorder}s that can be navigated via
  * {@link #getBorder(PlayDirection)} and also {@link #getField(PlayDirection)}.
  */
-public class PlayField extends PlayObjectWithColorAndTypeAndItems {
+public class PlayField extends PlayTypedObjectWithItems {
 
   private final PlayLevel level;
 
@@ -32,6 +33,8 @@ public class PlayField extends PlayObjectWithColorAndTypeAndItems {
   private PlayFieldType type;
 
   private PlayColor color;
+
+  private PlayPushItem pushItem;
 
   /**
    * The constructor.
@@ -74,6 +77,22 @@ public class PlayField extends PlayObjectWithColorAndTypeAndItems {
 
     assert (this.type == null);
     this.type = type;
+  }
+
+  /**
+   * @return the {@link PlayPushItem} that is on this {@link PlayField} or {@code null} if there is no such item here.
+   */
+  public PlayPushItem getPushItem() {
+
+    return this.pushItem;
+  }
+
+  /**
+   * @param pushItem the new value of {@link #getPushItem()}.
+   */
+  public void setPushItem(PlayPushItem pushItem) {
+
+    this.pushItem = pushItem;
   }
 
   /**

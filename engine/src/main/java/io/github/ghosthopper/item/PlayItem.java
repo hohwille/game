@@ -2,44 +2,31 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.item;
 
-import io.github.ghosthopper.PlayColor;
-import io.github.ghosthopper.PlayObjectWithColorAndType;
+import io.github.ghosthopper.color.PlayColor;
 import io.github.ghosthopper.game.PlayGame;
+import io.github.ghosthopper.object.PlayTypedObject;
 
 /**
  * An item of the {@link PlayGame} such as a key or a gem.
+ *
+ * @param <S> this {@link PlayItem} itself.
  */
-public class PlayItem extends PlayObjectWithColorAndType {
-
-  private final PlayItemType type;
+public abstract class PlayItem<S extends PlayItem<S>> extends PlayTypedObject implements PlayAttributeWeight<S> {
 
   /**
    * The constructor.
-   *
-   * @param type the {@link PlayItemType} of this item.
    */
-  public PlayItem(PlayItemType type) {
+  public PlayItem() {
     super();
-    this.type = type;
   }
 
   /**
    * The constructor.
    *
    * @param color - see {@link #getColor()}.
-   * @param type the {@link PlayItemType} of this item.
    */
-  public PlayItem(PlayColor color, PlayItemType type) {
+  public PlayItem(PlayColor color) {
     super(color);
-    this.type = type;
-  }
-
-  /**
-   * @return the {@link PlayItemType} of this {@link PlayItem}.
-   */
-  public PlayItemType getType() {
-
-    return this.type;
   }
 
 }

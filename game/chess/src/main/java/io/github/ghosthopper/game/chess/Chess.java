@@ -2,8 +2,8 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.game.chess;
 
-import io.github.ghosthopper.PlayColor;
 import io.github.ghosthopper.PlayLevel;
+import io.github.ghosthopper.color.PlayColor;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.figure.PlayFigureType;
@@ -15,17 +15,17 @@ import io.github.ghosthopper.player.Player;
  */
 public class Chess extends PlayGameSimple {
 
-  private static final PlayFigureType KING = new PlayFigureType("ChessKing", '♔');
+  private static final PlayFigureType KING = new PlayFigureType("ChessKing");
 
-  private static final PlayFigureType QUEEN = new PlayFigureType("ChessQueen", '♕');
+  private static final PlayFigureType QUEEN = new PlayFigureType("ChessQueen");
 
-  private static final PlayFigureType ROOK = new PlayFigureType("ChessRook", '♖');
+  private static final PlayFigureType ROOK = new PlayFigureType("ChessRook");
 
-  private static final PlayFigureType BISHOB = new PlayFigureType("ChessBishob", '♗');
+  private static final PlayFigureType BISHOB = new PlayFigureType("ChessBishob");
 
-  private static final PlayFigureType KNIGHT = new PlayFigureType("ChessKnight", '♘');
+  private static final PlayFigureType KNIGHT = new PlayFigureType("ChessKnight");
 
-  private static final PlayFigureType PAWN = new PlayFigureType("Pawn", '♙');
+  private static final PlayFigureType PAWN = new PlayFigureType("Pawn");
 
   private static final PlayFigureType[] FIGURE_TYPES = new PlayFigureType[] { //
       ROOK, KNIGHT, BISHOB, QUEEN, KING, BISHOB, KNIGHT, ROOK, //

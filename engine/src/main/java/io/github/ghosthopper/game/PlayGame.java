@@ -8,18 +8,40 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import io.github.ghosthopper.PlayDirection;
 import io.github.ghosthopper.PlayLevel;
-import io.github.ghosthopper.PlayObjectWithId;
+import io.github.ghosthopper.border.PlayBorder;
 import io.github.ghosthopper.border.PlayBorderType;
 import io.github.ghosthopper.field.PlayField;
+import io.github.ghosthopper.field.PlayFieldType;
+import io.github.ghosthopper.figure.PlayFigure;
+import io.github.ghosthopper.figure.PlayFigureType;
 import io.github.ghosthopper.i18n.PlayTranslator;
+import io.github.ghosthopper.item.PlayItem;
+import io.github.ghosthopper.item.PlayItemType;
+import io.github.ghosthopper.move.PlayDirection;
+import io.github.ghosthopper.object.PlayStateObjectWithId;
 import io.github.ghosthopper.player.Player;
 
 /**
- * This is the main object and represents an actual game with its rules.
+ * This is the main object and represents an actual game with its rules. To implement your own game, simply extend this
+ * class and implement/override according methods. You can e.g.
+ * <ul>
+ * <li>Decide for {@link #isTurnGame() turn game} (default) or action game.</li>
+ * <li>Define custom {@link PlayFigureType}s and reuse predefined ones.</li>
+ * <li>Define custom {@link PlayItemType}s and reuse predefined ones.</li>
+ * <li>Define custom {@link PlayFieldType}s and reuse predefined ones.</li>
+ * <li>{@link #getPlayers() Predefine} the {@link Player}s with their {@link PlayFigure}s based on the above types.</li>
+ * <li>{@link #createDirections() Define} custom {@link PlayDirection}s or use the predefined ones (see
+ * {@link #isSupportingDiagonalDirections()}).</li>
+ * <li>{@link #createFirstLevel() create} {@link PlayLevel}s with all the {@link PlayField}s typically as
+ * {@link #initLevelAsRectangular(PlayLevel, PlayDirection, int, PlayDirection, int, PlayBorderTypeStrategy) rectangular
+ * field}.</li>
+ * <li>Customize the {@link PlayBorder}s to create complex puzzle/riddle games.</li>
+ * <li>Place {@link PlayItem}s and {@link PlayFigure}s on the {@link PlayField}s.</li>
+ * <li>Implement a strategy to {@link #moveBotPlayer(Player) move bot players}.</li>
+ * </ul>
  */
-public class PlayGame extends PlayObjectWithId {
+public class PlayGame extends PlayStateObjectWithId {
 
   /** @see #getCurrentGame() */
   private static PlayGame currentGame = PlayGameNone.INSTANCE;
@@ -59,9 +81,36 @@ public class PlayGame extends PlayObjectWithId {
     return this;
   }
 
-  public void start() {
+  /**
+   * Starts this {@link PlayGame}.
+   */
+  public final void start() {
 
     currentGame = this;
+  }
+
+  /**
+   * Ends this {@link PlayGame}.
+   */
+  public final void end() {
+
+    currentGame = PlayGameNone.INSTANCE;
+  }
+
+  /**
+   * Loads the current game from the disc.
+   */
+  public void load() {
+
+    // TODO
+  }
+
+  /**
+   * Save the current game to the disc.
+   */
+  public void save() {
+
+    // TODO
   }
 
   /**

@@ -2,7 +2,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.player;
 
-import io.github.ghosthopper.PlayObjectType;
+import io.github.ghosthopper.object.PlayObjectType;
 
 /**
  * The type of a {@link Player}.

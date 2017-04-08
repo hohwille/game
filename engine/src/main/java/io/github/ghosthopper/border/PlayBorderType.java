@@ -1,14 +1,13 @@
 package io.github.ghosthopper.border;
 
-import io.github.ghosthopper.PlayDirection;
-import io.github.ghosthopper.PlayLevel;
-import io.github.ghosthopper.PlayObjectType;
 import io.github.ghosthopper.figure.PlayFigure;
+import io.github.ghosthopper.object.PlayObjectType;
 
 /**
  * The abstract class for the {@link PlayBorder#getType() type} of a {@link PlayBorder}.
- * {@link PlayBorder#canPass(PlayFigure)} delegates to {@link #canPass(PlayFigure, PlayBorder)} what makes the actual
- * decision according to this {@link PlayBorderType} and its potential state.
+ * {@link PlayBorder#canPass(PlayFigure)} and {@link PlayBorder#pass(PlayFigure)} delegate to
+ * {@link #canPass(PlayFigure, PlayBorder, boolean)} what makes the actual decision according to this
+ * {@link PlayBorderType} and its potential state.
  */
 public abstract class PlayBorderType extends PlayObjectType {
 
@@ -26,13 +25,11 @@ public abstract class PlayBorderType extends PlayObjectType {
    *
    * @param figure the {@link PlayFigure}.
    * @param border the {@link PlayBorder}.
+   * @param move {@code true} if the {@link PlayFigure} actually {@link PlayBorder#pass(PlayFigure) performs the move}
+   *        if possible, {@code false} otherwise (only to {@link PlayBorder#canPass(PlayFigure) check a simulated
+   *        move}).
    * @return {@code true} if the given {@link PlayFigure} can pass this border, {@code false} otherwise.
    */
-  public abstract boolean canPass(PlayFigure figure, PlayBorder border);
+  public abstract boolean canPass(PlayFigure figure, PlayBorder border, boolean move);
 
-  /**
-   * @param direction the {@link PlayDirection}. See {@link PlayBorder#getDirection()}.
-   * @return the character used to represent this {@link PlayBorderType} in ASCII-Art of the {@link PlayLevel}.
-   */
-  protected abstract char getAsciiArt(PlayDirection direction);
 }

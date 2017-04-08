@@ -5,16 +5,16 @@ import java.util.List;
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
-import io.github.ghosthopper.PlayColor;
-import io.github.ghosthopper.PlayDirection;
 import io.github.ghosthopper.PlayLevel;
+import io.github.ghosthopper.color.PlayColor;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.figure.PlayFigureType;
 import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.game.PlayGameNone;
-import io.github.ghosthopper.item.PlayItem;
-import io.github.ghosthopper.item.PlayItemType;
+import io.github.ghosthopper.item.PlayPickItem;
+import io.github.ghosthopper.item.PlayPickItemType;
+import io.github.ghosthopper.move.PlayDirection;
 import io.github.ghosthopper.player.Player;
 
 /**
@@ -22,9 +22,9 @@ import io.github.ghosthopper.player.Player;
  */
 public class PlayBorderTest extends Assertions {
 
-  private static final PlayFigureType MOUSE = new PlayFigureType("Mouse", 'M');
+  private static final PlayFigureType MOUSE = new PlayFigureType("Mouse");
 
-  private static final PlayFigureType RABBIT = new PlayFigureType("Rabbit", 'R');
+  private static final PlayFigureType RABBIT = new PlayFigureType("Rabbit");
 
   private static final PlayBorderType MOUSE_HOLE = PlayBorderTypeHole.get(MOUSE);
 
@@ -36,7 +36,7 @@ public class PlayBorderTest extends Assertions {
 
   private static final PlayFigure GREEN_RABBIT_FIGURE = GREEN_RABBIT.getFigures().get(0);
 
-  private static final PlayItem RED_KEY = new PlayItem(PlayColor.RED, PlayItemType.KEY);
+  private static final PlayPickItem RED_KEY = new PlayPickItem(PlayColor.RED, PlayPickItemType.KEY);
 
   /**
    * Test of {@link PlayBorder} with {@link PlayBorderTypeHole}.
@@ -48,8 +48,8 @@ public class PlayBorderTest extends Assertions {
     PlayBorder mouseHole = new PlayBorder(null, PlayDirection.RIGHT, null, MOUSE_HOLE);
 
     // when + then
-    assertThat(mouseHole.canPass(BLUE_MOUSE_FIGURE)).isTrue();
-    assertThat(mouseHole.canPass(GREEN_RABBIT_FIGURE)).isFalse();
+    assertThat(mouseHole.pass(BLUE_MOUSE_FIGURE)).isTrue();
+    assertThat(mouseHole.pass(GREEN_RABBIT_FIGURE)).isFalse();
   }
 
   /**
@@ -62,8 +62,8 @@ public class PlayBorderTest extends Assertions {
     PlayBorder wall = new PlayBorder(null, PlayDirection.RIGHT, null, PlayBorderTypeWall.get());
 
     // when + then
-    assertThat(wall.canPass(BLUE_MOUSE_FIGURE)).isFalse();
-    assertThat(wall.canPass(GREEN_RABBIT_FIGURE)).isFalse();
+    assertThat(wall.pass(BLUE_MOUSE_FIGURE)).isFalse();
+    assertThat(wall.pass(GREEN_RABBIT_FIGURE)).isFalse();
   }
 
   /**
@@ -76,8 +76,8 @@ public class PlayBorderTest extends Assertions {
     PlayBorder open = new PlayBorder(null, PlayDirection.RIGHT, null, PlayBorderTypeOpen.get());
 
     // when + then
-    assertThat(open.canPass(BLUE_MOUSE_FIGURE)).isTrue();
-    assertThat(open.canPass(GREEN_RABBIT_FIGURE)).isTrue();
+    assertThat(open.pass(BLUE_MOUSE_FIGURE)).isTrue();
+    assertThat(open.pass(GREEN_RABBIT_FIGURE)).isTrue();
   }
 
   /**
@@ -91,8 +91,8 @@ public class PlayBorderTest extends Assertions {
     PlayBorder open = new PlayBorder(null, PlayDirection.RIGHT, null, PlayBorderTypeDoor.get(RED_KEY));
 
     // when + then
-    assertThat(open.canPass(BLUE_MOUSE_FIGURE)).isTrue();
-    assertThat(open.canPass(GREEN_RABBIT_FIGURE)).isFalse();
+    assertThat(open.pass(BLUE_MOUSE_FIGURE)).isTrue();
+    assertThat(open.pass(GREEN_RABBIT_FIGURE)).isFalse();
   }
 
   /**
@@ -113,12 +113,12 @@ public class PlayBorderTest extends Assertions {
     PlayBorder open = new PlayBorder(sourceField, PlayDirection.RIGHT, targetField, PlayBorderTypeMagicDoor.get());
 
     // when + then
-    assertThat(open.canPass(GREEN_RABBIT_FIGURE)).isFalse();
+    assertThat(open.pass(GREEN_RABBIT_FIGURE)).isFalse();
     BLUE_MOUSE_FIGURE.setField(sourceField);
-    assertThat(open.canPass(BLUE_MOUSE_FIGURE)).isFalse();
+    assertThat(open.pass(BLUE_MOUSE_FIGURE)).isFalse();
     GREEN_RABBIT_FIGURE.setField(targetField);
-    assertThat(open.canPass(BLUE_MOUSE_FIGURE)).isTrue();
-    assertThat(open.canPass(GREEN_RABBIT_FIGURE)).isTrue();
+    assertThat(open.pass(BLUE_MOUSE_FIGURE)).isTrue();
+    assertThat(open.pass(GREEN_RABBIT_FIGURE)).isTrue();
   }
 
 }

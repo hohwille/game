@@ -2,9 +2,9 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.game;
 
-import io.github.ghosthopper.PlayDirection;
 import io.github.ghosthopper.PlayLevel;
 import io.github.ghosthopper.field.PlayField;
+import io.github.ghosthopper.move.PlayDirection;
 import io.github.ghosthopper.player.Player;
 
 /**

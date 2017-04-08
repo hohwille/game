@@ -1,12 +1,12 @@
 package io.github.ghosthopper.border;
 
-import io.github.ghosthopper.PlayDirection;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.figure.PlayFigure;
 
 /**
- * A {@link PlayBorderType} that is a magic door so every {@link PlayFigure} {@link #canPass(PlayFigure, PlayBorder) can
- * always pass through}.
+ * A {@link PlayBorderType} that is a magic door that {@link #canPass(PlayFigure, PlayBorder, boolean) can only be
+ * passed} after it has been opened. Therefore a {@link PlayFigure} has to
+ * {@link #canPass(PlayFigure, PlayBorder, boolean) pass} whilst another {@link PlayFigure} is on the other side.
  */
 public class PlayBorderTypeMagicDoor extends PlayBorderType {
 
@@ -16,27 +16,34 @@ public class PlayBorderTypeMagicDoor extends PlayBorderType {
     super("MagicDoor");
   }
 
+  /**
+   * @return {@code true} if open, {@code false} otherwise (closed).
+   */
+  public boolean isOpen() {
+
+    return this.open;
+  }
+
   @Override
-  public boolean canPass(PlayFigure figure, PlayBorder border) {
+  public boolean canPass(PlayFigure figure, PlayBorder border, boolean move) {
 
     if (this.open) {
       return true;
+    }
+    if (figure == null) {
+      return false;
     }
     PlayField sourceField = border.getSourceField();
     if ((sourceField != null) && sourceField.hasHumanFigure()) {
       PlayField targetField = border.getTargetField();
       if ((targetField != null) && targetField.hasHumanFigure()) {
-        this.open = true;
+        if (move) {
+          this.open = true;
+        }
         return true;
       }
     }
     return false;
-  }
-
-  @Override
-  protected char getAsciiArt(PlayDirection direction) {
-
-    return 'D';
   }
 
   /**

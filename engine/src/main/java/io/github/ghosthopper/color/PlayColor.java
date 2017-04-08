@@ -1,8 +1,9 @@
 /* Copyright (c) The m-m-m Team, Licensed under the Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0 */
-package io.github.ghosthopper;
+package io.github.ghosthopper.color;
 
 import io.github.ghosthopper.figure.PlayFigureType;
+import io.github.ghosthopper.object.PlayObjectWithId;
 import io.github.ghosthopper.player.Player;
 
 /**

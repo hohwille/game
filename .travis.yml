@@ -1,0 +1,22 @@
+language: java
+
+jdk:
+  - oraclejdk8
+
+script: mvn install
+
+sudo: false
+
+cache:
+  directories:
+    - $HOME/.m2
+
+branches:
+  except:
+    - gh-pages
+
+notifications:
+  email:
+    - franz9jh@gmail.com
+    - joerg.hohwiller@googlemail.com
+    - joelle368@gmail.com

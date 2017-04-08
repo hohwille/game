@@ -1,11 +1,10 @@
 package io.github.ghosthopper.border;
 
-import io.github.ghosthopper.PlayDirection;
 import io.github.ghosthopper.figure.PlayFigure;
 
 /**
- * A {@link PlayBorderType} that is an open gate so no {@link PlayFigure} {@link #canPass(PlayFigure, PlayBorder) can
- * ever pass through}.
+ * A {@link PlayBorderType} that is an open gate so no {@link PlayFigure}
+ * {@link #canPass(PlayFigure, PlayBorder, boolean) can ever pass through}.
  */
 public class PlayBorderTypeWall extends PlayBorderType {
 
@@ -16,7 +15,7 @@ public class PlayBorderTypeWall extends PlayBorderType {
   }
 
   @Override
-  public boolean canPass(PlayFigure player, PlayBorder border) {
+  public boolean canPass(PlayFigure figure, PlayBorder border, boolean move) {
 
     return false;
   }
@@ -27,16 +26,6 @@ public class PlayBorderTypeWall extends PlayBorderType {
   public static PlayBorderTypeWall get() {
 
     return INSTANCE;
-  }
-
-  @Override
-  protected char getAsciiArt(PlayDirection direction) {
-
-    if (direction == PlayDirection.RIGHT) {
-      return '|';
-    } else {
-      return '-';
-    }
   }
 
 }

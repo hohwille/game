@@ -2,13 +2,15 @@ package io.github.ghosthopper;
 
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.game.PlayGame;
+import io.github.ghosthopper.move.PlayDirection;
+import io.github.ghosthopper.object.PlayStateObjectWithId;
 import io.github.ghosthopper.player.Player;
 
 /**
  * The {@link PlayLevel} represents a level or stage of a {@link #getGame() game}. It contains the
  * {@link #getStartField() start field} that is connected with all other {@link PlayField}s.
  */
-public class PlayLevel extends PlayObjectWithId {
+public class PlayLevel extends PlayStateObjectWithId {
 
   private final PlayGame game;
 

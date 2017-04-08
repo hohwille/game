@@ -8,6 +8,7 @@ package io.github.ghosthopper.game;
  */
 public class PlayGameNone extends PlayGame {
 
+  /** {@link #getId() ID} of {@link PlayGameNone}. */
   public static final String ID = "None";
 
   /** The singleton instance. */
@@ -18,6 +19,7 @@ public class PlayGameNone extends PlayGame {
    */
   public PlayGameNone() {
     super(ID);
+    start();
   }
 
 }

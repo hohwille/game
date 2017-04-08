@@ -1,19 +1,30 @@
 /* Copyright (c) The m-m-m Team, Licensed under the Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0 */
-package io.github.ghosthopper;
+package io.github.ghosthopper.object;
+
+import io.github.ghosthopper.color.PlayAttributeColor;
+import io.github.ghosthopper.color.PlayColor;
+import io.github.ghosthopper.properties.PlayProperties;
 
 /**
- * This is the abstract base class for an object that optionally can have a {@link #getColor() color}.
+ * This is the abstract base class for an object that has a {@link #getType() type} and optionally a {@link #getColor()
+ * color}.
  */
-public abstract class PlayObjectWithColorAndType extends PlayObject implements PlayAttributeColor {
+public abstract class PlayTypedObject extends PlayStateObject implements PlayAttributeColor {
 
   private PlayColor color;
 
   /**
    * The constructor.
    */
-  public PlayObjectWithColorAndType() {
+  public PlayTypedObject() {
     super();
+  }
+
+  @Override
+  protected PlayProperties createProperties() {
+
+    return new PlayProperties(getType().getProperties());
   }
 
   /**
@@ -21,7 +32,7 @@ public abstract class PlayObjectWithColorAndType extends PlayObject implements P
    *
    * @param color - see {@link #getColor()}.
    */
-  public PlayObjectWithColorAndType(PlayColor color) {
+  public PlayTypedObject(PlayColor color) {
     super();
     this.color = color;
   }

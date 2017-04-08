@@ -1,11 +1,11 @@
 /* Copyright (c) The m-m-m Team, Licensed under the Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0 */
-package io.github.ghosthopper;
+package io.github.ghosthopper.object;
 
 /**
  * Abstract base class for an object type.
  */
-public abstract class PlayObjectType extends PlayObjectWithId {
+public abstract class PlayObjectType extends PlayStateObjectWithId {
 
   /**
    * The constructor.

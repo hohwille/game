@@ -1,13 +1,14 @@
 /* Copyright (c) The m-m-m Team, Licensed under the Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0 */
-package io.github.ghosthopper;
+package io.github.ghosthopper.object;
 
 import java.util.Locale;
+import java.util.Objects;
 
 import io.github.ghosthopper.game.PlayGame;
 
 /**
- * This is the interface for any object of this game.
+ * This is the abstract base class for any object of this game.
  */
 public abstract class PlayObject {
 
@@ -23,7 +24,9 @@ public abstract class PlayObject {
    */
   public PlayGame getGame() {
 
-    return PlayGame.getCurrentGame();
+    PlayGame game = PlayGame.getCurrentGame();
+    Objects.requireNonNull(game, "game");
+    return game;
   }
 
   /**

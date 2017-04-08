@@ -1,39 +1,35 @@
 package io.github.ghosthopper.border;
 
-import io.github.ghosthopper.PlayDirection;
 import io.github.ghosthopper.figure.PlayFigure;
-import io.github.ghosthopper.item.PlayItem;
+import io.github.ghosthopper.item.PlayPickItem;
 
 /**
- * A {@link PlayBorderType} that is a magic door so every {@link PlayFigure} {@link #canPass(PlayFigure, PlayBorder) can
- * always pass through}.
+ * A {@link PlayBorderType} that is a door that {@link #canPass(PlayFigure, PlayBorder, boolean) can only be passed} by
+ * {@link PlayFigure}s having the proper key.
  */
 public class PlayBorderTypeDoor extends PlayBorderType {
 
-  private final PlayItem key;
+  private final PlayPickItem key;
 
-  private PlayBorderTypeDoor(PlayItem key) {
+  private PlayBorderTypeDoor(PlayPickItem key) {
     super("Door");
     this.key = key;
   }
 
   @Override
-  public boolean canPass(PlayFigure figure, PlayBorder border) {
+  public boolean canPass(PlayFigure figure, PlayBorder border, boolean move) {
 
+    if (figure == null) {
+      return false;
+    }
     return figure.getItems().contains(this.key);
-  }
-
-  @Override
-  protected char getAsciiArt(PlayDirection direction) {
-
-    return 'D';
   }
 
   /**
    * @param key the key required to open this door.
    * @return an instance of this border type.
    */
-  public static PlayBorderTypeDoor get(PlayItem key) {
+  public static PlayBorderTypeDoor get(PlayPickItem key) {
 
     return new PlayBorderTypeDoor(key);
   }

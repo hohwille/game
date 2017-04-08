@@ -1,11 +1,11 @@
 /* Copyright (c) The m-m-m Team, Licensed under the Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0 */
-package io.github.ghosthopper;
+package io.github.ghosthopper.object;
 
 /**
- * Abstract base class for any object of this game that can be identified by and {@link #getId() ID}.
+ * A {@link PlayStateObject} that can be identified by and {@link #getId() ID}.
  */
-public abstract class PlayObjectWithId extends PlayObject {
+public abstract class PlayStateObjectWithId extends PlayStateObject {
 
   private final String id;
 
@@ -14,7 +14,7 @@ public abstract class PlayObjectWithId extends PlayObject {
    *
    * @param id - see {@link #getId()}.
    */
-  public PlayObjectWithId(String id) {
+  public PlayStateObjectWithId(String id) {
     super();
     this.id = id;
   }

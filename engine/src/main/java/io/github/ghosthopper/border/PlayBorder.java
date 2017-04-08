@@ -1,18 +1,17 @@
 package io.github.ghosthopper.border;
 
-import io.github.ghosthopper.PlayDirection;
-import io.github.ghosthopper.PlayLevel;
-import io.github.ghosthopper.PlayObjectWithColorAndType;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.game.PlayGame;
+import io.github.ghosthopper.move.PlayDirection;
+import io.github.ghosthopper.object.PlayTypedObject;
 
 /**
  * A {@link PlayBorder} connects two {@link PlayField}s. A {@link #getSourceField() source field} is leading in the
  * {@link #getDirection() direction} towards the {@link #getTargetField() target field}. The {@link PlayBorder} has a
  * {@link #getType() type} that decides if a figure {@link #canPass(PlayFigure) can pass} the border.
  */
-public class PlayBorder extends PlayObjectWithColorAndType {
+public class PlayBorder extends PlayTypedObject {
 
   private final PlayField sourceField;
 
@@ -113,20 +112,29 @@ public class PlayBorder extends PlayObjectWithColorAndType {
   }
 
   /**
-   * @param figure the {@link PlayFigure}.
+   * Unlike {@link #pass(PlayFigure)} this method only checks if the {@link PlayFigure} can potentially pass this
+   * {@link PlayBorder} without changing its state.
+   *
+   * @param figure the {@link PlayFigure}. May be {@code null} to check if anything can pass.
    * @return {@code true} if the given {@link PlayFigure} can pass this border, {@code false} otherwise.
    */
   public boolean canPass(PlayFigure figure) {
 
-    return this.type.canPass(figure, this);
+    return this.type.canPass(figure, this, false);
   }
 
   /**
-   * @return the character used to represent this {@link PlayBorderType} in ASCII-Art of the {@link PlayLevel}.
+   * Unlike {@link #canPass(PlayFigure)} this method actually lets the {@link PlayFigure} pass this {@link PlayBorder}
+   * what may change its state (or more precisely the state of its {@link #getType() type}).
+   *
+   * @param figure the {@link PlayFigure} to {@link PlayFigure#move() move}.
+   * @return {@code true} if the given {@link PlayFigure} passed this border, {@code false} otherwise (figure was
+   *         blocked and move has to be cancelled).
    */
-  protected char getAsciiArt() {
+  public boolean pass(PlayFigure figure) {
 
-    return this.type.getAsciiArt(this.direction);
+    assert (figure != null);
+    return this.type.canPass(figure, this, true);
   }
 
   /**

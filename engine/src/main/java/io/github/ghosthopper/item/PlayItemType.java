@@ -2,18 +2,15 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.item;
 
-import io.github.ghosthopper.PlayObjectType;
+import io.github.ghosthopper.object.PlayObjectType;
 
 /**
- * The {@link PlayItem#getType() type} of a {@link PlayItem}. Such as
+ * The {@link PlayItem#getType() type} of a {@link PlayItem}. It is either a {@link PlayPickItemType} or a
+ * {@link PlayPushItemType}.
+ *
+ * @param <S> this {@link PlayItemType} itself.
  */
-public class PlayItemType extends PlayObjectType {
-
-  /** A key to open doors. */
-  public static final PlayItemType KEY = new PlayItemType("Key");
-
-  /** A key to open doors. */
-  public static final PlayItemType GEM = new PlayItemType("Gem");
+public abstract class PlayItemType<S extends PlayItemType<S>> extends PlayObjectType implements PlayAttributeWeight<S> {
 
   /**
    * The constructor.

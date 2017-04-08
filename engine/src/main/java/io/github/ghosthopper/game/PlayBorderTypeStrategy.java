@@ -2,10 +2,10 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.game;
 
-import io.github.ghosthopper.PlayDirection;
 import io.github.ghosthopper.border.PlayBorder;
 import io.github.ghosthopper.border.PlayBorderType;
 import io.github.ghosthopper.field.PlayField;
+import io.github.ghosthopper.move.PlayDirection;
 
 /**
  * {@link FunctionalInterface} for the strategy that decides about the {@link PlayBorder#getType() types} of the

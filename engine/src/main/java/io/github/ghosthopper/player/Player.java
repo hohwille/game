@@ -5,17 +5,17 @@ package io.github.ghosthopper.player;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.ghosthopper.PlayColor;
-import io.github.ghosthopper.PlayObjectType;
-import io.github.ghosthopper.PlayObjectWithColorAndTypeAndItems;
+import io.github.ghosthopper.color.PlayColor;
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.figure.PlayFigureType;
 import io.github.ghosthopper.game.PlayGame;
+import io.github.ghosthopper.object.PlayObjectType;
+import io.github.ghosthopper.object.PlayTypedObjectWithItems;
 
 /**
  * A {@link Player} of the {@link PlayGame}.
  */
-public class Player extends PlayObjectWithColorAndTypeAndItems {
+public class Player extends PlayTypedObjectWithItems {
 
   private final List<PlayFigure> figures;
 

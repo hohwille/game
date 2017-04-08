@@ -5,13 +5,12 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import io.github.ghosthopper.PlayDirection;
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.figure.PlayFigureType;
 
 /**
  * A {@link PlayBorderType} that is a hole where only {@link PlayFigure}s of specific {@link PlayFigure#getType() types}
- * {@link #canPass(PlayFigure, PlayBorder) can pass through}.
+ * {@link #canPass(PlayFigure, PlayBorder, boolean) can pass through}.
  */
 public class PlayBorderTypeHole extends PlayBorderType {
 
@@ -23,25 +22,22 @@ public class PlayBorderTypeHole extends PlayBorderType {
   }
 
   @Override
-  public boolean canPass(PlayFigure player, PlayBorder border) {
+  public boolean canPass(PlayFigure figure, PlayBorder border, boolean move) {
 
-    return this.figureTypes.contains(player.getType());
+    if (figure == null) {
+      return false;
+    }
+    return this.figureTypes.contains(figure.getType());
   }
 
   /**
-   * @param figureTypes the {@link PlayFigureType}s that are allowed to {@link #canPass(PlayFigure, PlayBorder) pass
-   *        through}.
+   * @param figureTypes the {@link PlayFigureType}s that are allowed to {@link #canPass(PlayFigure, PlayBorder, boolean)
+   *        pass through}.
    * @return an instance of this border type.
    */
   public static final PlayBorderTypeHole get(PlayFigureType... figureTypes) {
 
     return new PlayBorderTypeHole(figureTypes);
-  }
-
-  @Override
-  protected char getAsciiArt(PlayDirection direction) {
-
-    return Character.toLowerCase(this.figureTypes.iterator().next().getAsciiArt());
   }
 
 }

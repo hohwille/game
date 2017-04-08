@@ -10,11 +10,11 @@ import io.github.ghosthopper.player.Player;
  */
 public class Ghosty extends PlayGameSimple {
 
-  public static final PlayFigureType MOUSE = new PlayFigureType("Mouse", 'M');
+  public static final PlayFigureType MOUSE = new PlayFigureType("Mouse");
 
-  public static final PlayFigureType RABBIT = new PlayFigureType("Rabbit", 'R');
+  public static final PlayFigureType RABBIT = new PlayFigureType("Rabbit");
 
-  public static final PlayFigureType GHOST = new PlayFigureType("Ghost", ' ', true);
+  public static final PlayFigureType GHOST = new PlayFigureType("Ghost", true);
 
   public static final PlayBorderTypeHole MOUSE_HOLE = PlayBorderTypeHole.get(MOUSE);
 
