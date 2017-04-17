@@ -12,13 +12,13 @@ import io.github.ghosthopper.object.PlayObjectType;
 public class PlayFieldType extends PlayObjectType {
 
   /** Type of a normal/regular {@link PlayField}. */
-  public static final PlayFieldType NORMAL = new PlayFieldType("FieldNormal");
+  public static final PlayFieldType NORMAL = new PlayFieldType("Normal");
 
   /** Type of a {@link PlayField} with a pit (player falls down or dies). */
-  public static final PlayFieldType PIT = new PlayFieldType("FieldPit");
+  public static final PlayFieldType PIT = new PlayFieldType("Pit");
 
   /** Type of a {@link PlayField} that is an exit (level completed). */
-  public static final PlayFieldType EXIT = new PlayFieldType("FieldExit");
+  public static final PlayFieldType EXIT = new PlayFieldType("Exit");
 
   /**
    * The constructor.
@@ -27,6 +27,12 @@ public class PlayFieldType extends PlayObjectType {
    */
   public PlayFieldType(String id) {
     super(id);
+  }
+
+  @Override
+  public String getTypeName() {
+
+    return "Field";
   }
 
   /**

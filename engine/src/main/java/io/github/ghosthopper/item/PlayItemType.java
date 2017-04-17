@@ -21,4 +21,10 @@ public abstract class PlayItemType<S extends PlayItemType<S>> extends PlayObject
     super(id);
   }
 
+  @Override
+  public String getTypeName() {
+
+    return "Item";
+  }
+
 }

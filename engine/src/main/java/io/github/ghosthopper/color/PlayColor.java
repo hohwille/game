@@ -12,34 +12,37 @@ import io.github.ghosthopper.player.Player;
 public class PlayColor extends PlayObjectWithId {
 
   /** Red. */
-  public static final PlayColor RED = new PlayColor("Red", 255, 0, 0);
+  public static final PlayColor RED = new PlayColor("Red", 1, 0, 0);
 
   /** Green. */
-  public static final PlayColor GREEN = new PlayColor("Green", 0, 255, 0);
+  public static final PlayColor GREEN = new PlayColor("Green", 0, 1, 0);
 
   /** Blue. */
-  public static final PlayColor BLUE = new PlayColor("Blue", 0, 0, 255);
+  public static final PlayColor BLUE = new PlayColor("Blue", 0, 0, 1);
 
   /** Yellow. */
-  public static final PlayColor YELLOW = new PlayColor("Yellow", 255, 255, 0);
+  public static final PlayColor YELLOW = new PlayColor("Yellow", 1, 1, 0);
 
   /** Cyan. */
-  public static final PlayColor CYAN = new PlayColor("Cyan", 0, 255, 255);
+  public static final PlayColor CYAN = new PlayColor("Cyan", 0, 1, 1);
 
   /** Magenta. */
-  public static final PlayColor MAGENTA = new PlayColor("Magenta", 255, 0, 255);
+  public static final PlayColor MAGENTA = new PlayColor("Magenta", 1, 0, 1);
 
   /** White. */
-  public static final PlayColor WHITE = new PlayColor("White", 255, 255, 255);
+  public static final PlayColor WHITE = new PlayColor("White", 1, 1, 1);
+
+  /** Grey. */
+  public static final PlayColor GREY = new PlayColor("Grey", 0.5, 0.5, 0.5);
 
   /** Black. */
   public static final PlayColor BLACK = new PlayColor("Black", 0, 0, 0);
 
-  private final int red;
+  private final double red;
 
-  private final int green;
+  private final double green;
 
-  private final int blue;
+  private final double blue;
 
   /**
    * The constructor.
@@ -49,17 +52,27 @@ public class PlayColor extends PlayObjectWithId {
    * @param green - see {@link #getGreen()}.
    * @param blue - see {@link #getBlue()}.
    */
-  public PlayColor(String id, int red, int green, int blue) {
+  public PlayColor(String id, double red, double green, double blue) {
     super(id);
+    checkValue(red, "red");
+    checkValue(green, "green");
+    checkValue(blue, "blue");
     this.red = red;
     this.green = green;
     this.blue = blue;
   }
 
+  private static void checkValue(double v, String name) {
+
+    if ((v < 0) || (v > 1)) {
+      throw new IllegalArgumentException(name + " value of color is " + v + " but has to be in the range from 0 to 1");
+    }
+  }
+
   /**
    * @return the red part of the color.
    */
-  public int getRed() {
+  public double getRed() {
 
     return this.red;
   }
@@ -67,7 +80,7 @@ public class PlayColor extends PlayObjectWithId {
   /**
    * @return the green part of the color.
    */
-  public int getGreen() {
+  public double getGreen() {
 
     return this.green;
   }
@@ -75,7 +88,7 @@ public class PlayColor extends PlayObjectWithId {
   /**
    * @return the blue part of the color.
    */
-  public int getBlue() {
+  public double getBlue() {
 
     return this.blue;
   }

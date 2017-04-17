@@ -2,6 +2,9 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.properties;
 
+import io.github.ghosthopper.color.PlayColor;
+import io.github.ghosthopper.field.PlayField;
+import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.player.Player;
 
@@ -16,6 +19,9 @@ public class PlayPropertyKey<T> implements PlayProperty<T> {
 
   /** The {@link PlayPropertyKey} for the <em>score</em> of an object (e.g. {@link Player}). */
   public static final PlayProperty<Double> SCORE = new PlayPropertyKey<>("Score");
+
+  /** The {@link PlayPropertyKey} for the <em>color</em> of an object (e.g. {@link PlayField} or {@link PlayFigure}). */
+  public static final PlayProperty<PlayColor> COLOR = new PlayPropertyKey<>("Color");
 
   /** The {@link PlayPropertyKey} for the <em>score</em> of an object (e.g. {@link Player}). */
   public static final PlayProperty<Character> ASCII = new PlayPropertyKey<>("Ascii", Character.valueOf(' '));

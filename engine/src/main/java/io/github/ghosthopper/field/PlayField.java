@@ -11,7 +11,6 @@ import io.github.ghosthopper.PlayLevel;
 import io.github.ghosthopper.border.PlayBorder;
 import io.github.ghosthopper.border.PlayBorderType;
 import io.github.ghosthopper.border.PlayBorderTypeWall;
-import io.github.ghosthopper.color.PlayColor;
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.item.PlayPushItem;
@@ -31,8 +30,6 @@ public class PlayField extends PlayTypedObjectWithItems {
   private final Map<PlayDirection, PlayBorder> direction2borderMap;
 
   private PlayFieldType type;
-
-  private PlayColor color;
 
   private PlayPushItem pushItem;
 
@@ -142,21 +139,6 @@ public class PlayField extends PlayTypedObjectWithItems {
   public boolean hasHumanFigure() {
 
     return !getCurrentFigures(x -> x.isHuman()).isEmpty();
-  }
-
-  @Override
-  public PlayColor getColor() {
-
-    return this.color;
-  }
-
-  /**
-   * @param color the new value of {@link #getColor()}.
-   */
-  @Override
-  public void setColor(PlayColor color) {
-
-    this.color = color;
   }
 
   /**
@@ -280,8 +262,16 @@ public class PlayField extends PlayTypedObjectWithItems {
   public void createWall(PlayDirection direction) {
 
     assert !direction.isCombined();
-    PlayBorder border = PlayBorder.of(this, direction, null, PlayBorderTypeWall.get());
-    setBorder(border, direction);
+    PlayBorder border = this.direction2borderMap.get(direction);
+    if (border == null) {
+      border = PlayBorder.of(this, direction, null, PlayBorderTypeWall.get());
+      setBorder(border, direction);
+    } else {
+      if (!(border.getType() instanceof PlayBorderTypeWall)) {
+        throw new IllegalStateException(
+            "Border in direction " + direction + " already existed as " + border + " and cannot be replaced with " + PlayBorderTypeWall.get());
+      }
+    }
   }
 
   private void setBorder(PlayBorder border, PlayDirection direction) {

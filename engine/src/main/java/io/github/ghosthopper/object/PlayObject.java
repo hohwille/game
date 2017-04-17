@@ -32,7 +32,7 @@ public abstract class PlayObject {
   /**
    * @return the ID of this item used to find corresponding graphics or audio information.
    */
-  protected abstract String getId();
+  public abstract String getId();
 
   /**
    * @return the localized name of this object.
@@ -49,6 +49,12 @@ public abstract class PlayObject {
   public String getLocalizedName(Locale locale) {
 
     return getGame().getTranslator().translate(getId(), locale);
+  }
+
+  @Override
+  public String toString() {
+
+    return getId();
   }
 
 }

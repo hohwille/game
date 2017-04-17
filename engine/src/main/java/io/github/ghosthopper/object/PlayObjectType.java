@@ -16,4 +16,9 @@ public abstract class PlayObjectType extends PlayStateObjectWithId {
     super(id);
   }
 
+  /**
+   * @return the name of this type.
+   */
+  public abstract String getTypeName();
+
 }

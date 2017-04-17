@@ -3,6 +3,7 @@ package io.github.ghosthopper.border;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.game.PlayGame;
+import io.github.ghosthopper.move.PlayAttributeDirection;
 import io.github.ghosthopper.move.PlayDirection;
 import io.github.ghosthopper.object.PlayTypedObject;
 
@@ -11,7 +12,7 @@ import io.github.ghosthopper.object.PlayTypedObject;
  * {@link #getDirection() direction} towards the {@link #getTargetField() target field}. The {@link PlayBorder} has a
  * {@link #getType() type} that decides if a figure {@link #canPass(PlayFigure) can pass} the border.
  */
-public class PlayBorder extends PlayTypedObject {
+public class PlayBorder extends PlayTypedObject implements PlayAttributeDirection {
 
   private final PlayField sourceField;
 
@@ -106,6 +107,7 @@ public class PlayBorder extends PlayTypedObject {
    * @return the {@link PlayDirection}. Should be {@link PlayDirection#isNatural() natural} and not
    *         {@link PlayDirection#isCombined() combined}.
    */
+  @Override
   public PlayDirection getDirection() {
 
     return this.direction;

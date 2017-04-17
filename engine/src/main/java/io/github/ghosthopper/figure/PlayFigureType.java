@@ -36,6 +36,12 @@ public class PlayFigureType extends PlayObjectType {
     this.invisible = invisible;
   }
 
+  @Override
+  public String getTypeName() {
+
+    return "Figure";
+  }
+
   /**
    * @return {@code true} if the figure is invisible, {@code false} otherwise.
    */

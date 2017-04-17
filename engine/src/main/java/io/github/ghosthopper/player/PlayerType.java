@@ -23,4 +23,10 @@ public class PlayerType extends PlayObjectType {
     super(id);
   }
 
+  @Override
+  public String getTypeName() {
+
+    return "Player";
+  }
+
 }

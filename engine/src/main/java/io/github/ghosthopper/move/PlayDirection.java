@@ -17,16 +17,16 @@ import io.github.ghosthopper.object.PlayObjectWithId;
 public class PlayDirection extends PlayObjectWithId {
 
   /** {@link PlayDirection} moving to the left (west). */
-  public static final PlayDirection LEFT = new PlayDirection("left");
+  public static final PlayDirection LEFT = new PlayDirection("Left");
 
   /** {@link PlayDirection} moving upwards (north, to top). */
-  public static final PlayDirection UP = new PlayDirection("up");
+  public static final PlayDirection UP = new PlayDirection("Up");
 
   /** {@link PlayDirection} moving to the right (east). */
-  public static final PlayDirection RIGHT = new PlayDirection("right");
+  public static final PlayDirection RIGHT = new PlayDirection("Right");
 
   /** {@link PlayDirection} moving downwards (south, to bottom). */
-  public static final PlayDirection DOWN = new PlayDirection("down");
+  public static final PlayDirection DOWN = new PlayDirection("Down");
 
   /** {@link PlayDirection} moving {@link #UP} and {@link #LEFT} (diagonal). */
   public static final PlayDirection UP_LEFT = new PlayDirection(UP, LEFT);

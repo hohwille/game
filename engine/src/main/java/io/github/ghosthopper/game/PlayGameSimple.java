@@ -4,7 +4,6 @@ package io.github.ghosthopper.game;
 
 import io.github.ghosthopper.PlayLevel;
 import io.github.ghosthopper.field.PlayField;
-import io.github.ghosthopper.move.PlayDirection;
 import io.github.ghosthopper.player.Player;
 
 /**
@@ -34,7 +33,7 @@ public abstract class PlayGameSimple extends PlayGame {
   protected PlayLevel createFirstLevel() {
 
     PlayLevel level = new PlayLevel("Level 1", this);
-    initLevelAsRectangular(level, PlayDirection.RIGHT, this.width, PlayDirection.DOWN, this.height, getBorderStrategy());
+    initLevelAsRectangular(level, this.width, this.height, getBorderStrategy());
     return level;
   }
 

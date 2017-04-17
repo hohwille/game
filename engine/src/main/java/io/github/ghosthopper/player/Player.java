@@ -34,8 +34,7 @@ public class Player extends PlayTypedObjectWithItems {
    * @param figureTypes - see {@link #getFigures()}.
    */
   public Player(PlayColor color, PlayFigureType... figureTypes) {
-    this("Player " + color.getId(), true, PlayerType.DEFAULT, figureTypes);
-    setColor(color);
+    this(color, "Player " + color.getId(), true, PlayerType.DEFAULT, figureTypes);
   }
 
   /**
@@ -45,25 +44,33 @@ public class Player extends PlayTypedObjectWithItems {
    * @param figureTypes - see {@link #getFigures()}.
    */
   public Player(String name, PlayFigureType... figureTypes) {
-    this(name, true, PlayerType.DEFAULT, figureTypes);
+    this(null, name, true, PlayerType.DEFAULT, figureTypes);
   }
 
   /**
    * The constructor.
    *
+   * @param color - see {@link #getColor()}.
    * @param name - see {@link #getName()}.
    * @param human - see {@link #isHuman()}.
    * @param type - see {@link #getType()}.
    * @param figureTypes - see {@link #getFigures()}.
    */
-  public Player(String name, boolean human, PlayerType type, PlayFigureType... figureTypes) {
+  public Player(PlayColor color, String name, boolean human, PlayerType type, PlayFigureType... figureTypes) {
     super();
     this.name = name;
     this.human = human;
     this.type = type;
     this.figures = new ArrayList<>();
+    if (color != null) {
+      setColor(color);
+    }
     for (PlayFigureType figureType : figureTypes) {
-      this.figures.add(new PlayFigure(this, figureType));
+      PlayFigure figure = new PlayFigure(this, figureType);
+      if (color != null) {
+        figure.setColor(color);
+      }
+      this.figures.add(figure);
     }
   }
 

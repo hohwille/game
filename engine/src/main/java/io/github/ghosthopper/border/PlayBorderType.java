@@ -20,6 +20,12 @@ public abstract class PlayBorderType extends PlayObjectType {
     super(id);
   }
 
+  @Override
+  public String getTypeName() {
+
+    return "Border";
+  }
+
   /**
    * @see PlayBorder#canPass(PlayFigure)
    *

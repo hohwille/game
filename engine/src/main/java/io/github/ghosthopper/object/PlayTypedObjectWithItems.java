@@ -5,7 +5,6 @@ package io.github.ghosthopper.object;
 import java.util.ArrayList;
 import java.util.List;
 
-import io.github.ghosthopper.color.PlayColor;
 import io.github.ghosthopper.item.PlayPickItem;
 
 /**
@@ -19,16 +18,7 @@ public abstract class PlayTypedObjectWithItems extends PlayTypedObject {
    * The constructor.
    */
   public PlayTypedObjectWithItems() {
-    this(null);
-  }
-
-  /**
-   * The constructor.
-   *
-   * @param color - see {@link #getColor()}.
-   */
-  public PlayTypedObjectWithItems(PlayColor color) {
-    super(color);
+    super();
     this.items = new ArrayList<>();
   }
 

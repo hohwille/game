@@ -34,8 +34,7 @@ import io.github.ghosthopper.player.Player;
  * <li>{@link #createDirections() Define} custom {@link PlayDirection}s or use the predefined ones (see
  * {@link #isSupportingDiagonalDirections()}).</li>
  * <li>{@link #createFirstLevel() create} {@link PlayLevel}s with all the {@link PlayField}s typically as
- * {@link #initLevelAsRectangular(PlayLevel, PlayDirection, int, PlayDirection, int, PlayBorderTypeStrategy) rectangular
- * field}.</li>
+ * {@link #initLevelAsRectangular(PlayLevel, int, int, PlayBorderTypeStrategy) rectangular field}.</li>
  * <li>Customize the {@link PlayBorder}s to create complex puzzle/riddle games.</li>
  * <li>Place {@link PlayItem}s and {@link PlayFigure}s on the {@link PlayField}s.</li>
  * <li>Implement a strategy to {@link #moveBotPlayer(Player) move bot players}.</li>
@@ -55,6 +54,8 @@ public class PlayGame extends PlayStateObjectWithId {
   private PlayLevel currentLevel;
 
   private Set<PlayDirection> directions;
+
+  private boolean paused;
 
   /**
    * The constructor.
@@ -87,6 +88,37 @@ public class PlayGame extends PlayStateObjectWithId {
   public final void start() {
 
     currentGame = this;
+  }
+
+  /**
+   * @return {@code true} if this game is currently active (it is the {@link #getCurrentGame() current game} and is not
+   *         {@link #isPaused() paused} or over).
+   */
+  public boolean isActive() {
+
+    if (currentGame != this) {
+      return false;
+    }
+    if (this.paused) {
+      return false;
+    }
+    return true;
+  }
+
+  /**
+   * @return {@code true} if {@link #pause() paused}, {@code false} otherwise.
+   */
+  public boolean isPaused() {
+
+    return this.paused;
+  }
+
+  public void pause() {
+
+  }
+
+  public void resume() {
+
   }
 
   /**
@@ -127,6 +159,15 @@ public class PlayGame extends PlayStateObjectWithId {
    *         action games where speed matters).
    */
   public boolean isTurnGame() {
+
+    return true;
+  }
+
+  /**
+   * @return {@code true} if this game should show its {@link PlayBorder}s in the UI, {@code false} otherwise (borders
+   *         are hidden).
+   */
+  public boolean isShowBorder() {
 
     return true;
   }
@@ -204,25 +245,24 @@ public class PlayGame extends PlayStateObjectWithId {
 
   /**
    * @param level the {@link PlayLevel} to initialize.
-   * @param xDir the first {@link PlayDirection} (x-Axis).
-   * @param width the number of {@link PlayField}s in {@code xDir}.
-   * @param yDir the second {@link PlayDirection} (y-Axis).
-   * @param height the number of {@link PlayField}s in {@code yDir}.
+   * @param width the number of {@link PlayField}s in {@link #getDirectionX() X-direction}.
+   * @param height the number of {@link PlayField}s in {@link #getDirectionY() Y-direction}.
    * @param borderStrategy the {@link PlayBorderTypeStrategy}.
    * @return the given {@link PlayLevel} after initialization.
    */
-  protected PlayLevel initLevelAsRectangular(PlayLevel level, PlayDirection xDir, int width, PlayDirection yDir, int height,
-      PlayBorderTypeStrategy borderStrategy) {
+  protected PlayLevel initLevelAsRectangular(PlayLevel level, int width, int height, PlayBorderTypeStrategy borderStrategy) {
 
     assert level.getGame() == this;
+    PlayDirection xDir = getDirectionX();
+    PlayDirection yDir = getDirectionY();
     PlayDirection xDirInverse = xDir.getInverse();
     PlayDirection yDirInverse = yDir.getInverse();
     PlayField startField = level.getStartField();
     startField.initEdge();
     PlayField xStartField = startField;
     for (int y = 1; y <= height; y++) {
-      startField.createWall(xDirInverse);
       PlayField field = xStartField;
+      field.createWall(xDirInverse);
       for (int x = 1; x <= width; x++) {
         if (y == 1) {
           field.createWall(yDirInverse);
@@ -242,6 +282,7 @@ public class PlayGame extends PlayStateObjectWithId {
           } else {
             PlayField targetField = field.getField(yDirInverse).getField(xDir).getField(yDir);
             field.createBorder(type, xDir, targetField);
+            field = targetField;
           }
         }
       }
@@ -262,15 +303,39 @@ public class PlayGame extends PlayStateObjectWithId {
   }
 
   /**
+   * @return the {@link PlayDirection} on X-Axis.
+   */
+  public PlayDirection getDirectionX() {
+
+    return PlayDirection.RIGHT;
+  }
+
+  /**
+   * @return the {@link PlayDirection} on Y-Axis.
+   */
+  public PlayDirection getDirectionY() {
+
+    return PlayDirection.DOWN;
+  }
+
+  /**
+   * @return the {@link PlayDirection} on Z-Axis (not yet supported).
+   */
+  public PlayDirection getDirectionZ() {
+
+    return null;
+  }
+
+  /**
    * @return the {@link #getDirections() directions}.
    */
   protected Set<PlayDirection> createDirections() {
 
     Set<PlayDirection> set = new HashSet<>();
-    set.add(PlayDirection.UP);
-    set.add(PlayDirection.DOWN);
     set.add(PlayDirection.LEFT);
-    set.add(PlayDirection.RIGHT);
+    set.add(getDirectionX());
+    set.add(PlayDirection.UP);
+    set.add(getDirectionY());
     if (isSupportingDiagonalDirections()) {
       set.add(PlayDirection.UP_LEFT);
       set.add(PlayDirection.UP_RIGHT);

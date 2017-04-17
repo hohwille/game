@@ -7,6 +7,7 @@ import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.item.PlayPickItem;
 import io.github.ghosthopper.item.PlayPushItem;
+import io.github.ghosthopper.move.PlayAttributeDirection;
 import io.github.ghosthopper.move.PlayDirection;
 import io.github.ghosthopper.object.PlayTypedObjectWithItems;
 import io.github.ghosthopper.player.Player;
@@ -19,7 +20,7 @@ import io.github.ghosthopper.properties.PlayPropertyValueInt;
  * moment in time of the {@link PlayGame} each {@link PlayFigure} is {@link #getField() located on} a specific
  * {@link PlayField}.
  */
-public class PlayFigure extends PlayTypedObjectWithItems {
+public class PlayFigure extends PlayTypedObjectWithItems implements PlayAttributeDirection {
 
   private final Player player;
 
@@ -39,7 +40,9 @@ public class PlayFigure extends PlayTypedObjectWithItems {
     super();
     this.player = player;
     this.type = type;
-    setColor(player.getColor());
+    if (player != null) {
+      setColor(player.getColor());
+    }
   }
 
   @Override
@@ -82,6 +85,7 @@ public class PlayFigure extends PlayTypedObjectWithItems {
    * @return the current {@link PlayDirection} this {@link PlayFigure} is pointing to. May be {@code null} if
    *         unspecified.
    */
+  @Override
   public PlayDirection getDirection() {
 
     return this.direction;

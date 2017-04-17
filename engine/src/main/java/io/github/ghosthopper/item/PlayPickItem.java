@@ -29,8 +29,9 @@ public class PlayPickItem extends PlayItem<PlayPickItem> {
    * @param type the {@link PlayPickItemType} of this item.
    */
   public PlayPickItem(PlayColor color, PlayPickItemType type) {
-    super(color);
+    super();
     this.type = type;
+    setColor(color);
   }
 
   /**
