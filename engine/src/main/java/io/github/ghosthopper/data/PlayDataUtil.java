@@ -3,6 +3,7 @@
 package io.github.ghosthopper.data;
 
 import java.net.URL;
+import java.util.logging.Logger;
 
 import io.github.ghosthopper.game.PlayGame;
 
@@ -11,6 +12,8 @@ import io.github.ghosthopper.game.PlayGame;
  * {@link #getAudioUrl(String, PlayDataKey) audio} files.
  */
 public final class PlayDataUtil {
+
+  private static final Logger LOG = Logger.getLogger(PlayDataUtil.class.getName());
 
   private static final String DATA_PACKAGE = "io/github/ghosthopper/data/";
 
@@ -77,7 +80,7 @@ public final class PlayDataUtil {
   private static URL getResource(String path, PlayDataKey key, ClassLoader ccl, String gameId, String extension) {
 
     String resource = DATA_PACKAGE + gameId + "/" + path + extension;
-    System.out.println(resource);
+    LOG.fine(resource);
     return ccl.getResource(resource);
   }
 

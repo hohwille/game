@@ -5,6 +5,7 @@ package io.github.ghosthopper.i18n;
 import java.util.Locale;
 import java.util.MissingResourceException;
 import java.util.ResourceBundle;
+import java.util.logging.Logger;
 
 import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.game.PlayGameNone;
@@ -14,6 +15,8 @@ import io.github.ghosthopper.object.PlayStateObjectWithId;
  * Localizes text messages to the current locale.
  */
 public class PlayTranslator {
+
+  private static final Logger LOG = Logger.getLogger(PlayTranslator.class.getName());
 
   private static final String BUNDLE_PREFIX = "io.github.ghosthopper.i18n.";
 
@@ -59,7 +62,7 @@ public class PlayTranslator {
         try {
           return ResourceBundle.getBundle(baseName, locale);
         } catch (Exception e) {
-          System.err.println(e.getMessage());
+          LOG.warning(e.getMessage());
         }
       }
     }

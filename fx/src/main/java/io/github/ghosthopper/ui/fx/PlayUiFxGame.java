@@ -6,18 +6,19 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.github.ghosthopper.PlayLevel;
+import io.github.ghosthopper.event.PlayKeyEvent;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.player.Player;
-import javafx.scene.input.KeyCode;
+import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
 
 /**
  * JavaFx view for a {@link PlayLevel}.
  */
-public class PlayUiFxGame extends VBox {
+public class PlayUiFxGame extends Scene {
 
   private final PlayGame game;
 
@@ -33,15 +34,16 @@ public class PlayUiFxGame extends VBox {
    * @param game the {@link PlayGame} to visualize.
    */
   public PlayUiFxGame(PlayGame game) {
-    super();
+    super(new VBox());
     this.game = game;
+    this.game.start();
     this.dataCache = new PlayUiFxDataCache(game.getId());
     this.figureMap = new HashMap<>();
     this.level = new PlayUiFxLevel(game.getCurrentLevel(), this);
     initPlayers();
-    getChildren().add(this.level);
+    ((VBox) getRoot()).getChildren().add(this.level);
     setOnKeyPressed(this::handleKeyEvent);
-    setOnKeyTyped(this::handleKeyEvent);
+    this.game.addListener(PlayFigure.class, this::onUpdateFigure);
   }
 
   private void initPlayers() {
@@ -52,7 +54,7 @@ public class PlayUiFxGame extends VBox {
         this.figureMap.put(figure, fxFigure);
         PlayField field = figure.getField();
         if (field != null) {
-          PlayUiFxField playField = this.level.getPlayField(field);
+          PlayUiFxField playField = this.level.getFxField(field);
           if (playField != null) {
             fxFigure.setPlayField(playField);
           }
@@ -65,18 +67,25 @@ public class PlayUiFxGame extends VBox {
    * @param figure the {@link PlayFigure}.
    * @return the corresponding {@link PlayUiFxFigure}.
    */
-  public PlayUiFxFigure getPlayFigure(PlayFigure figure) {
+  public PlayUiFxFigure getFxFigure(PlayFigure figure) {
 
     return this.figureMap.get(figure);
   }
 
   private void handleKeyEvent(KeyEvent keyEvent) {
 
-    if (keyEvent.getCode() == KeyCode.ENTER) {
+    PlayKeyEvent event = PlayUiFxKeyEvent.convertEvent(keyEvent);
+    if (event != null) {
+      this.game.sendEvent(event);
+    }
+  }
 
-      // this.level.getFig
-      System.out.println("Enter");
-      keyEvent.consume();
+  private void onUpdateFigure(PlayFigure figure) {
+
+    PlayUiFxFigure fxFigure = getFxFigure(figure);
+    if (fxFigure != null) {
+      PlayUiFxField fxField = this.level.getFxField(figure.getField());
+      fxFigure.setPlayField(fxField);
     }
   }
 

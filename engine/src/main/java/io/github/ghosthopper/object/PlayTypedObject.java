@@ -3,13 +3,14 @@
 package io.github.ghosthopper.object;
 
 import io.github.ghosthopper.color.PlayAttributeColor;
+import io.github.ghosthopper.event.PlayEvent;
 import io.github.ghosthopper.properties.PlayProperties;
 
 /**
  * This is the abstract base class for an object that has a {@link #getType() type} and optionally a {@link #getColor()
  * color}.
  */
-public abstract class PlayTypedObject extends PlayStateObject implements PlayAttributeColor {
+public abstract class PlayTypedObject extends PlayStateObject implements PlayAttributeColor, PlayEvent {
 
   /**
    * The constructor.

@@ -4,13 +4,22 @@ package io.github.ghosthopper.game;
 
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Set;
 
 import io.github.ghosthopper.PlayLevel;
 import io.github.ghosthopper.border.PlayBorder;
 import io.github.ghosthopper.border.PlayBorderType;
+import io.github.ghosthopper.event.PlayEvent;
+import io.github.ghosthopper.event.PlayEventDispatcher;
+import io.github.ghosthopper.event.PlayEventListener;
+import io.github.ghosthopper.event.PlayEventSender;
+import io.github.ghosthopper.event.PlayKeyEvent;
+import io.github.ghosthopper.event.PlayKeys;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.field.PlayFieldType;
 import io.github.ghosthopper.figure.PlayFigure;
@@ -40,7 +49,7 @@ import io.github.ghosthopper.player.Player;
  * <li>Implement a strategy to {@link #moveBotPlayer(Player) move bot players}.</li>
  * </ul>
  */
-public class PlayGame extends PlayStateObjectWithId {
+public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<PlayEvent> {
 
   /** @see #getCurrentGame() */
   private static PlayGame currentGame = PlayGameNone.INSTANCE;
@@ -49,7 +58,13 @@ public class PlayGame extends PlayStateObjectWithId {
 
   private final List<Player> players;
 
+  private final List<Player> playersView;
+
+  private final Map<Class<?>, PlayEventDispatcher<?>> dispatcherMap;
+
   private int currentPlayer;
+
+  private int currentFigure;
 
   private PlayLevel currentLevel;
 
@@ -66,6 +81,109 @@ public class PlayGame extends PlayStateObjectWithId {
     super(id);
     this.translator = new PlayTranslator(this);
     this.players = new ArrayList<>();
+    this.playersView = Collections.unmodifiableList(this.players);
+    this.dispatcherMap = new HashMap<>();
+    addListener(PlayKeyEvent.class, this::handleKeyEvent);
+  }
+
+  protected void handleKeyEvent(PlayKeyEvent event) {
+
+    if (event.getCode() == PlayKeys.KEY_LEFT) {
+      move(PlayDirection.WEST);
+    } else if (event.getCode() == PlayKeys.KEY_RIGHT) {
+      move(PlayDirection.EAST);
+    } else if (event.getCode() == PlayKeys.KEY_UP) {
+      move(PlayDirection.NORTH);
+    } else if (event.getCode() == PlayKeys.KEY_DOWN) {
+      move(PlayDirection.SOUTH);
+    }
+  }
+
+  /**
+   * Moves the {@link #getCurrentFigure() current figure} in the given {@link PlayDirection}.
+   *
+   * @param direction the {@link PlayDirection} to move.
+   */
+  protected void move(PlayDirection direction) {
+
+    PlayFigure figure = getCurrentFigure();
+    if (figure != null) {
+      figure.move(direction);
+    }
+  }
+
+  @SuppressWarnings({ "rawtypes", "unchecked" })
+  @Override
+  public void sendEvent(PlayEvent event) {
+
+    Objects.requireNonNull(event, "event");
+    Class<? extends PlayEvent> eventType = event.getClass();
+    PlayEventDispatcher eventDispatcher = getEventDispatcherOptional(eventType);
+    if (eventDispatcher != null) {
+      eventDispatcher.sendEvent(event);
+    }
+  }
+
+  @SuppressWarnings("rawtypes")
+  private PlayEventDispatcher getEventDispatcher(Class<?> eventType, boolean createIfNotExists) {
+
+    PlayEventDispatcher<?> dispatcher = this.dispatcherMap.get(eventType);
+    if (dispatcher == null) {
+      Class<?> parentType = eventType.getSuperclass();
+      if (createIfNotExists) {
+        PlayEventDispatcher<?> parent;
+        if ((parentType != null) && PlayEvent.class.isAssignableFrom(parentType)) {
+          parent = getEventDispatcher(parentType, true);
+        } else {
+          parent = null;
+        }
+        dispatcher = new PlayEventDispatcher<>(parent);
+        this.dispatcherMap.put(eventType, dispatcher);
+      } else {
+        if ((parentType != null) && PlayEvent.class.isAssignableFrom(parentType)) {
+          dispatcher = getEventDispatcher(parentType, false);
+        } else {
+          dispatcher = null;
+        }
+      }
+    }
+    return dispatcher;
+  }
+
+  @SuppressWarnings("unchecked")
+  protected <E extends PlayEvent> PlayEventDispatcher<E> getEventDispatcherRequired(Class<E> eventType) {
+
+    return getEventDispatcher(eventType, true);
+  }
+
+  @SuppressWarnings("unchecked")
+  protected <E extends PlayEvent> PlayEventDispatcher<E> getEventDispatcherOptional(Class<E> eventType) {
+
+    return getEventDispatcher(eventType, false);
+  }
+
+  @Override
+  public <E extends PlayEvent> void addListener(Class<E> eventType, PlayEventListener<E> listener) {
+
+    Objects.requireNonNull(eventType, "eventType");
+    Objects.requireNonNull(listener, "listener");
+    if (eventType.isInterface()) {
+      throw new IllegalArgumentException(eventType.getName());
+    }
+    getEventDispatcherRequired(eventType).addListener(eventType, listener);
+  }
+
+  @Override
+  public boolean removeListener(PlayEventListener<? extends PlayEvent> listener) {
+
+    for (PlayEventDispatcher<?> dispatcher : this.dispatcherMap.values()) {
+      @SuppressWarnings({ "rawtypes", "unchecked" })
+      boolean removed = dispatcher.removeListener((PlayEventListener) listener);
+      if (removed) {
+        return true;
+      }
+    }
+    return false;
   }
 
   /**
@@ -88,6 +206,7 @@ public class PlayGame extends PlayStateObjectWithId {
   public final void start() {
 
     currentGame = this;
+    sendEvent(PlayState.START);
   }
 
   /**
@@ -115,10 +234,20 @@ public class PlayGame extends PlayStateObjectWithId {
 
   public void pause() {
 
+    if (this.paused) {
+      return;
+    }
+    this.paused = true;
+    sendEvent(PlayState.PAUSE);
   }
 
   public void resume() {
 
+    if (!this.paused) {
+      return;
+    }
+    this.paused = false;
+    sendEvent(PlayState.RESUME);
   }
 
   /**
@@ -126,6 +255,7 @@ public class PlayGame extends PlayStateObjectWithId {
    */
   public final void end() {
 
+    sendEvent(PlayState.END);
     currentGame = PlayGameNone.INSTANCE;
   }
 
@@ -177,7 +307,16 @@ public class PlayGame extends PlayStateObjectWithId {
    */
   public List<Player> getPlayers() {
 
-    return this.players;
+    return this.playersView;
+  }
+
+  /**
+   * @param player the {@link Player} to add.
+   */
+  protected void addPlayer(Player player) {
+
+    player.setGame(this);
+    this.players.add(player);
   }
 
   /**
@@ -196,15 +335,58 @@ public class PlayGame extends PlayStateObjectWithId {
    */
   public Player nextPlayer() {
 
+    if (!isTurnGame()) {
+      return null;
+    }
     this.currentPlayer++;
-    if (this.currentPlayer > this.players.size()) {
+    if (this.currentPlayer >= this.players.size()) {
       this.currentPlayer = 0;
     }
+    this.currentFigure = 0;
     Player player = getCurrentPlayer();
     if (!player.isHuman()) {
       moveBotPlayer(player);
     }
     return player;
+  }
+
+  /**
+   * @return the current {@link PlayFigure} of the {@link #getCurrentPlayer() current player} or {@code null} if the
+   *         turn of the current player is over.
+   */
+  public PlayFigure getCurrentFigure() {
+
+    Player player = getCurrentPlayer();
+    List<PlayFigure> figures = player.getFigures();
+    if (this.currentFigure >= figures.size()) {
+      return null;
+    }
+    return figures.get(this.currentFigure);
+  }
+
+  /**
+   * @param mayChangePlayer {@code true} if the turn of the {@link #getCurrentPlayer() current player} should
+   *        automatically be ended and the {@link #nextPlayer() next player shall be on turn} in case the
+   *        {@link #getCurrentPlayer() current player} has no {@link #getCurrentFigure() figure} left, {@code false}
+   *        otherwise (return {@code null} in that case).
+   * @return the next {@link PlayFigure} or {@code null} if turn is over.
+   */
+  public PlayFigure nextFigure(boolean mayChangePlayer) {
+
+    if (!isTurnGame()) {
+      return null;
+    }
+    Player player = getCurrentPlayer();
+    int size = player.getFigures().size();
+    if (this.currentFigure < size) {
+      this.currentFigure++;
+    }
+    PlayFigure figure = getCurrentFigure();
+    if ((figure == null) && (mayChangePlayer)) {
+      nextPlayer();
+      figure = getCurrentFigure();
+    }
+    return figure;
   }
 
   /**

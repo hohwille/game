@@ -2,6 +2,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.game;
 
+import io.github.ghosthopper.event.PlayEvent;
 import io.github.ghosthopper.event.PlayEventListener;
 
 /**
@@ -9,7 +10,7 @@ import io.github.ghosthopper.event.PlayEventListener;
  *
  * @see PlayEventListener
  */
-public class PlayState {
+public class PlayState implements PlayEvent {
 
   /** The {@link PlayState} for {@link PlayGame#start()}. */
   public static final PlayState START = new PlayState("Start");

@@ -69,7 +69,7 @@ public class PlayUiFxLevel extends GridPane {
           colorIndex = 0;
         }
         PlayUiFxFigure fxFigure = new PlayUiFxFigure(figure, this.game.getDataCache());
-        fxFigure.setPlayField(getPlayField(field));
+        fxFigure.setPlayField(getFxField(field));
       }
     }
   }
@@ -151,7 +151,7 @@ public class PlayUiFxLevel extends GridPane {
    * @param field the {@link PlayField}.
    * @return the corresponding {@link PlayUiFxField} or {@code null} if undefined.
    */
-  public PlayUiFxField getPlayField(PlayField field) {
+  public PlayUiFxField getFxField(PlayField field) {
 
     assert (field.getLevel() == this.level);
     return this.fieldMap.get(field);
@@ -161,7 +161,7 @@ public class PlayUiFxLevel extends GridPane {
    * @param border the {@link PlayBorder}.
    * @return the corresponding {@link PlayUiFxBorder} or {@code null} if undefined.
    */
-  public PlayUiFxBorder getPlayBorder(PlayBorder border) {
+  public PlayUiFxBorder getFxBorder(PlayBorder border) {
 
     assert ((border.getSourceField() == null) || (border.getSourceField().getLevel() == this.level));
     assert ((border.getTargetField() == null) || (border.getTargetField().getLevel() == this.level));

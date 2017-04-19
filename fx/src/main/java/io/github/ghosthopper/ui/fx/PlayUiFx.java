@@ -5,7 +5,6 @@ package io.github.ghosthopper.ui.fx;
 import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.game.ghosty.Ghosty;
 import javafx.application.Application;
-import javafx.scene.Scene;
 import javafx.stage.Stage;
 
 /**
@@ -25,9 +24,8 @@ public class PlayUiFx extends Application {
 
     PlayGame game = new Ghosty();
     PlayUiFxGame fxGame = new PlayUiFxGame(game);
-    Scene scene = new Scene(fxGame);
     stage.setTitle(game.getLocalizedName());
-    stage.setScene(scene);
+    stage.setScene(fxGame);
     stage.show();
   }
 

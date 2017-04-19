@@ -147,6 +147,7 @@ public class PlayFigure extends PlayTypedObjectWithItems implements PlayAttribut
       return null;
     }
     this.field = targetField;
+    getGame().sendEvent(this);
     return this.field;
   }
 
@@ -154,13 +155,14 @@ public class PlayFigure extends PlayTypedObjectWithItems implements PlayAttribut
    * @param sourceField the {@link PlayField} that may have an {@link PlayField#getPushItem() item} to push.
    * @param dir the {@link PlayDirection} to push to.
    * @param weight the current {@link PlayPropertyValueDouble#WEIGHT} to push.
-   * @return {@code true} if the push was successful, {@code false} otherwise.
+   * @return {@code true} if the push was successful (no item to push or item successfully pushed), {@code false}
+   *         otherwise.
    */
   private boolean push(PlayField sourceField, PlayDirection dir) {
 
     PlayPushItem item = sourceField.getPushItem();
     if (item == null) {
-      return false;
+      return true;
     }
     return push(item, sourceField, dir, 0);
   }
