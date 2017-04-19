@@ -9,8 +9,12 @@ import java.util.Map;
 import io.github.ghosthopper.data.PlayDataKey;
 import io.github.ghosthopper.data.PlayDataUtil;
 import io.github.ghosthopper.game.PlayGame;
+import io.github.ghosthopper.move.PlayDirection;
 import io.github.ghosthopper.object.PlayTypedObject;
+import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.paint.Color;
 
 /**
  * A cache for data resources (images and audio).
@@ -55,6 +59,15 @@ public class PlayUiFxDataCache {
     if (image == null) {
       URL url = getImageUrl(key);
       image = new Image(url.toString());
+      PlayDirection direction = key.getDirection();
+      if (direction != null) {
+        double rotation = direction.getRotationZ();
+        ImageView iv = new ImageView(image);
+        iv.setRotate(rotation);
+        SnapshotParameters params = new SnapshotParameters();
+        params.setFill(Color.TRANSPARENT);
+        image = iv.snapshot(params, null);
+      }
       this.imageMap.put(key, image);
     }
     return image;

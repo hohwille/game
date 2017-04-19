@@ -50,14 +50,14 @@ public class PlayLevel extends PlayStateObjectWithId {
    * Gets the {@link PlayField} at the given coordinate assuming the {@link PlayLevel} is a square rectangular field of
    * at least the given dimension.
    *
-   * @param x the number of moves to the {@link PlayDirection#RIGHT right} (the column of the requested
+   * @param x the number of moves to the {@link PlayDirection#EAST right} (the column of the requested
    *        {@link PlayField}).
-   * @param y the number of moves {@link PlayDirection#DOWN downwards} (the row of the requested {@link PlayField}).
+   * @param y the number of moves {@link PlayDirection#SOUTH downwards} (the row of the requested {@link PlayField}).
    * @return the requested {@link PlayField}. May be {@code null}.
    */
   public PlayField getField(int x, int y) {
 
-    return getField(PlayDirection.RIGHT, x, PlayDirection.DOWN, y);
+    return getField(PlayDirection.EAST, x, PlayDirection.SOUTH, y);
   }
 
   /**

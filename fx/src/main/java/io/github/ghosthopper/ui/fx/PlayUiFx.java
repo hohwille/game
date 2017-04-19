@@ -24,9 +24,8 @@ public class PlayUiFx extends Application {
   public void start(Stage stage) throws Exception {
 
     PlayGame game = new Ghosty();
-    PlayUiFxDataCache dataCache = new PlayUiFxDataCache(game.getId());
-    PlayUiFxLevel level = new PlayUiFxLevel(game.getCurrentLevel(), dataCache);
-    Scene scene = new Scene(level);
+    PlayUiFxGame fxGame = new PlayUiFxGame(game);
+    Scene scene = new Scene(fxGame);
     stage.setTitle(game.getLocalizedName());
     stage.setScene(scene);
     stage.show();

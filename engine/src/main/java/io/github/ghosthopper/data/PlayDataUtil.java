@@ -5,7 +5,6 @@ package io.github.ghosthopper.data;
 import java.net.URL;
 
 import io.github.ghosthopper.game.PlayGame;
-import io.github.ghosthopper.move.PlayDirection;
 
 /**
  * A utility class that gives access to data resources such as {@link #getImageUrl(String, PlayDataKey) image} or
@@ -52,11 +51,11 @@ public final class PlayDataUtil {
     // pathBuffer.append(color.getId());
     // pathBuffer.append('/');
     // }
-    PlayDirection direction = key.getDirection();
-    if (direction != null) {
-      pathBuffer.append(direction.getId());
-      pathBuffer.append('/');
-    }
+    // PlayDirection direction = key.getDirection();
+    // if (direction != null) {
+    // pathBuffer.append(direction.getId());
+    // pathBuffer.append('/');
+    // }
     String objectId = key.getObjectId();
     if (objectId != null) {
       pathBuffer.append(objectId);

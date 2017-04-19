@@ -26,6 +26,10 @@ public class PlayUiFxBorder extends StackPane {
     getStyleClass().add("border");
     Image image = dataCache.getImage(border);
     ImageView imageView = new ImageView(image);
+    double rotation = border.getDirection().getRotationZ();
+    if (rotation > 0) {
+      // imageView.setRotate(rotation);
+    }
     getChildren().add(imageView);
   }
 

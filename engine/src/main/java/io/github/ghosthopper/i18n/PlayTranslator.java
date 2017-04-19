@@ -82,24 +82,59 @@ public class PlayTranslator {
    */
   public String translate(String key, Locale locale) {
 
+    String text = translateWord(key, locale);
+    if (text == null) {
+      int length = key.length();
+      StringBuilder buffer = new StringBuilder(length + 4);
+      int start = 0;
+      for (int i = 1; i < length; i++) {
+        char c;
+        if ((i + 1) == length) {
+          i++;
+          c = '\0';
+        } else {
+          c = key.charAt(i);
+        }
+        if (!Character.isAlphabetic(c)) {
+          if (i > start) {
+            String word = key.substring(start, i);
+            String translation = translateWord(word, locale);
+            if (translation == null) {
+              translation = word;
+            }
+            buffer.append(translation);
+            start = i + 1;
+          }
+          if (c != '\0') {
+            buffer.append(c);
+          }
+        }
+      }
+      text = buffer.toString();
+    }
+    return text;
+  }
+
+  private String translateWord(String key, Locale locale) {
+
     String text = null;
     if (locale == this.creationLocale) {
-      text = translate(this.gameBundle, key, false);
+      text = translate(this.gameBundle, key);
       if (text == null) {
-        text = translate(this.rootBundle, key, true);
+        text = translate(this.rootBundle, key);
       }
     } else {
       ResourceBundle bundle = getGameBundle(this.game, locale);
-      text = translate(bundle, key, false);
+      text = translate(bundle, key);
       if (text == null) {
         bundle = ResourceBundle.getBundle(BUNDLE_ROOT, locale);
-        text = translate(bundle, key, true);
+        text = translate(bundle, key);
       }
     }
     return text;
   }
 
-  private String translate(ResourceBundle bundle, String key, boolean fallback) {
+  private String translate(ResourceBundle bundle, String key) {
 
     if (bundle == null) {
       return null;
@@ -108,11 +143,7 @@ public class PlayTranslator {
       return bundle.getString(key);
     } catch (MissingResourceException e) {
       // ignore
-      if (fallback) {
-        return key;
-      } else {
-        return null;
-      }
+      return null;
     }
   }
 

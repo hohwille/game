@@ -307,7 +307,7 @@ public class PlayGame extends PlayStateObjectWithId {
    */
   public PlayDirection getDirectionX() {
 
-    return PlayDirection.RIGHT;
+    return PlayDirection.EAST;
   }
 
   /**
@@ -315,7 +315,7 @@ public class PlayGame extends PlayStateObjectWithId {
    */
   public PlayDirection getDirectionY() {
 
-    return PlayDirection.DOWN;
+    return PlayDirection.SOUTH;
   }
 
   /**
@@ -332,21 +332,21 @@ public class PlayGame extends PlayStateObjectWithId {
   protected Set<PlayDirection> createDirections() {
 
     Set<PlayDirection> set = new HashSet<>();
-    set.add(PlayDirection.LEFT);
+    set.add(PlayDirection.WEST);
     set.add(getDirectionX());
-    set.add(PlayDirection.UP);
+    set.add(PlayDirection.NORTH);
     set.add(getDirectionY());
     if (isSupportingDiagonalDirections()) {
-      set.add(PlayDirection.UP_LEFT);
-      set.add(PlayDirection.UP_RIGHT);
-      set.add(PlayDirection.DOWN_LEFT);
-      set.add(PlayDirection.DOWN_RIGHT);
+      set.add(PlayDirection.NORTH_WEST);
+      set.add(PlayDirection.NORTH_EAST);
+      set.add(PlayDirection.SOUTH_WEST);
+      set.add(PlayDirection.SOUTH_EAST);
     }
     return set;
   }
 
   /**
-   * @return {@code true} if also the four diagonal {@link PlayDirection}s such as {@link PlayDirection#UP_LEFT} are
+   * @return {@code true} if also the four diagonal {@link PlayDirection}s such as {@link PlayDirection#NORTH_WEST} are
    *         supported (e.g. for chess).
    */
   protected boolean isSupportingDiagonalDirections() {

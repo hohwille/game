@@ -14,7 +14,6 @@ import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.figure.PlayFigureType;
 import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.move.PlayDirection;
-import io.github.ghosthopper.player.Player;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -24,32 +23,28 @@ import javafx.scene.layout.GridPane;
  */
 public class PlayUiFxLevel extends GridPane {
 
-  private final PlayLevel level;
+  private final PlayUiFxGame game;
 
-  private final PlayUiFxDataCache dataCache;
+  private final PlayLevel level;
 
   private final Map<PlayField, PlayUiFxField> fieldMap;
 
   private final Map<PlayBorder, PlayUiFxBorder> borderMap;
 
-  private final Map<PlayFigure, PlayUiFxFigure> figureMap;
-
   /**
    * The constructor.
    *
    * @param level the {@link PlayLevel}.
-   * @param dataCache the {@link PlayUiFxDataCache}.
+   * @param game the {@link PlayUiFxGame} owning this level.
    */
-  public PlayUiFxLevel(PlayLevel level, PlayUiFxDataCache dataCache) {
+  public PlayUiFxLevel(PlayLevel level, PlayUiFxGame game) {
     super();
     this.level = level;
-    this.dataCache = dataCache;
+    this.game = game;
     this.fieldMap = new HashMap<>();
     this.borderMap = new HashMap<>();
-    this.figureMap = new HashMap<>();
     getStyleClass().add("level");
     initLevel();
-    initPlayers();
     if (isDummy()) {
       placeDummyFigures();
     }
@@ -73,40 +68,22 @@ public class PlayUiFxLevel extends GridPane {
         if (colorIndex == colors.length) {
           colorIndex = 0;
         }
-        PlayUiFxFigure fxFigure = new PlayUiFxFigure(figure, this.dataCache);
+        PlayUiFxFigure fxFigure = new PlayUiFxFigure(figure, this.game.getDataCache());
         fxFigure.setPlayField(getPlayField(field));
-      }
-    }
-  }
-
-  private void initPlayers() {
-
-    PlayGame game = this.level.getGame();
-    for (Player player : game.getPlayers()) {
-      for (PlayFigure figure : player.getFigures()) {
-        PlayUiFxFigure fxFigure = new PlayUiFxFigure(figure, this.dataCache);
-        this.figureMap.put(figure, fxFigure);
-        PlayField field = figure.getField();
-        if (field != null) {
-          PlayUiFxField playField = getPlayField(field);
-          if (playField != null) {
-            fxFigure.setPlayField(playField);
-          }
-        }
       }
     }
   }
 
   private void initLevel() {
 
-    PlayGame game = this.level.getGame();
+    PlayGame playGame = this.level.getGame();
     PlayField startField = this.level.getStartField();
-    PlayDirection xDir = game.getDirectionX();
-    PlayDirection yDir = game.getDirectionY();
+    PlayDirection xDir = playGame.getDirectionX();
+    PlayDirection yDir = playGame.getDirectionY();
     PlayDirection xDirInverse = xDir.getInverse();
     PlayDirection yDirInverse = yDir.getInverse();
     PlayField xStartField = startField;
-    boolean showBorder = game.isShowBorder();
+    boolean showBorder = playGame.isShowBorder();
     int y = 0;
     while (xStartField != null) {
       PlayField field = xStartField;
@@ -151,21 +128,21 @@ public class PlayUiFxLevel extends GridPane {
 
   private void addEdge(int x, int y) {
 
-    Image image = this.dataCache.getImage(PlayDataKey.EDGE);
+    Image image = this.game.getDataCache().getImage(PlayDataKey.EDGE);
     ImageView imageView = new ImageView(image);
     add(imageView, x, y);
   }
 
   private void addField(PlayField field, int x, int y) {
 
-    PlayUiFxField fxField = new PlayUiFxField(field, this.dataCache);
+    PlayUiFxField fxField = new PlayUiFxField(field, this.game.getDataCache());
     this.fieldMap.put(field, fxField);
     add(fxField, x, y);
   }
 
   private void addBorder(PlayBorder border, int x, int y) {
 
-    PlayUiFxBorder fxBorder = new PlayUiFxBorder(border, this.dataCache);
+    PlayUiFxBorder fxBorder = new PlayUiFxBorder(border, this.game.getDataCache());
     this.borderMap.put(border, fxBorder);
     add(fxBorder, x, y);
   }

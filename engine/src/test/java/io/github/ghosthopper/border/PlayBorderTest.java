@@ -45,7 +45,7 @@ public class PlayBorderTest extends Assertions {
   public void testHole() {
 
     // given
-    PlayBorder mouseHole = new PlayBorder(null, PlayDirection.RIGHT, null, MOUSE_HOLE);
+    PlayBorder mouseHole = new PlayBorder(null, PlayDirection.EAST, null, MOUSE_HOLE);
 
     // when + then
     assertThat(mouseHole.pass(BLUE_MOUSE_FIGURE)).isTrue();
@@ -59,7 +59,7 @@ public class PlayBorderTest extends Assertions {
   public void testWall() {
 
     // given
-    PlayBorder wall = new PlayBorder(null, PlayDirection.RIGHT, null, PlayBorderTypeWall.get());
+    PlayBorder wall = new PlayBorder(null, PlayDirection.EAST, null, PlayBorderTypeWall.get());
 
     // when + then
     assertThat(wall.pass(BLUE_MOUSE_FIGURE)).isFalse();
@@ -73,7 +73,7 @@ public class PlayBorderTest extends Assertions {
   public void testOpen() {
 
     // given
-    PlayBorder open = new PlayBorder(null, PlayDirection.RIGHT, null, PlayBorderTypeOpen.get());
+    PlayBorder open = new PlayBorder(null, PlayDirection.EAST, null, PlayBorderTypeOpen.get());
 
     // when + then
     assertThat(open.pass(BLUE_MOUSE_FIGURE)).isTrue();
@@ -88,7 +88,7 @@ public class PlayBorderTest extends Assertions {
 
     // given
     BLUE_MOUSE_FIGURE.getItems().add(RED_KEY);
-    PlayBorder open = new PlayBorder(null, PlayDirection.RIGHT, null, PlayBorderTypeDoor.get(RED_KEY));
+    PlayBorder open = new PlayBorder(null, PlayDirection.EAST, null, PlayBorderTypeDoor.get(RED_KEY));
 
     // when + then
     assertThat(open.pass(BLUE_MOUSE_FIGURE)).isTrue();
@@ -110,7 +110,7 @@ public class PlayBorderTest extends Assertions {
     PlayLevel level = game.getCurrentLevel();
     PlayField sourceField = level.getStartField();
     PlayField targetField = new PlayField(level);
-    PlayBorder open = new PlayBorder(sourceField, PlayDirection.RIGHT, targetField, PlayBorderTypeMagicDoor.get());
+    PlayBorder open = new PlayBorder(sourceField, PlayDirection.EAST, targetField, PlayBorderTypeMagicDoor.get());
 
     // when + then
     assertThat(open.pass(GREEN_RABBIT_FIGURE)).isFalse();
