@@ -2,11 +2,12 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.border;
 
-import io.github.ghosthopper.figure.PlayFigure;
+import io.github.ghosthopper.object.PlayAsset;
+import io.github.ghosthopper.object.PlayStateObject;
 
 /**
  * A {@link PlayBorderType} that wraps a {@link #getDelegate() delegate border type} that is hidden until the
- * {@link PlayBorder} is {@link PlayBorder#pass(PlayFigure) passed} for the first time.
+ * {@link PlayBorder} is {@link PlayBorder#pass(PlayAsset) passed} for the first time.
  */
 public class PlayBorderTypeHidden extends PlayBorderType {
 
@@ -19,7 +20,7 @@ public class PlayBorderTypeHidden extends PlayBorderType {
    *
    * @param delegate - see {@link #getDelegate()}.
    */
-  public PlayBorderTypeHidden(PlayBorderType delegate) {
+  private PlayBorderTypeHidden(PlayBorderType delegate) {
     super("Hidden");
     this.delegate = delegate;
     this.hidden = true;
@@ -51,12 +52,31 @@ public class PlayBorderTypeHidden extends PlayBorderType {
   }
 
   @Override
-  public boolean canPass(PlayFigure figure, PlayBorder border, boolean move) {
+  public PlayStateObject getOverlay() {
+
+    if (this.hidden) {
+      return super.getOverlay();
+    }
+    return this.delegate.getOverlay();
+  }
+
+  @Override
+  public boolean canPass(PlayAsset<?> asset, PlayBorder border, boolean move) {
 
     if (this.hidden) {
       this.hidden = false;
+      getGame().sendEvent(border);
     }
-    return this.delegate.canPass(figure, border, move);
+    return this.delegate.canPass(asset, border, move);
+  }
+
+  /**
+   * @param type the {@link PlayBorderType} to hide.
+   * @return an instance of this border type.
+   */
+  public static final PlayBorderTypeHidden get(PlayBorderType type) {
+
+    return new PlayBorderTypeHidden(type);
   }
 
 }

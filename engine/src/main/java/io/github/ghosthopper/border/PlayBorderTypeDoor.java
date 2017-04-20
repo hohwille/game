@@ -1,10 +1,13 @@
 package io.github.ghosthopper.border;
 
 import io.github.ghosthopper.figure.PlayFigure;
+import io.github.ghosthopper.item.PlayAttributePickItems;
 import io.github.ghosthopper.item.PlayPickItem;
+import io.github.ghosthopper.object.PlayAsset;
+import io.github.ghosthopper.object.PlayStateObject;
 
 /**
- * A {@link PlayBorderType} that is a door that {@link #canPass(PlayFigure, PlayBorder, boolean) can only be passed} by
+ * A {@link PlayBorderType} that is a door that {@link #canPass(PlayAsset, PlayBorder, boolean) can only be passed} by
  * {@link PlayFigure}s having the proper key.
  */
 public class PlayBorderTypeDoor extends PlayBorderType {
@@ -17,12 +20,18 @@ public class PlayBorderTypeDoor extends PlayBorderType {
   }
 
   @Override
-  public boolean canPass(PlayFigure figure, PlayBorder border, boolean move) {
+  public boolean canPass(PlayAsset<?> asset, PlayBorder border, boolean move) {
 
-    if (figure == null) {
-      return false;
+    if (asset instanceof PlayAttributePickItems) {
+      return ((PlayAttributePickItems) asset).getItems().contains(this.key);
     }
-    return figure.getItems().contains(this.key);
+    return false;
+  }
+
+  @Override
+  public PlayStateObject getOverlay() {
+
+    return this.key;
   }
 
   /**

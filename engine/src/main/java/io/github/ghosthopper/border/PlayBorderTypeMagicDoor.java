@@ -2,11 +2,12 @@ package io.github.ghosthopper.border;
 
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.figure.PlayFigure;
+import io.github.ghosthopper.object.PlayAsset;
 
 /**
- * A {@link PlayBorderType} that is a magic door that {@link #canPass(PlayFigure, PlayBorder, boolean) can only be
+ * A {@link PlayBorderType} that is a magic door that {@link #canPass(PlayAsset, PlayBorder, boolean) can only be
  * passed} after it has been opened. Therefore a {@link PlayFigure} has to
- * {@link #canPass(PlayFigure, PlayBorder, boolean) pass} whilst another {@link PlayFigure} is on the other side.
+ * {@link #canPass(PlayAsset, PlayBorder, boolean) pass} whilst another {@link PlayFigure} is on the other side.
  */
 public class PlayBorderTypeMagicDoor extends PlayBorderType {
 
@@ -25,12 +26,21 @@ public class PlayBorderTypeMagicDoor extends PlayBorderType {
   }
 
   @Override
-  public boolean canPass(PlayFigure figure, PlayBorder border, boolean move) {
+  public String getId() {
+
+    if (this.open) {
+      return PlayBorderTypeOpen.ID;
+    }
+    return super.getId();
+  }
+
+  @Override
+  public boolean canPass(PlayAsset<?> asset, PlayBorder border, boolean move) {
 
     if (this.open) {
       return true;
     }
-    if (figure == null) {
+    if (asset == null) {
       return false;
     }
     PlayField sourceField = border.getSourceField();
@@ -39,6 +49,7 @@ public class PlayBorderTypeMagicDoor extends PlayBorderType {
       if ((targetField != null) && targetField.hasHumanFigure()) {
         if (move) {
           this.open = true;
+          getGame().sendEvent(border);
         }
         return true;
       }

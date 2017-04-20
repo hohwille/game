@@ -9,6 +9,7 @@ import io.github.ghosthopper.move.PlayAttributeDirection;
 import io.github.ghosthopper.move.PlayDirection;
 import io.github.ghosthopper.object.PlayObject;
 import io.github.ghosthopper.object.PlayObjectType;
+import io.github.ghosthopper.object.PlayStateObject;
 import io.github.ghosthopper.object.PlayTypedObject;
 
 /**
@@ -29,6 +30,8 @@ public class PlayDataKey {
 
   private final PlayDirection direction;
 
+  private final PlayDataKey overlay;
+
   /**
    * The constructor.
    *
@@ -39,6 +42,7 @@ public class PlayDataKey {
     PlayObjectType type = object.getType();
     this.typeId = getId(type);
     this.typeName = type.getTypeName();
+    this.overlay = convertOverlay(type.getOverlay());
     this.color = object.getColor();
     String oid = getId(object);
     if (this.typeId.equals(oid)) {
@@ -53,9 +57,23 @@ public class PlayDataKey {
     super();
     this.typeName = typeName;
     this.typeId = typeId;
+    this.overlay = null;
     this.objectId = null;
     this.color = null;
     this.direction = null;
+  }
+
+  private static PlayDataKey convertOverlay(PlayStateObject overlayObject) {
+
+    if (overlayObject == null) {
+      return null;
+    } else if (overlayObject instanceof PlayTypedObject) {
+      return new PlayDataKey((PlayTypedObject) overlayObject);
+    } else if (overlayObject instanceof PlayObjectType) {
+      return new PlayDataKey(((PlayObjectType) overlayObject).getTypeName(), overlayObject.getId());
+    } else {
+      throw new IllegalStateException(overlayObject.toString());
+    }
   }
 
   private PlayDirection getDirection(PlayTypedObject object) {
@@ -104,6 +122,14 @@ public class PlayDataKey {
   }
 
   /**
+   * @return the {@link PlayDataKey} of the overlay object or {@code null} for none.
+   */
+  public PlayDataKey getOverlay() {
+
+    return this.overlay;
+  }
+
+  /**
    * @return the direction
    */
   public PlayDirection getDirection() {
@@ -140,6 +166,9 @@ public class PlayDataKey {
       return false;
     }
     if (!Objects.equals(this.color, other.color)) {
+      return false;
+    }
+    if (!Objects.equals(this.overlay, other.overlay)) {
       return false;
     }
     if (!Objects.equals(this.direction, other.direction)) {

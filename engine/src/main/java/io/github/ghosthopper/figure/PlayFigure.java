@@ -89,6 +89,14 @@ public class PlayFigure extends PlayAsset<PlayField> implements PlayAttributeDir
   }
 
   /**
+   * @return {@code true} if this is the {@link PlayGame#getCurrentFigure() current figure}, {@code false} otherwise.
+   */
+  public boolean isCurrentFigure() {
+
+    return getGame().getCurrentFigure() == this;
+  }
+
+  /**
    * @return the current {@link PlayDirection} this {@link PlayFigure} is pointing to. May be {@code null} if
    *         unspecified.
    */

@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import io.github.ghosthopper.PlayLevel;
+import io.github.ghosthopper.border.PlayBorder;
 import io.github.ghosthopper.event.PlayKeyEvent;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.figure.PlayFigure;
@@ -28,6 +29,10 @@ public class PlayUiFxGame extends Scene {
 
   private final Map<PlayFigure, PlayUiFxFigure> figureMap;
 
+  private final Map<PlayField, PlayUiFxField> fieldMap;
+
+  private final Map<PlayBorder, PlayUiFxBorder> borderMap;
+
   /**
    * The constructor.
    *
@@ -36,14 +41,17 @@ public class PlayUiFxGame extends Scene {
   public PlayUiFxGame(PlayGame game) {
     super(new VBox());
     this.game = game;
-    this.game.start();
+    this.fieldMap = new HashMap<>();
+    this.borderMap = new HashMap<>();
     this.dataCache = new PlayUiFxDataCache(game.getId());
     this.figureMap = new HashMap<>();
+    this.game.start();
     this.level = new PlayUiFxLevel(game.getCurrentLevel(), this);
     initPlayers();
     ((VBox) getRoot()).getChildren().add(this.level);
     setOnKeyPressed(this::handleKeyEvent);
     this.game.addListener(PlayFigure.class, this::onUpdateFigure);
+    this.game.addListener(PlayBorder.class, this::onUpdateBorder);
   }
 
   private void initPlayers() {
@@ -54,7 +62,7 @@ public class PlayUiFxGame extends Scene {
         this.figureMap.put(figure, fxFigure);
         PlayField field = figure.getLocation();
         if (field != null) {
-          PlayUiFxField playField = this.level.getFxField(field);
+          PlayUiFxField playField = getFxField(field);
           if (playField != null) {
             fxFigure.setPlayField(playField);
           }
@@ -84,8 +92,17 @@ public class PlayUiFxGame extends Scene {
 
     PlayUiFxFigure fxFigure = getFxFigure(figure);
     if (fxFigure != null) {
-      PlayUiFxField fxField = this.level.getFxField(figure.getLocation());
+      PlayUiFxField fxField = getFxField(figure.getLocation());
       fxFigure.setPlayField(fxField);
+      fxFigure.update();
+    }
+  }
+
+  private void onUpdateBorder(PlayBorder border) {
+
+    PlayUiFxBorder fxBorder = getFxBorder(border);
+    if (fxBorder != null) {
+      fxBorder.update();
     }
   }
 
@@ -103,6 +120,40 @@ public class PlayUiFxGame extends Scene {
   public PlayGame getPlayGame() {
 
     return this.game;
+  }
+
+  /**
+   * @param fxField the {@link PlayUiFxField} to add.
+   */
+  void addFxField(PlayUiFxField fxField) {
+
+    this.fieldMap.put(fxField.getPlayField(), fxField);
+  }
+
+  /**
+   * @param field the {@link PlayField}.
+   * @return the corresponding {@link PlayUiFxField} or {@code null} if undefined.
+   */
+  public PlayUiFxField getFxField(PlayField field) {
+
+    return this.fieldMap.get(field);
+  }
+
+  /**
+   * @param fxField the {@link PlayUiFxBorder} to add.
+   */
+  void addFxBorder(PlayUiFxBorder fxBorder) {
+
+    this.borderMap.put(fxBorder.getPlayBorder(), fxBorder);
+  }
+
+  /**
+   * @param border the {@link PlayBorder}.
+   * @return the corresponding {@link PlayUiFxBorder} or {@code null} if undefined.
+   */
+  public PlayUiFxBorder getFxBorder(PlayBorder border) {
+
+    return this.borderMap.get(border);
   }
 
 }

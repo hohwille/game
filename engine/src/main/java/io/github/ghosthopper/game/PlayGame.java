@@ -83,13 +83,13 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
     this.players = new ArrayList<>();
     this.playersView = Collections.unmodifiableList(this.players);
     this.dispatcherMap = new HashMap<>();
-    addListener(PlayKeyEvent.class, this::handleKeyEvent);
+    addListener(PlayKeyEvent.class, this::onKeyPressed);
   }
 
   /**
    * @param event the {@link PlayKeyEvent} to handle.
    */
-  protected void handleKeyEvent(PlayKeyEvent event) {
+  protected void onKeyPressed(PlayKeyEvent event) {
 
     if (event.getCode() == PlayKeys.KEY_LEFT) {
       move(PlayDirection.WEST);
@@ -99,6 +99,8 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
       move(PlayDirection.NORTH);
     } else if (event.getCode() == PlayKeys.KEY_DOWN) {
       move(PlayDirection.SOUTH);
+    } else if (event.getCode() == PlayKeys.KEY_ENTER) {
+      nextPlayer();
     }
   }
 
@@ -359,14 +361,23 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
     if (!isTurnGame()) {
       return null;
     }
+    Player player = getCurrentPlayer();
+    PlayFigure figure = getCurrentFigure();
     this.currentPlayer++;
     if (this.currentPlayer >= this.players.size()) {
       this.currentPlayer = 0;
     }
     this.currentFigure = 0;
-    Player player = getCurrentPlayer();
-    if (!player.isHuman()) {
+    sendEvent(player);
+    sendEvent(figure);
+    player = getCurrentPlayer();
+    sendEvent(player);
+    List<PlayFigure> figures = player.getFigures();
+    figure = figures.get(this.currentFigure);
+    sendEvent(figure);
+    while (!player.isHuman()) {
       moveBotPlayer(player);
+      player = nextPlayer();
     }
     return player;
   }
@@ -398,14 +409,21 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
       return null;
     }
     Player player = getCurrentPlayer();
-    int size = player.getFigures().size();
+    PlayFigure figure;
+    List<PlayFigure> figures = player.getFigures();
+    int size = figures.size();
     if (this.currentFigure < size) {
+      figure = figures.get(this.currentFigure);
       this.currentFigure++;
+      sendEvent(figure);
     }
-    PlayFigure figure = getCurrentFigure();
+    figure = getCurrentFigure();
     if ((figure == null) && (mayChangePlayer)) {
       nextPlayer();
       figure = getCurrentFigure();
+    }
+    if (figure != null) {
+      sendEvent(figure);
     }
     return figure;
   }

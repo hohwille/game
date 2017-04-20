@@ -1,43 +1,47 @@
 package io.github.ghosthopper.border;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.Set;
-
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.figure.PlayFigureType;
+import io.github.ghosthopper.item.PlayPickItem;
+import io.github.ghosthopper.object.PlayAsset;
+import io.github.ghosthopper.object.PlayStateObject;
 
 /**
  * A {@link PlayBorderType} that is a hole where only {@link PlayFigure}s of specific {@link PlayFigure#getType() types}
- * {@link #canPass(PlayFigure, PlayBorder, boolean) can pass through}.
+ * {@link #canPass(PlayAsset, PlayBorder, boolean) can pass through}.
  */
 public class PlayBorderTypeHole extends PlayBorderType {
 
-  private final Set<PlayFigureType> figureTypes;
+  private final PlayFigureType figureType;
 
-  private PlayBorderTypeHole(PlayFigureType... figureTypes) {
+  private PlayBorderTypeHole(PlayFigureType figureType) {
     super("Hole");
-    this.figureTypes = Collections.unmodifiableSet(new HashSet<>(Arrays.asList(figureTypes)));
+    this.figureType = figureType;
   }
 
   @Override
-  public boolean canPass(PlayFigure figure, PlayBorder border, boolean move) {
+  public boolean canPass(PlayAsset<?> asset, PlayBorder border, boolean move) {
 
-    if (figure == null) {
-      return false;
+    if (asset instanceof PlayPickItem) {
+      return true;
     }
-    return this.figureTypes.contains(figure.getType());
+    return (this.figureType == asset.getType());
+  }
+
+  @Override
+  public PlayStateObject getOverlay() {
+
+    return this.figureType;
   }
 
   /**
-   * @param figureTypes the {@link PlayFigureType}s that are allowed to {@link #canPass(PlayFigure, PlayBorder, boolean)
+   * @param figureType the {@link PlayFigureType} that is allowed to {@link #canPass(PlayAsset, PlayBorder, boolean)
    *        pass through}.
    * @return an instance of this border type.
    */
-  public static final PlayBorderTypeHole get(PlayFigureType... figureTypes) {
+  public static final PlayBorderTypeHole get(PlayFigureType figureType) {
 
-    return new PlayBorderTypeHole(figureTypes);
+    return new PlayBorderTypeHole(figureType);
   }
 
 }

@@ -5,12 +5,13 @@ import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.move.PlayAttributeDirection;
 import io.github.ghosthopper.move.PlayDirection;
+import io.github.ghosthopper.object.PlayAsset;
 import io.github.ghosthopper.object.PlayTypedObject;
 
 /**
  * A {@link PlayBorder} connects two {@link PlayField}s. A {@link #getSourceField() source field} is leading in the
  * {@link #getDirection() direction} towards the {@link #getTargetField() target field}. The {@link PlayBorder} has a
- * {@link #getType() type} that decides if a figure {@link #canPass(PlayFigure) can pass} the border.
+ * {@link #getType() type} that decides if a figure {@link #canPass(PlayAsset) can pass} the border.
  */
 public class PlayBorder extends PlayTypedObject implements PlayAttributeDirection {
 
@@ -99,7 +100,6 @@ public class PlayBorder extends PlayTypedObject implements PlayAttributeDirectio
    */
   public void setType(PlayBorderType type) {
 
-    assert (this.type == null);
     this.type = type;
   }
 
@@ -114,29 +114,30 @@ public class PlayBorder extends PlayTypedObject implements PlayAttributeDirectio
   }
 
   /**
-   * Unlike {@link #pass(PlayFigure)} this method only checks if the {@link PlayFigure} can potentially pass this
+   * Unlike {@link #pass(PlayAsset)} this method only checks if the {@link PlayAsset} can potentially pass this
    * {@link PlayBorder} without changing its state.
    *
-   * @param figure the {@link PlayFigure}. May be {@code null} to check if anything can pass.
-   * @return {@code true} if the given {@link PlayFigure} can pass this border, {@code false} otherwise.
+   * @param asset the {@link PlayAsset}.
+   * @return {@code true} if the given {@link PlayAsset} can pass this border, {@code false} otherwise.
    */
-  public boolean canPass(PlayFigure figure) {
+  public boolean canPass(PlayAsset<?> asset) {
 
-    return this.type.canPass(figure, this, false);
+    assert (asset != null);
+    return this.type.canPass(asset, this, false);
   }
 
   /**
-   * Unlike {@link #canPass(PlayFigure)} this method actually lets the {@link PlayFigure} pass this {@link PlayBorder}
+   * Unlike {@link #canPass(PlayAsset)} this method actually lets the {@link PlayFigure} pass this {@link PlayBorder}
    * what may change its state (or more precisely the state of its {@link #getType() type}).
    *
-   * @param figure the {@link PlayFigure} to {@link PlayFigure#move() move}.
+   * @param asset the {@link PlayAsset} to {@link PlayFigure#move() move}.
    * @return {@code true} if the given {@link PlayFigure} passed this border, {@code false} otherwise (figure was
    *         blocked and move has to be cancelled).
    */
-  public boolean pass(PlayFigure figure) {
+  public boolean pass(PlayAsset<?> asset) {
 
-    assert (figure != null);
-    return this.type.canPass(figure, this, true);
+    assert (asset != null);
+    return this.type.canPass(asset, this, true);
   }
 
   /**

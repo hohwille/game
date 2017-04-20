@@ -133,4 +133,12 @@ public class Player extends PlayTypedObjectWithItems {
     return this.figures;
   }
 
+  /**
+   * @return {@code true} if this is the {@link PlayGame#getCurrentPlayer() current player}, {@code false} otherwise.
+   */
+  public boolean isCurrentPlayer() {
+
+    return (this.game.getCurrentPlayer() == this);
+  }
+
 }

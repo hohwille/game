@@ -11,9 +11,11 @@ import io.github.ghosthopper.data.PlayDataUtil;
 import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.move.PlayDirection;
 import io.github.ghosthopper.object.PlayTypedObject;
+import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
+import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Color;
 
 /**
@@ -59,14 +61,37 @@ public class PlayUiFxDataCache {
     if (image == null) {
       URL url = getImageUrl(key);
       image = new Image(url.toString());
+      Node imageTransformator = null;
+      PlayDataKey overlay = key.getOverlay();
+      if (overlay != null) {
+        assert (overlay.getOverlay() == null);
+        Image image2 = getImage(overlay);
+        if (image2 != null) {
+          ImageView imageView = new ImageView(image);
+          ImageView imageView2 = new ImageView(image2);
+          double height = image.getHeight();
+          imageView2.setFitWidth(height);
+          imageView2.setFitHeight(height);
+          imageTransformator = new StackPane(imageView, imageView2);
+        }
+      }
       PlayDirection direction = key.getDirection();
       if (direction != null) {
-        double rotation = direction.getRotationZ();
-        ImageView iv = new ImageView(image);
-        iv.setRotate(rotation);
+        double rotation = direction.getRotationZ() - 180;
+        if (rotation < 0) {
+          rotation += 360;
+        }
+        if (rotation > 0) {
+          if (imageTransformator == null) {
+            imageTransformator = new ImageView(image);
+          }
+          imageTransformator.setRotate(rotation);
+        }
+      }
+      if (imageTransformator != null) {
         SnapshotParameters params = new SnapshotParameters();
         params.setFill(Color.TRANSPARENT);
-        image = iv.snapshot(params, null);
+        image = imageTransformator.snapshot(params, null);
       }
       this.imageMap.put(key, image);
     }

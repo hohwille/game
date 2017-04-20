@@ -14,6 +14,10 @@ public class PlayUiFxBorder extends StackPane {
 
   private final PlayBorder border;
 
+  private final PlayUiFxDataCache dataCache;
+
+  private final ImageView imageView;
+
   /**
    * The constructor.
    *
@@ -23,14 +27,11 @@ public class PlayUiFxBorder extends StackPane {
   public PlayUiFxBorder(PlayBorder border, PlayUiFxDataCache dataCache) {
     super();
     this.border = border;
+    this.dataCache = dataCache;
     getStyleClass().add("border");
     Image image = dataCache.getImage(border);
-    ImageView imageView = new ImageView(image);
-    double rotation = border.getDirection().getRotationZ();
-    if (rotation > 0) {
-      // imageView.setRotate(rotation);
-    }
-    getChildren().add(imageView);
+    this.imageView = new ImageView(image);
+    getChildren().add(this.imageView);
   }
 
   /**
@@ -39,6 +40,15 @@ public class PlayUiFxBorder extends StackPane {
   public PlayBorder getPlayBorder() {
 
     return this.border;
+  }
+
+  /**
+   * Updates this border.
+   */
+  public void update() {
+
+    Image image = this.dataCache.getImage(this.border);
+    this.imageView.setImage(image);
   }
 
 }

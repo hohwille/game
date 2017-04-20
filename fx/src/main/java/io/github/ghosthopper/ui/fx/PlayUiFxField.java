@@ -66,7 +66,7 @@ public class PlayUiFxField extends StackPane {
     if (size <= 2) {
       return Pos.CENTER;
     }
-    switch (size - 2 % 4) {
+    switch (size - 3 % 4) {
       case 0:
         return Pos.TOP_LEFT;
       case 1:

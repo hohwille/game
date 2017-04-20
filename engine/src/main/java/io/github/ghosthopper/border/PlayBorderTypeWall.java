@@ -1,10 +1,11 @@
 package io.github.ghosthopper.border;
 
 import io.github.ghosthopper.figure.PlayFigure;
+import io.github.ghosthopper.object.PlayAsset;
 
 /**
  * A {@link PlayBorderType} that is an open gate so no {@link PlayFigure}
- * {@link #canPass(PlayFigure, PlayBorder, boolean) can ever pass through}.
+ * {@link #canPass(PlayAsset, PlayBorder, boolean) can ever pass through}.
  */
 public class PlayBorderTypeWall extends PlayBorderType {
 
@@ -15,7 +16,7 @@ public class PlayBorderTypeWall extends PlayBorderType {
   }
 
   @Override
-  public boolean canPass(PlayFigure figure, PlayBorder border, boolean move) {
+  public boolean canPass(PlayAsset<?> asset, PlayBorder border, boolean move) {
 
     return false;
   }

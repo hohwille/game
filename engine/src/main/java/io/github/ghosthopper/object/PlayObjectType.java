@@ -21,4 +21,12 @@ public abstract class PlayObjectType extends PlayStateObjectWithId {
    */
   public abstract String getTypeName();
 
+  /**
+   * @return the optional overlay type or {@code null} for none.
+   */
+  public PlayStateObject getOverlay() {
+
+    return null;
+  }
+
 }

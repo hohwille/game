@@ -1,12 +1,15 @@
 package io.github.ghosthopper.border;
 
 import io.github.ghosthopper.figure.PlayFigure;
+import io.github.ghosthopper.object.PlayAsset;
 
 /**
  * A {@link PlayBorderType} that is an open gate so every {@link PlayFigure}
- * {@link #canPass(PlayFigure, PlayBorder, boolean) can always pass through}.
+ * {@link #canPass(PlayAsset, PlayBorder, boolean) can always pass through}.
  */
 public class PlayBorderTypeOpen extends PlayBorderType {
+
+  static final String ID = "Open";
 
   private static final PlayBorderTypeOpen INSTANCE = new PlayBorderTypeOpen();
 
@@ -14,11 +17,11 @@ public class PlayBorderTypeOpen extends PlayBorderType {
    * The constructor.
    */
   public PlayBorderTypeOpen() {
-    super("Open");
+    super(ID);
   }
 
   @Override
-  public boolean canPass(PlayFigure figure, PlayBorder border, boolean move) {
+  public boolean canPass(PlayAsset<?> asset, PlayBorder border, boolean move) {
 
     return true;
   }
