@@ -5,12 +5,13 @@ package io.github.ghosthopper.object;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.github.ghosthopper.item.PlayAttributePickItems;
 import io.github.ghosthopper.item.PlayPickItem;
 
 /**
  * This is the abstract base class for an object that optionally can have a {@link #getColor() color}.
  */
-public abstract class PlayTypedObjectWithItems extends PlayTypedObject {
+public abstract class PlayTypedObjectWithItems extends PlayTypedObject implements PlayAttributePickItems, PlayLocation {
 
   private final List<PlayPickItem> items;
 
@@ -25,6 +26,7 @@ public abstract class PlayTypedObjectWithItems extends PlayTypedObject {
   /**
    * @return the {@link PlayPickItem}s contained in this object.
    */
+  @Override
   public List<PlayPickItem> getItems() {
 
     return this.items;

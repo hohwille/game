@@ -4,10 +4,12 @@ package io.github.ghosthopper.item;
 
 import java.util.List;
 
+import io.github.ghosthopper.object.PlayLocation;
+
 /**
  * This is the interface for an object that may have {@link #getItems() items}.
  */
-public interface PlayAttributeItems {
+public interface PlayAttributePickItems extends PlayLocation {
 
   /**
    * @return the {@link PlayPickItem}s contained in this object.

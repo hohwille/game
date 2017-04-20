@@ -3,14 +3,17 @@
 package io.github.ghosthopper.item;
 
 import io.github.ghosthopper.color.PlayColor;
+import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.game.PlayGame;
 
 /**
  * An item of the {@link PlayGame} such as a key or a gem.
  */
-public class PlayPushItem extends PlayItem<PlayPushItem> {
+public class PlayPushItem extends PlayItem<PlayField, PlayPushItem> {
 
   private final PlayPickItemType type;
+
+  private PlayField location;
 
   /**
    * The constructor.
@@ -47,6 +50,18 @@ public class PlayPushItem extends PlayItem<PlayPushItem> {
   public double getWeight() {
 
     return this.type.getWeight();
+  }
+
+  @Override
+  public PlayField getLocation() {
+
+    return this.location;
+  }
+
+  @Override
+  public void setLocation(PlayField location) {
+
+    this.location = location;
   }
 
 }

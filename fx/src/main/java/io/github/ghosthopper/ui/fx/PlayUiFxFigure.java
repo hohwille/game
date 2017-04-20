@@ -3,20 +3,13 @@
 package io.github.ghosthopper.ui.fx;
 
 import io.github.ghosthopper.figure.PlayFigure;
-import javafx.scene.effect.Effect;
-import javafx.scene.image.Image;
-import javafx.scene.image.ImageView;
 
 /**
  * JavaFx view for a {@link PlayFigure}.
  */
-public class PlayUiFxFigure extends ImageView {
+public class PlayUiFxFigure extends PlayUiFxAsset {
 
   private final PlayFigure figure;
-
-  private final PlayUiFxDataCache dataCache;
-
-  private PlayUiFxField field;
 
   /**
    * The constructor.
@@ -25,44 +18,14 @@ public class PlayUiFxFigure extends ImageView {
    * @param dataCache the {@link PlayUiFxDataCache}.
    */
   public PlayUiFxFigure(PlayFigure figure, PlayUiFxDataCache dataCache) {
-    super();
+    super(figure, dataCache);
     this.figure = figure;
-    this.dataCache = dataCache;
-    Image image = this.dataCache.getImage(figure);
-    setImage(image);
-    Effect effect = PlayUiFxColor.getEffect(figure.getColor());
-    if (effect != null) {
-      setEffect(effect);
-    }
   }
 
-  /**
-   * @return the {@link PlayFigure}.
-   */
-  public PlayFigure getPlayFigure() {
+  @Override
+  public PlayFigure getPlayAsset() {
 
     return this.figure;
-  }
-
-  /**
-   * @return the {@link PlayUiFxField} where the {@link PlayFigure} is currently {@link PlayFigure#getField() on}.
-   */
-  public PlayUiFxField getPlayField() {
-
-    return this.field;
-  }
-
-  /**
-   * @param newField the new {@link #getPlayField() field} to move this figure to.
-   */
-  public void setPlayField(PlayUiFxField newField) {
-
-    if (this.field != null) {
-      this.field.getChildren().remove(this);
-    }
-    newField.getChildren().add(this);
-    this.field = newField;
-    this.figure.setField(newField.getPlayField());
   }
 
 }

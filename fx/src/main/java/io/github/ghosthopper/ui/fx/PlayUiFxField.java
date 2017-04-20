@@ -3,7 +3,7 @@
 package io.github.ghosthopper.ui.fx;
 
 import io.github.ghosthopper.field.PlayField;
-import io.github.ghosthopper.figure.PlayFigure;
+import javafx.geometry.Pos;
 import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -16,8 +16,6 @@ public class PlayUiFxField extends StackPane {
 
   private final PlayField field;
 
-  private final PlayUiFxDataCache dataCache;
-
   /**
    * The constructor.
    *
@@ -27,7 +25,6 @@ public class PlayUiFxField extends StackPane {
   public PlayUiFxField(PlayField field, PlayUiFxDataCache dataCache) {
     super();
     this.field = field;
-    this.dataCache = dataCache;
     getStyleClass().add("field");
     Image image = dataCache.getImage(field);
     ImageView imageView = new ImageView(image);
@@ -47,13 +44,38 @@ public class PlayUiFxField extends StackPane {
   }
 
   /**
-   * @param figure the {@link PlayFigure} to add.
+   * @param asset the {@link PlayUiFxAsset} to remove from this field.
    */
-  public void addFigure(PlayFigure figure) {
+  public void removeFxAsset(PlayUiFxAsset asset) {
 
-    Image image = this.dataCache.getImage(figure);
-    ImageView imageView = new ImageView(image);
-    getChildren().add(imageView);
+    getChildren().remove(asset);
+  }
+
+  /**
+   * @param asset the {@link PlayUiFxAsset} to add to this field.
+   */
+  public void addFxAsset(PlayUiFxAsset asset) {
+
+    getChildren().add(asset);
+    int size = getChildren().size();
+    setAlignment(asset, getPosition(size));
+  }
+
+  private Pos getPosition(int size) {
+
+    if (size <= 2) {
+      return Pos.CENTER;
+    }
+    switch (size - 2 % 4) {
+      case 0:
+        return Pos.TOP_LEFT;
+      case 1:
+        return Pos.TOP_RIGHT;
+      case 2:
+        return Pos.BOTTOM_RIGHT;
+      default :
+        return Pos.BOTTOM_LEFT;
+    }
   }
 
 }

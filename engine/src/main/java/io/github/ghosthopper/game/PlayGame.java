@@ -86,6 +86,9 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
     addListener(PlayKeyEvent.class, this::handleKeyEvent);
   }
 
+  /**
+   * @param event the {@link PlayKeyEvent} to handle.
+   */
   protected void handleKeyEvent(PlayKeyEvent event) {
 
     if (event.getCode() == PlayKeys.KEY_LEFT) {
@@ -150,12 +153,22 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
     return dispatcher;
   }
 
+  /**
+   * @param <E> the type of the {@link PlayEvent}.
+   * @param eventType the {@link Class} reflecting the {@link PlayEvent}.
+   * @return the according {@link PlayEventDispatcher}. Will be created if not already exists.
+   */
   @SuppressWarnings("unchecked")
   protected <E extends PlayEvent> PlayEventDispatcher<E> getEventDispatcherRequired(Class<E> eventType) {
 
     return getEventDispatcher(eventType, true);
   }
 
+  /**
+   * @param <E> the type of the {@link PlayEvent}.
+   * @param eventType the {@link Class} reflecting the {@link PlayEvent}.
+   * @return the according {@link PlayEventDispatcher} or {@code null} if not exists.
+   */
   @SuppressWarnings("unchecked")
   protected <E extends PlayEvent> PlayEventDispatcher<E> getEventDispatcherOptional(Class<E> eventType) {
 
@@ -232,6 +245,9 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
     return this.paused;
   }
 
+  /**
+   * Pauses this {@link PlayGame}.
+   */
   public void pause() {
 
     if (this.paused) {
@@ -241,6 +257,9 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
     sendEvent(PlayState.PAUSE);
   }
 
+  /**
+   * Resumes this {@link PlayGame} after it has been {@link #pause() paused}.
+   */
   public void resume() {
 
     if (!this.paused) {
@@ -303,7 +322,9 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
   }
 
   /**
-   * @return the players
+   * @return an {@link Collections#unmodifiableList(List) unmodifiable list} of the {@link Player}s.
+   *
+   * @see #addPlayer(Player)
    */
   public List<Player> getPlayers() {
 

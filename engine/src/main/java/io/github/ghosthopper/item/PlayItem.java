@@ -3,14 +3,16 @@
 package io.github.ghosthopper.item;
 
 import io.github.ghosthopper.game.PlayGame;
-import io.github.ghosthopper.object.PlayTypedObject;
+import io.github.ghosthopper.object.PlayAsset;
+import io.github.ghosthopper.object.PlayLocation;
 
 /**
  * An item of the {@link PlayGame} such as a key or a gem.
  *
+ * @param <L> the type of the {@link #getLocation() location}.
  * @param <S> this {@link PlayItem} itself.
  */
-public abstract class PlayItem<S extends PlayItem<S>> extends PlayTypedObject implements PlayAttributeWeight<S> {
+public abstract class PlayItem<L extends PlayLocation, S extends PlayItem<L, S>> extends PlayAsset<L> implements PlayAttributeWeight<S> {
 
   /**
    * The constructor.

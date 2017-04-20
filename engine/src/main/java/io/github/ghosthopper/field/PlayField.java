@@ -13,6 +13,7 @@ import io.github.ghosthopper.border.PlayBorderType;
 import io.github.ghosthopper.border.PlayBorderTypeWall;
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.game.PlayGame;
+import io.github.ghosthopper.item.PlayAttributePushItem;
 import io.github.ghosthopper.item.PlayPushItem;
 import io.github.ghosthopper.move.PlayDirection;
 import io.github.ghosthopper.object.PlayTypedObjectWithItems;
@@ -23,7 +24,7 @@ import io.github.ghosthopper.player.Player;
  * {@link PlayField}s. Each {@link PlayField} has {@link PlayBorder}s that can be navigated via
  * {@link #getBorder(PlayDirection)} and also {@link #getField(PlayDirection)}.
  */
-public class PlayField extends PlayTypedObjectWithItems {
+public class PlayField extends PlayTypedObjectWithItems implements PlayAttributePushItem {
 
   private final PlayLevel level;
 
@@ -79,6 +80,7 @@ public class PlayField extends PlayTypedObjectWithItems {
   /**
    * @return the {@link PlayPushItem} that is on this {@link PlayField} or {@code null} if there is no such item here.
    */
+  @Override
   public PlayPushItem getPushItem() {
 
     return this.pushItem;
@@ -118,7 +120,7 @@ public class PlayField extends PlayTypedObjectWithItems {
   public void collectCurrentFigures(Player player, Collection<PlayFigure> figures) {
 
     for (PlayFigure figure : player.getFigures()) {
-      if (figure.getField() == this) {
+      if (figure.getLocation() == this) {
         figures.add(figure);
       }
     }

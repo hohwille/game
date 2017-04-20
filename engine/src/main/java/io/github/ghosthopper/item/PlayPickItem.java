@@ -8,9 +8,11 @@ import io.github.ghosthopper.game.PlayGame;
 /**
  * An item of the {@link PlayGame} such as a key or a gem.
  */
-public class PlayPickItem extends PlayItem<PlayPickItem> {
+public class PlayPickItem extends PlayItem<PlayAttributePickItems, PlayPickItem> {
 
   private final PlayPickItemType type;
+
+  private PlayAttributePickItems location;
 
   /**
    * The constructor.
@@ -41,6 +43,28 @@ public class PlayPickItem extends PlayItem<PlayPickItem> {
   public PlayPickItemType getType() {
 
     return this.type;
+  }
+
+  @Override
+  public PlayAttributePickItems getLocation() {
+
+    return this.location;
+  }
+
+  @Override
+  public void setLocation(PlayAttributePickItems location) {
+
+    if (this.location == location) {
+      return;
+    }
+    if (this.location != null) {
+      this.location.getItems().remove(this);
+    }
+    this.location = location;
+    if (this.location != null) {
+      this.location.getItems().add(this);
+    }
+    getGame().sendEvent(this);
   }
 
 }

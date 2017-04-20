@@ -52,7 +52,7 @@ public class PlayUiFxGame extends Scene {
       for (PlayFigure figure : player.getFigures()) {
         PlayUiFxFigure fxFigure = new PlayUiFxFigure(figure, this.dataCache);
         this.figureMap.put(figure, fxFigure);
-        PlayField field = figure.getField();
+        PlayField field = figure.getLocation();
         if (field != null) {
           PlayUiFxField playField = this.level.getFxField(field);
           if (playField != null) {
@@ -84,7 +84,7 @@ public class PlayUiFxGame extends Scene {
 
     PlayUiFxFigure fxFigure = getFxFigure(figure);
     if (fxFigure != null) {
-      PlayUiFxField fxField = this.level.getFxField(figure.getField());
+      PlayUiFxField fxField = this.level.getFxField(figure.getLocation());
       fxFigure.setPlayField(fxField);
     }
   }

@@ -114,9 +114,9 @@ public class PlayBorderTest extends Assertions {
 
     // when + then
     assertThat(open.pass(GREEN_RABBIT_FIGURE)).isFalse();
-    BLUE_MOUSE_FIGURE.setField(sourceField);
+    BLUE_MOUSE_FIGURE.setLocation(sourceField);
     assertThat(open.pass(BLUE_MOUSE_FIGURE)).isFalse();
-    GREEN_RABBIT_FIGURE.setField(targetField);
+    GREEN_RABBIT_FIGURE.setLocation(targetField);
     assertThat(open.pass(BLUE_MOUSE_FIGURE)).isTrue();
     assertThat(open.pass(GREEN_RABBIT_FIGURE)).isTrue();
   }

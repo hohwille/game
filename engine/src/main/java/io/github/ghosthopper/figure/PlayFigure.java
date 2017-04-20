@@ -1,15 +1,17 @@
 package io.github.ghosthopper.figure;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import io.github.ghosthopper.border.PlayBorder;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.game.PlayGame;
+import io.github.ghosthopper.item.PlayAttributePickItems;
 import io.github.ghosthopper.item.PlayPickItem;
 import io.github.ghosthopper.item.PlayPushItem;
 import io.github.ghosthopper.move.PlayAttributeDirection;
 import io.github.ghosthopper.move.PlayDirection;
-import io.github.ghosthopper.object.PlayTypedObjectWithItems;
+import io.github.ghosthopper.object.PlayAsset;
 import io.github.ghosthopper.player.Player;
 import io.github.ghosthopper.properties.PlayPropertyValueDouble;
 import io.github.ghosthopper.properties.PlayPropertyValueInt;
@@ -17,14 +19,16 @@ import io.github.ghosthopper.properties.PlayPropertyValueInt;
 /**
  * Any figure of an {@link Player#getFigures() owning} {@link Player}. Each {@link PlayFigure} has a {@link #getType()
  * type} that represents its characteristics and influences its visualization in the UI of the game. For the current
- * moment in time of the {@link PlayGame} each {@link PlayFigure} is {@link #getField() located on} a specific
+ * moment in time of the {@link PlayGame} each {@link PlayFigure} is {@link #getLocation() located on} a specific
  * {@link PlayField}.
  */
-public class PlayFigure extends PlayTypedObjectWithItems implements PlayAttributeDirection {
+public class PlayFigure extends PlayAsset<PlayField> implements PlayAttributeDirection, PlayAttributePickItems {
 
   private final Player player;
 
   private final PlayFigureType type;
+
+  private final List<PlayPickItem> items;
 
   private PlayField field;
 
@@ -40,6 +44,7 @@ public class PlayFigure extends PlayTypedObjectWithItems implements PlayAttribut
     super();
     this.player = player;
     this.type = type;
+    this.items = new ArrayList<>();
     if (player != null) {
       setColor(player.getColor());
     }
@@ -65,18 +70,20 @@ public class PlayFigure extends PlayTypedObjectWithItems implements PlayAttribut
     return this.player.getGame();
   }
 
-  /**
-   * @return the {@link PlayField} this {@link PlayFigure} is currently standing on.
-   */
-  public PlayField getField() {
+  @Override
+  public List<PlayPickItem> getItems() {
+
+    return this.items;
+  }
+
+  @Override
+  public PlayField getLocation() {
 
     return this.field;
   }
 
-  /**
-   * @param field the new value of {@link #getField()}.
-   */
-  public void setField(PlayField field) {
+  @Override
+  public void setLocation(PlayField field) {
 
     this.field = field;
   }
@@ -100,7 +107,7 @@ public class PlayFigure extends PlayTypedObjectWithItems implements PlayAttribut
   }
 
   /**
-   * @return the new {@link #getField()} after this move or {@code null} if the move was not possible and therefore
+   * @return the new {@link #getLocation()} after this move or {@code null} if the move was not possible and therefore
    *         failed.
    */
   public PlayField move() {
@@ -124,7 +131,7 @@ public class PlayFigure extends PlayTypedObjectWithItems implements PlayAttribut
 
   /**
    * @param dir the {@link PlayDirection} to move to.
-   * @return the new {@link #getField()} after this move or {@code null} if the move was not possible and therefore
+   * @return the new {@link #getLocation()} after this move or {@code null} if the move was not possible and therefore
    *         failed.
    */
   public PlayField move(PlayDirection dir) {
@@ -201,7 +208,7 @@ public class PlayFigure extends PlayTypedObjectWithItems implements PlayAttribut
   }
 
   /**
-   * @return the result of {@link #pickItem(PlayPickItem)} invoked for the top-most item of the {@link #getField()
+   * @return the result of {@link #pickItem(PlayPickItem)} invoked for the top-most item of the {@link #getLocation()
    *         current field}.
    */
   public PlayPickItem pickItem() {
@@ -219,9 +226,10 @@ public class PlayFigure extends PlayTypedObjectWithItems implements PlayAttribut
 
   /**
    * @param item the {@link PlayPickItem} to pick up.
-   * @return the {@link PlayPickItem} that has been picked up from the {@link #getField() field} this {@link PlayFigure}
-   *         is on, {@code null} otherwise (no {@link #getField() field}, no {@link PlayField#getItems() item},
-   *         {@link PlayPropertyValueInt#MAX_ITEMS full}, or {@link PlayPropertyValueDouble#MAX_WEIGHT overloaded}).
+   * @return the {@link PlayPickItem} that has been picked up from the {@link #getLocation() field} this
+   *         {@link PlayFigure} is on, {@code null} otherwise (no {@link #getLocation() field}, no
+   *         {@link PlayField#getItems() item}, {@link PlayPropertyValueInt#MAX_ITEMS full}, or
+   *         {@link PlayPropertyValueDouble#MAX_WEIGHT overloaded}).
    */
   public PlayPickItem pickItem(PlayPickItem item) {
 
@@ -245,36 +253,34 @@ public class PlayFigure extends PlayTypedObjectWithItems implements PlayAttribut
 
   /**
    * @return the {@link PlayPickItem} that has been dropped from the {@link #getItems() inventory} to the
-   *         {@link #getField() field} this {@link PlayFigure} is on, {@code null} otherwise (no {@link #getField()
-   *         field}, no {@link #getItems() item in inventory}, etc.).
+   *         {@link #getLocation() field} this {@link PlayFigure} is on, {@code null} otherwise (no
+   *         {@link #getLocation() field}, no {@link #getItems() item in inventory}, etc.).
    */
   public PlayPickItem dropItem() {
 
     if (this.field == null) {
       return null;
     }
-    List<PlayPickItem> items = getItems();
-    if (items.isEmpty()) {
+    if (this.items.isEmpty()) {
       return null;
     }
-    int itemIndex = items.size() - 1;
-    PlayPickItem item = items.get(itemIndex);
+    int itemIndex = this.items.size() - 1;
+    PlayPickItem item = this.items.get(itemIndex);
     return dropItem(item, itemIndex);
   }
 
   /**
    * @param item the {@link PlayPickItem} to pick up.
    * @return the {@link PlayPickItem} that has been dropped from the {@link #getItems() inventory} to the
-   *         {@link #getField() field} this {@link PlayFigure} is on, {@code null} otherwise (no {@link #getField()
-   *         field}, item not in {@link #getItems() inventory}, etc.).
+   *         {@link #getLocation() field} this {@link PlayFigure} is on, {@code null} otherwise (no
+   *         {@link #getLocation() field}, item not in {@link #getItems() inventory}, etc.).
    */
   public PlayPickItem dropItem(PlayPickItem item) {
 
     if (this.field == null) {
       return null;
     }
-    List<PlayPickItem> items = getItems();
-    int itemIndex = items.indexOf(items);
+    int itemIndex = this.items.indexOf(item);
     return dropItem(item, itemIndex);
   }
 

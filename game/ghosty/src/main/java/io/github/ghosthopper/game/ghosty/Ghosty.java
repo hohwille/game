@@ -47,18 +47,18 @@ public class Ghosty extends PlayGameSimple {
 
     Player player1 = new Player(PlayColor.GREEN, FROG);
     addPlayer(player1);
-    player1.getFigures().get(0).setField(level.getField(0, 0));
+    player1.getFigures().get(0).setLocation(level.getField(0, 0));
 
     Player player2 = new Player(PlayColor.RED, BUG);
     addPlayer(player2);
-    player2.getFigures().get(0).setField(level.getField(width - 1, 0));
+    player2.getFigures().get(0).setLocation(level.getField(width - 1, 0));
 
     Player player3 = new Player(PlayColor.BLUE, FROG);
     addPlayer(player3);
-    player3.getFigures().get(0).setField(level.getField(width - 1, height - 1));
+    player3.getFigures().get(0).setLocation(level.getField(width - 1, height - 1));
 
     Player player4 = new Player(PlayColor.YELLOW, BUG);
     addPlayer(player4);
-    player4.getFigures().get(0).setField(level.getField(0, height - 1));
+    player4.getFigures().get(0).setLocation(level.getField(0, height - 1));
   }
 }

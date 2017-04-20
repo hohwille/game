@@ -54,7 +54,7 @@ public class Chess extends PlayGameSimple {
         fieldColor = toggleColor(fieldColor);
         if (y <= 2) {
           PlayFigure playFigure = BLACK.getFigures().get(figureIndex++);
-          playFigure.setField(field);
+          playFigure.setLocation(field);
         }
       }
     }
@@ -63,7 +63,7 @@ public class Chess extends PlayGameSimple {
       for (int x = 1; x <= 8; x++) {
         PlayFigure playFigure = WHITE.getFigures().get(getWhiteFigureIndex(figureIndex));
         figureIndex--;
-        playFigure.setField(level.getField(x, y));
+        playFigure.setLocation(level.getField(x, y));
       }
     }
   }
