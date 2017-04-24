@@ -3,7 +3,6 @@
 package io.github.ghosthopper.ui.fx;
 
 import io.github.ghosthopper.figure.PlayFigure;
-import javafx.scene.effect.ColorAdjust;
 import javafx.scene.effect.Effect;
 import javafx.scene.effect.Glow;
 
@@ -14,6 +13,8 @@ public class PlayUiFxFigure extends PlayUiFxAsset {
 
   private final PlayFigure figure;
 
+  private final Glow glow;
+
   /**
    * The constructor.
    *
@@ -23,6 +24,12 @@ public class PlayUiFxFigure extends PlayUiFxAsset {
   public PlayUiFxFigure(PlayFigure figure, PlayUiFxDataCache dataCache) {
     super(figure, dataCache);
     this.figure = figure;
+    this.glow = new Glow();
+    Effect effect = getEffect();
+    if (effect != null) {
+      this.glow.setInput(effect);
+    }
+    setEffect(this.glow);
     update();
   }
 
@@ -38,20 +45,10 @@ public class PlayUiFxFigure extends PlayUiFxAsset {
   public void update() {
 
     boolean selected = this.figure.isCurrentFigure();
-    Effect effect = getEffect();
     if (selected) {
-      Glow glow = new Glow(1);
-      if (effect == null) {
-        setEffect(glow);
-      } else if (effect instanceof ColorAdjust) {
-        ((ColorAdjust) effect).setInput(glow);
-      }
+      this.glow.setLevel(0.8);
     } else {
-      if (effect instanceof ColorAdjust) {
-        ((ColorAdjust) effect).setInput(null);
-      } else {
-        setEffect(null);
-      }
+      this.glow.setLevel(0);
     }
   }
 

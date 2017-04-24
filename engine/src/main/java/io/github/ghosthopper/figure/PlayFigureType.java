@@ -2,6 +2,8 @@ package io.github.ghosthopper.figure;
 
 import java.util.List;
 
+import io.github.ghosthopper.asset.PlayAssetType;
+import io.github.ghosthopper.asset.PlayAttributeAsset;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.item.PlayPickItem;
 import io.github.ghosthopper.object.PlayObjectType;
@@ -12,7 +14,7 @@ import io.github.ghosthopper.properties.PlayPropertyValueInt;
 /**
  * The {@link PlayFigure#getType() type} of a {@link PlayField}.
  */
-public class PlayFigureType extends PlayObjectType {
+public class PlayFigureType extends PlayObjectType implements PlayAssetType {
 
   private final boolean invisible;
 
@@ -55,8 +57,9 @@ public class PlayFigureType extends PlayObjectType {
    * @param item the {@link PlayPickItem} to check (that shall potentially be added).
    * @return {@code true} if this {@link PlayFigure} may {@link PlayFigure#pickItem(PlayPickItem) pick} and carry the
    *         {@link PlayPickItem}, {@code false} otherwise.
+   * @see PlayAttributeAsset#canAddAsset(io.github.ghosthopper.asset.PlayAsset)
    */
-  public boolean isPickable(PlayFigure figure, PlayPickItem item) {
+  public boolean canAddItem(PlayFigure figure, PlayPickItem item) {
 
     assert (figure.getType() == this);
     PlayProperties properties = figure.getProperties();

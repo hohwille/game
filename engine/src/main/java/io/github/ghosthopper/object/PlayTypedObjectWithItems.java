@@ -3,17 +3,21 @@
 package io.github.ghosthopper.object;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import io.github.ghosthopper.item.PlayAttributePickItems;
 import io.github.ghosthopper.item.PlayPickItem;
+import io.github.ghosthopper.item.PlayPickItemMoveEvent;
 
 /**
  * This is the abstract base class for an object that optionally can have a {@link #getColor() color}.
  */
-public abstract class PlayTypedObjectWithItems extends PlayTypedObject implements PlayAttributePickItems, PlayLocation {
+public abstract class PlayTypedObjectWithItems extends AbstractPlayTypedObject implements PlayAttributePickItems {
 
   private final List<PlayPickItem> items;
+
+  private final List<PlayPickItem> itemsView;
 
   /**
    * The constructor.
@@ -21,15 +25,45 @@ public abstract class PlayTypedObjectWithItems extends PlayTypedObject implement
   public PlayTypedObjectWithItems() {
     super();
     this.items = new ArrayList<>();
+    this.itemsView = Collections.unmodifiableList(this.items);
   }
 
-  /**
-   * @return the {@link PlayPickItem}s contained in this object.
-   */
   @Override
   public List<PlayPickItem> getItems() {
 
-    return this.items;
+    return this.itemsView;
+  }
+
+  @Override
+  public boolean canAddItem(PlayPickItem item) {
+
+    return true;
+  }
+
+  @Override
+  public boolean addItem(PlayPickItem item) {
+
+    if (!canAddItem(item)) {
+      return false;
+    }
+    PlayAttributePickItems oldLocation = item.getLocation();
+    if (oldLocation != null) {
+      boolean success = oldLocation.removeItem(item, false);
+      if (!success) {
+        return false;
+      }
+    }
+    this.items.add(item);
+    item.setLocation(this);
+    getGame().sendEvent(new PlayPickItemMoveEvent(oldLocation, item, this));
+    return true;
+  }
+
+  @Override
+  public boolean removeItem(PlayPickItem item, boolean sendEvent) {
+
+    // TODO Auto-generated method stub
+    return false;
   }
 
 }

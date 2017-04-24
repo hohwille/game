@@ -2,8 +2,8 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.ui.fx;
 
+import io.github.ghosthopper.asset.PlayAsset;
 import io.github.ghosthopper.figure.PlayFigure;
-import io.github.ghosthopper.object.PlayAsset;
 import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;

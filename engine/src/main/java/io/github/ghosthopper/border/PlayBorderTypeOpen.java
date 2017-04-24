@@ -1,7 +1,7 @@
 package io.github.ghosthopper.border;
 
+import io.github.ghosthopper.asset.PlayAsset;
 import io.github.ghosthopper.figure.PlayFigure;
-import io.github.ghosthopper.object.PlayAsset;
 
 /**
  * A {@link PlayBorderType} that is an open gate so every {@link PlayFigure}

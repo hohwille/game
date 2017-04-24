@@ -2,6 +2,8 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.field;
 
+import io.github.ghosthopper.asset.PlayAsset;
+import io.github.ghosthopper.asset.PlayAttributeAsset;
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.item.PlayPickItem;
 import io.github.ghosthopper.object.PlayObjectType;
@@ -9,7 +11,7 @@ import io.github.ghosthopper.object.PlayObjectType;
 /**
  * The type of a {@link PlayField}.
  */
-public class PlayFieldType extends PlayObjectType {
+public class PlayFieldType extends PlayObjectType implements PlayAttributeAsset<PlayAsset<?>> {
 
   /** Type of a normal/regular {@link PlayField}. */
   public static final PlayFieldType NORMAL = new PlayFieldType("Normal");
@@ -41,6 +43,25 @@ public class PlayFieldType extends PlayObjectType {
    *         {@link PlayField}.
    */
   public boolean isDroppable(PlayPickItem item) {
+
+    return true;
+  }
+
+  @Override
+  public boolean canAddAsset(PlayAsset<?> asset) {
+
+    // by default a field can hold any asset(s). Override to change...
+    return true;
+  }
+
+  @Override
+  public boolean addAsset(PlayAsset<?> asset) {
+
+    return canAddAsset(asset);
+  }
+
+  @Override
+  public boolean removeAsset(PlayAsset<?> asset) {
 
     return true;
   }

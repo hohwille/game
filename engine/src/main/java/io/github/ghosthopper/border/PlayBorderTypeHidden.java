@@ -2,8 +2,8 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.border;
 
-import io.github.ghosthopper.object.PlayAsset;
-import io.github.ghosthopper.object.PlayStateObject;
+import io.github.ghosthopper.asset.PlayAsset;
+import io.github.ghosthopper.object.AbstractPlayStateObject;
 
 /**
  * A {@link PlayBorderType} that wraps a {@link #getDelegate() delegate border type} that is hidden until the
@@ -52,7 +52,7 @@ public class PlayBorderTypeHidden extends PlayBorderType {
   }
 
   @Override
-  public PlayStateObject getOverlay() {
+  public AbstractPlayStateObject getOverlay() {
 
     if (this.hidden) {
       return super.getOverlay();

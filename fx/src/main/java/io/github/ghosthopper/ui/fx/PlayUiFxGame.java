@@ -10,6 +10,8 @@ import io.github.ghosthopper.border.PlayBorder;
 import io.github.ghosthopper.event.PlayKeyEvent;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.figure.PlayFigure;
+import io.github.ghosthopper.figure.PlayFigureMoveEvent;
+import io.github.ghosthopper.figure.PlayFigureTurnEvent;
 import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.player.Player;
 import javafx.scene.Scene;
@@ -50,7 +52,8 @@ public class PlayUiFxGame extends Scene {
     initPlayers();
     ((VBox) getRoot()).getChildren().add(this.level);
     setOnKeyPressed(this::handleKeyEvent);
-    this.game.addListener(PlayFigure.class, this::onUpdateFigure);
+    this.game.addListener(PlayFigureMoveEvent.class, this::onMoveFigure);
+    this.game.addListener(PlayFigureTurnEvent.class, this::onTurnFigure);
     this.game.addListener(PlayBorder.class, this::onUpdateBorder);
   }
 
@@ -88,12 +91,23 @@ public class PlayUiFxGame extends Scene {
     }
   }
 
-  private void onUpdateFigure(PlayFigure figure) {
+  private void onMoveFigure(PlayFigureMoveEvent moveFigure) {
 
-    PlayUiFxFigure fxFigure = getFxFigure(figure);
+    PlayUiFxFigure fxFigure = getFxFigure(moveFigure.getAsset());
     if (fxFigure != null) {
-      PlayUiFxField fxField = getFxField(figure.getLocation());
+      PlayUiFxField fxField = getFxField(moveFigure.getNewLocation());
       fxFigure.setPlayField(fxField);
+    }
+  }
+
+  private void onTurnFigure(PlayFigureTurnEvent turnFigure) {
+
+    PlayUiFxFigure fxFigure = getFxFigure(turnFigure.getOldFigure());
+    if (fxFigure != null) {
+      fxFigure.update();
+    }
+    fxFigure = getFxFigure(turnFigure.getNewFigure());
+    if (fxFigure != null) {
       fxFigure.update();
     }
   }

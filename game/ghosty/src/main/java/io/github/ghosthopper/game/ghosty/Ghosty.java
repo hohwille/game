@@ -41,6 +41,13 @@ public class Ghosty extends PlayGameSimple {
     this(4, 4);
   }
 
+  @Override
+  protected void move(PlayDirection direction) {
+
+    super.move(direction);
+    // nextPlayer();
+  }
+
   /**
    * The constructor.
    *

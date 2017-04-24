@@ -8,12 +8,15 @@ import java.util.Set;
 import java.util.function.Predicate;
 
 import io.github.ghosthopper.PlayLevel;
+import io.github.ghosthopper.asset.PlayAsset;
+import io.github.ghosthopper.asset.PlayAttributeAsset;
 import io.github.ghosthopper.border.PlayBorder;
 import io.github.ghosthopper.border.PlayBorderType;
 import io.github.ghosthopper.border.PlayBorderTypeWall;
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.item.PlayAttributePushItem;
+import io.github.ghosthopper.item.PlayPickItem;
 import io.github.ghosthopper.item.PlayPushItem;
 import io.github.ghosthopper.move.PlayDirection;
 import io.github.ghosthopper.object.PlayTypedObjectWithItems;
@@ -24,7 +27,7 @@ import io.github.ghosthopper.player.Player;
  * {@link PlayField}s. Each {@link PlayField} has {@link PlayBorder}s that can be navigated via
  * {@link #getBorder(PlayDirection)} and also {@link #getField(PlayDirection)}.
  */
-public class PlayField extends PlayTypedObjectWithItems implements PlayAttributePushItem {
+public class PlayField extends PlayTypedObjectWithItems implements PlayAttributePushItem, PlayAttributeAsset<PlayAsset<?>> {
 
   private final PlayLevel level;
 
@@ -73,7 +76,6 @@ public class PlayField extends PlayTypedObjectWithItems implements PlayAttribute
    */
   public void setType(PlayFieldType type) {
 
-    assert (this.type == null);
     this.type = type;
   }
 
@@ -88,10 +90,25 @@ public class PlayField extends PlayTypedObjectWithItems implements PlayAttribute
 
   /**
    * @param pushItem the new value of {@link #getPushItem()}.
+   * @return {@code true} if the {@link PlayPushItem} has been set successfully, {@code false} otherwise.
    */
-  public void setPushItem(PlayPushItem pushItem) {
+  public boolean setPushItem(PlayPushItem pushItem) {
 
-    this.pushItem = pushItem;
+    if (this.pushItem == pushItem) {
+      return true;
+    }
+    boolean success;
+    if (this.pushItem == null) {
+      success = this.type.addAsset(pushItem);
+    } else if (pushItem == null) {
+      success = this.type.removeAsset(this.pushItem);
+    } else {
+      success = false; // PlayField can only hold a single push item
+    }
+    if (success) {
+      this.pushItem = pushItem;
+    }
+    return success;
   }
 
   /**
@@ -281,6 +298,36 @@ public class PlayField extends PlayTypedObjectWithItems implements PlayAttribute
     PlayBorder duplicate = this.direction2borderMap.put(direction, border);
     if (duplicate != null) {
       throw new IllegalStateException("Border in direction " + direction + " already existed as " + duplicate + " and has been replaced with " + border);
+    }
+  }
+
+  @Override
+  public boolean canAddAsset(PlayAsset<?> asset) {
+
+    return this.type.canAddAsset(asset);
+  }
+
+  @Override
+  public boolean addAsset(PlayAsset<?> asset) {
+
+    if (asset instanceof PlayPushItem) {
+      return setPushItem((PlayPushItem) asset);
+    } else if (asset instanceof PlayPickItem) {
+      return addItem((PlayPickItem) asset);
+    } else {
+      return this.type.addAsset(asset);
+    }
+  }
+
+  @Override
+  public boolean removeAsset(PlayAsset<?> asset) {
+
+    if (asset instanceof PlayPushItem) {
+      return setPushItem(null);
+    } else if (asset instanceof PlayPickItem) {
+      return removeItem((PlayPickItem) asset);
+    } else {
+      return this.type.removeAsset(asset);
     }
   }
 

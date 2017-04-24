@@ -2,6 +2,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.item;
 
+import io.github.ghosthopper.asset.PlayAssetType;
 import io.github.ghosthopper.object.PlayObjectType;
 
 /**
@@ -10,7 +11,7 @@ import io.github.ghosthopper.object.PlayObjectType;
  *
  * @param <S> this {@link PlayItemType} itself.
  */
-public abstract class PlayItemType<S extends PlayItemType<S>> extends PlayObjectType implements PlayAttributeWeight<S> {
+public abstract class PlayItemType<S extends PlayItemType<S>> extends PlayObjectType implements PlayAssetType, PlayAttributeWeight<S> {
 
   /**
    * The constructor.

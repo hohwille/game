@@ -23,13 +23,16 @@ import io.github.ghosthopper.event.PlayKeys;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.field.PlayFieldType;
 import io.github.ghosthopper.figure.PlayFigure;
+import io.github.ghosthopper.figure.PlayFigureTurnEvent;
 import io.github.ghosthopper.figure.PlayFigureType;
 import io.github.ghosthopper.i18n.PlayTranslator;
 import io.github.ghosthopper.item.PlayItem;
 import io.github.ghosthopper.item.PlayItemType;
+import io.github.ghosthopper.item.PlayPickItem;
 import io.github.ghosthopper.move.PlayDirection;
 import io.github.ghosthopper.object.PlayStateObjectWithId;
 import io.github.ghosthopper.player.Player;
+import io.github.ghosthopper.player.PlayerTurnEvent;
 
 /**
  * This is the main object and represents an actual game with its rules. To implement your own game, simply extend this
@@ -315,6 +318,15 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
   }
 
   /**
+   * @return {@code true} if a {@link PlayFigure} should automatically {@link PlayFigure#pickItem() pick} the
+   *         {@link PlayPickItem}(s) when he moves on a {@link PlayField}, {@code false} otherwise.
+   */
+  public boolean isAutoPickItem() {
+
+    return false;
+  }
+
+  /**
    * @return {@code true} if this game should show its {@link PlayBorder}s in the UI, {@code false} otherwise (borders
    *         are hidden).
    */
@@ -361,25 +373,30 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
     if (!isTurnGame()) {
       return null;
     }
-    Player player = getCurrentPlayer();
-    PlayFigure figure = getCurrentFigure();
+    PlayFigure oldFigure = getCurrentFigure();
+    Player oldPlayer = null;
+    if (oldFigure != null) {
+      oldPlayer = oldFigure.getPlayer();
+    }
     this.currentPlayer++;
     if (this.currentPlayer >= this.players.size()) {
       this.currentPlayer = 0;
     }
     this.currentFigure = 0;
-    sendEvent(player);
-    sendEvent(figure);
-    player = getCurrentPlayer();
-    sendEvent(player);
-    List<PlayFigure> figures = player.getFigures();
-    figure = figures.get(this.currentFigure);
-    sendEvent(figure);
-    while (!player.isHuman()) {
-      moveBotPlayer(player);
-      player = nextPlayer();
+    PlayFigure newFigure = getCurrentFigure();
+    Player newPlayer;
+    if (newFigure == null) {
+      newPlayer = getCurrentPlayer();
+    } else {
+      newPlayer = newFigure.getPlayer();
     }
-    return player;
+    sendEvent(new PlayerTurnEvent(oldPlayer, newPlayer));
+    sendEvent(new PlayFigureTurnEvent(oldFigure, newFigure));
+    if ((newPlayer != null) && !newPlayer.isHuman()) {
+      moveBotPlayer(newPlayer);
+      newPlayer = nextPlayer();
+    }
+    return newPlayer;
   }
 
   /**
@@ -409,23 +426,20 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
       return null;
     }
     Player player = getCurrentPlayer();
-    PlayFigure figure;
+    PlayFigure oldFigure = null;
     List<PlayFigure> figures = player.getFigures();
     int size = figures.size();
     if (this.currentFigure < size) {
-      figure = figures.get(this.currentFigure);
+      oldFigure = figures.get(this.currentFigure);
       this.currentFigure++;
-      sendEvent(figure);
     }
-    figure = getCurrentFigure();
-    if ((figure == null) && (mayChangePlayer)) {
+    PlayFigure newFigure = getCurrentFigure();
+    if ((newFigure == null) && (mayChangePlayer)) {
       nextPlayer();
-      figure = getCurrentFigure();
+      newFigure = getCurrentFigure();
     }
-    if (figure != null) {
-      sendEvent(figure);
-    }
-    return figure;
+    sendEvent(new PlayFigureTurnEvent(oldFigure, newFigure));
+    return newFigure;
   }
 
   /**

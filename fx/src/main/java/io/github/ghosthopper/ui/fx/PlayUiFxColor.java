@@ -79,7 +79,7 @@ public class PlayUiFxColor {
   /**
    * @return the {@link Effect} to transform an image from the base-color (mangeta) to this color.
    */
-  public ColorAdjust getEffect() {
+  public Effect getEffect() {
 
     return this.effect;
   }
@@ -100,7 +100,7 @@ public class PlayUiFxColor {
    * @param color the {@link PlayColor}.
    * @return the corresponding {@link #getEffect() effect}.
    */
-  public static ColorAdjust getEffect(PlayColor color) {
+  public static Effect getEffect(PlayColor color) {
 
     if (color == null) {
       return null;

@@ -10,6 +10,7 @@ import io.github.ghosthopper.data.PlayDataKey;
 import io.github.ghosthopper.data.PlayDataUtil;
 import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.move.PlayDirection;
+import io.github.ghosthopper.object.AbstractPlayTypedObject;
 import io.github.ghosthopper.object.PlayTypedObject;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
@@ -99,10 +100,10 @@ public class PlayUiFxDataCache {
   }
 
   /**
-   * @param object the {@link PlayTypedObject}.
+   * @param object the {@link AbstractPlayTypedObject}.
    * @return the {@link URL} of the image for the given object.
    */
-  public URL getImageUrl(PlayTypedObject object) {
+  public URL getImageUrl(AbstractPlayTypedObject object) {
 
     PlayDataKey key = new PlayDataKey(object);
     return getImageUrl(key);

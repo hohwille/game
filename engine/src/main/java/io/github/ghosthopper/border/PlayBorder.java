@@ -1,19 +1,19 @@
 package io.github.ghosthopper.border;
 
+import io.github.ghosthopper.asset.PlayAsset;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.move.PlayAttributeDirection;
 import io.github.ghosthopper.move.PlayDirection;
-import io.github.ghosthopper.object.PlayAsset;
-import io.github.ghosthopper.object.PlayTypedObject;
+import io.github.ghosthopper.object.AbstractPlayTypedObject;
 
 /**
  * A {@link PlayBorder} connects two {@link PlayField}s. A {@link #getSourceField() source field} is leading in the
  * {@link #getDirection() direction} towards the {@link #getTargetField() target field}. The {@link PlayBorder} has a
  * {@link #getType() type} that decides if a figure {@link #canPass(PlayAsset) can pass} the border.
  */
-public class PlayBorder extends PlayTypedObject implements PlayAttributeDirection {
+public class PlayBorder extends AbstractPlayTypedObject implements PlayAttributeDirection {
 
   private final PlayField sourceField;
 

@@ -8,21 +8,14 @@ import java.util.Objects;
 import io.github.ghosthopper.game.PlayGame;
 
 /**
- * This is the abstract base class for any object of this game.
+ * Interface for any play object of this game.
  */
-public abstract class PlayObject {
+public interface PlayObject {
 
   /**
-   * The constructor.
+   * @return the {@link PlayGame} owning this object.
    */
-  public PlayObject() {
-    super();
-  }
-
-  /**
-   * @return the {@link PlayGame} owining this object.
-   */
-  public PlayGame getGame() {
+  default PlayGame getGame() {
 
     PlayGame game = PlayGame.getCurrentGame();
     Objects.requireNonNull(game, "game");
@@ -32,12 +25,12 @@ public abstract class PlayObject {
   /**
    * @return the ID of this item used to find corresponding graphics or audio information.
    */
-  public abstract String getId();
+  String getId();
 
   /**
    * @return the localized name of this object.
    */
-  public String getLocalizedName() {
+  default String getLocalizedName() {
 
     return getGame().getTranslator().translate(getId());
   }
@@ -46,15 +39,9 @@ public abstract class PlayObject {
    * @param locale the explicit {@link Locale} to translate to.
    * @return the localized name of this object.
    */
-  public String getLocalizedName(Locale locale) {
+  default String getLocalizedName(Locale locale) {
 
     return getGame().getTranslator().translate(getId(), locale);
-  }
-
-  @Override
-  public String toString() {
-
-    return getId();
   }
 
 }

@@ -57,6 +57,7 @@ public class PlayPickItem extends PlayItem<PlayAttributePickItems, PlayPickItem>
     if (this.location == location) {
       return;
     }
+    PlayAttributePickItems oldLocation = this.location;
     if (this.location != null) {
       this.location.getItems().remove(this);
     }
@@ -64,7 +65,7 @@ public class PlayPickItem extends PlayItem<PlayAttributePickItems, PlayPickItem>
     if (this.location != null) {
       this.location.getItems().add(this);
     }
-    getGame().sendEvent(this);
+    getGame().sendEvent(new PlayPickItemMoveEvent(oldLocation, this, location));
   }
 
 }

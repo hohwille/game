@@ -5,7 +5,7 @@ package io.github.ghosthopper.object;
 /**
  * Abstract base class for an object type.
  */
-public abstract class PlayObjectType extends PlayStateObjectWithId {
+public abstract class PlayObjectType extends PlayStateObjectWithId implements PlayType {
 
   /**
    * The constructor.
@@ -14,19 +14,6 @@ public abstract class PlayObjectType extends PlayStateObjectWithId {
    */
   public PlayObjectType(String id) {
     super(id);
-  }
-
-  /**
-   * @return the name of this type.
-   */
-  public abstract String getTypeName();
-
-  /**
-   * @return the optional overlay type or {@code null} for none.
-   */
-  public PlayStateObject getOverlay() {
-
-    return null;
   }
 
 }

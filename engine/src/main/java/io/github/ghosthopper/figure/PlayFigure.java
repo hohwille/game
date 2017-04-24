@@ -1,17 +1,20 @@
 package io.github.ghosthopper.figure;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
+import io.github.ghosthopper.asset.PlayAsset;
 import io.github.ghosthopper.border.PlayBorder;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.item.PlayAttributePickItems;
 import io.github.ghosthopper.item.PlayPickItem;
+import io.github.ghosthopper.item.PlayPickItemMoveEvent;
 import io.github.ghosthopper.item.PlayPushItem;
 import io.github.ghosthopper.move.PlayAttributeDirection;
 import io.github.ghosthopper.move.PlayDirection;
-import io.github.ghosthopper.object.PlayAsset;
+import io.github.ghosthopper.object.PlayTypedObjectWithItems;
 import io.github.ghosthopper.player.Player;
 import io.github.ghosthopper.properties.PlayPropertyValueDouble;
 import io.github.ghosthopper.properties.PlayPropertyValueInt;
@@ -22,13 +25,15 @@ import io.github.ghosthopper.properties.PlayPropertyValueInt;
  * moment in time of the {@link PlayGame} each {@link PlayFigure} is {@link #getLocation() located on} a specific
  * {@link PlayField}.
  */
-public class PlayFigure extends PlayAsset<PlayField> implements PlayAttributeDirection, PlayAttributePickItems {
+public class PlayFigure extends PlayTypedObjectWithItems implements PlayAsset<PlayField>, PlayAttributeDirection {
 
   private final Player player;
 
   private final PlayFigureType type;
 
   private final List<PlayPickItem> items;
+
+  private final List<PlayPickItem> itemsView;
 
   private PlayField field;
 
@@ -45,6 +50,7 @@ public class PlayFigure extends PlayAsset<PlayField> implements PlayAttributeDir
     this.player = player;
     this.type = type;
     this.items = new ArrayList<>();
+    this.itemsView = Collections.unmodifiableList(this.items);
     if (player != null) {
       setColor(player.getColor());
     }
@@ -73,7 +79,42 @@ public class PlayFigure extends PlayAsset<PlayField> implements PlayAttributeDir
   @Override
   public List<PlayPickItem> getItems() {
 
-    return this.items;
+    return this.itemsView;
+  }
+
+  @Override
+  public boolean canAddItem(PlayPickItem item) {
+
+    return this.type.canAddItem(this, item);
+  }
+
+  @Override
+  public boolean addItem(PlayPickItem item) {
+
+    if (!canAddItem(item)) {
+      return false;
+    }
+    PlayAttributePickItems oldLocation = item.getLocation();
+    if (oldLocation != null) {
+      boolean success = oldLocation.removeItem(item, false);
+      if (!success) {
+        return false;
+      }
+    }
+    this.items.add(item);
+    item.setLocation(this);
+    getGame().sendEvent(new PlayPickItemMoveEvent(oldLocation, item, this));
+    return true;
+  }
+
+  @Override
+  public boolean removeItem(PlayPickItem item, boolean sendEvent) {
+
+    boolean success = this.items.remove(item);
+    if (success && sendEvent) {
+      getGame().sendEvent(new PlayPickItemMoveEvent(this, item, null));
+    }
+    return success;
   }
 
   @Override
@@ -147,6 +188,7 @@ public class PlayFigure extends PlayAsset<PlayField> implements PlayAttributeDir
     if (this.field == null) {
       return null;
     }
+    PlayField oldField = this.field;
     PlayBorder border = this.field.getBorder(dir);
     if (!border.canPass(this)) {
       return null;
@@ -162,7 +204,7 @@ public class PlayFigure extends PlayAsset<PlayField> implements PlayAttributeDir
       return null;
     }
     this.field = targetField;
-    getGame().sendEvent(this);
+    getGame().sendEvent(new PlayFigureMoveEvent(oldField, this, targetField));
     return this.field;
   }
 
@@ -191,11 +233,11 @@ public class PlayFigure extends PlayAsset<PlayField> implements PlayAttributeDir
   private boolean push(PlayPushItem item, PlayField sourceField, PlayDirection dir, double weight) {
 
     PlayBorder border = sourceField.getBorder(dir);
-    if (!border.canPass(null)) {
+    if (!border.canPass(item)) {
       return false;
     }
     PlayField targetField = border.getField(dir);
-    if (targetField == null) {
+    if ((targetField == null) || (targetField.canAddAsset(item))) {
       return false;
     }
     double itemWeight = item.getWeight();
@@ -250,11 +292,10 @@ public class PlayFigure extends PlayAsset<PlayField> implements PlayAttributeDir
 
   private PlayPickItem pickItem(PlayPickItem item, int itemIndex) {
 
-    if ((itemIndex >= 0) && item.getType().isPickable(this) && this.type.isPickable(this, item)) {
-      PlayPickItem removedItem = this.field.getItems().remove(itemIndex);
-      assert (item == removedItem);
-      getItems().add(item);
-      return item;
+    if ((itemIndex >= 0) && item.getType().isPickable(this)) {
+      if (addItem(item)) {
+        return item;
+      }
     }
     return null;
   }
@@ -294,11 +335,10 @@ public class PlayFigure extends PlayAsset<PlayField> implements PlayAttributeDir
 
   private PlayPickItem dropItem(PlayPickItem item, int itemIndex) {
 
-    if ((itemIndex >= 0) && item.getType().isDroppable(this.field) && this.field.getType().isDroppable(item)) {
-      PlayPickItem removedItem = getItems().remove(itemIndex);
-      assert (item == removedItem);
-      this.field.getItems().add(item);
-      return item;
+    if ((itemIndex >= 0) && item.getType().isDroppable(this.field)) {
+      if (this.field.addItem(item)) {
+        return item;
+      }
     }
     return null;
   }

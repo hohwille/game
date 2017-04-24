@@ -2,6 +2,9 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.ui.fx;
 
+import java.util.Arrays;
+import java.util.List;
+
 import io.github.ghosthopper.field.PlayField;
 import javafx.geometry.Pos;
 import javafx.scene.effect.Effect;
@@ -14,7 +17,12 @@ import javafx.scene.layout.StackPane;
  */
 public class PlayUiFxField extends StackPane {
 
+  private static final List<Pos> ALIGNMENTS = Arrays.asList(Pos.CENTER, Pos.TOP_LEFT, Pos.TOP_RIGHT, Pos.BOTTOM_RIGHT, Pos.BOTTOM_LEFT, Pos.CENTER_LEFT,
+      Pos.CENTER_RIGHT, Pos.TOP_CENTER, Pos.BOTTOM_CENTER);
+
   private final PlayField field;
+
+  private final int[] alignmentCounts;
 
   /**
    * The constructor.
@@ -25,6 +33,7 @@ public class PlayUiFxField extends StackPane {
   public PlayUiFxField(PlayField field, PlayUiFxDataCache dataCache) {
     super();
     this.field = field;
+    this.alignmentCounts = new int[ALIGNMENTS.size()];
     getStyleClass().add("field");
     Image image = dataCache.getImage(field);
     ImageView imageView = new ImageView(image);
@@ -48,6 +57,13 @@ public class PlayUiFxField extends StackPane {
    */
   public void removeFxAsset(PlayUiFxAsset asset) {
 
+    Pos alignment = getAlignment(asset);
+    if (alignment != null) {
+      int index = ALIGNMENTS.indexOf(alignment);
+      if ((index >= 0) && (this.alignmentCounts[index] > 0)) {
+        this.alignmentCounts[index]--;
+      }
+    }
     getChildren().remove(asset);
   }
 
@@ -56,26 +72,27 @@ public class PlayUiFxField extends StackPane {
    */
   public void addFxAsset(PlayUiFxAsset asset) {
 
+    int index = findMinimumAlignment();
+    this.alignmentCounts[index]++;
+    Pos alignment = ALIGNMENTS.get(index);
     getChildren().add(asset);
-    int size = getChildren().size();
-    setAlignment(asset, getPosition(size));
+    setAlignment(asset, alignment);
   }
 
-  private Pos getPosition(int size) {
+  private int findMinimumAlignment() {
 
-    if (size <= 2) {
-      return Pos.CENTER;
+    int minAlignment = this.alignmentCounts[0];
+    if (minAlignment == 0) {
+      return 0;
     }
-    switch (size - 3 % 4) {
-      case 0:
-        return Pos.TOP_LEFT;
-      case 1:
-        return Pos.TOP_RIGHT;
-      case 2:
-        return Pos.BOTTOM_RIGHT;
-      default :
-        return Pos.BOTTOM_LEFT;
+    int index = 0;
+    for (int i = 1; i < this.alignmentCounts.length; i++) {
+      if (this.alignmentCounts[i] < minAlignment) {
+        index = i;
+        minAlignment = this.alignmentCounts[i];
+      }
     }
+    return index;
   }
 
 }

@@ -7,9 +7,11 @@ import java.util.Objects;
 import io.github.ghosthopper.color.PlayColor;
 import io.github.ghosthopper.move.PlayAttributeDirection;
 import io.github.ghosthopper.move.PlayDirection;
+import io.github.ghosthopper.object.AbstractPlayStateObject;
+import io.github.ghosthopper.object.AbstractPlayTypedObject;
 import io.github.ghosthopper.object.PlayObject;
 import io.github.ghosthopper.object.PlayObjectType;
-import io.github.ghosthopper.object.PlayStateObject;
+import io.github.ghosthopper.object.PlayType;
 import io.github.ghosthopper.object.PlayTypedObject;
 
 /**
@@ -39,7 +41,7 @@ public class PlayDataKey {
    */
   public PlayDataKey(PlayTypedObject object) {
     super();
-    PlayObjectType type = object.getType();
+    PlayType type = object.getType();
     this.typeId = getId(type);
     this.typeName = type.getTypeName();
     this.overlay = convertOverlay(type.getOverlay());
@@ -63,12 +65,12 @@ public class PlayDataKey {
     this.direction = null;
   }
 
-  private static PlayDataKey convertOverlay(PlayStateObject overlayObject) {
+  private static PlayDataKey convertOverlay(AbstractPlayStateObject overlayObject) {
 
     if (overlayObject == null) {
       return null;
-    } else if (overlayObject instanceof PlayTypedObject) {
-      return new PlayDataKey((PlayTypedObject) overlayObject);
+    } else if (overlayObject instanceof AbstractPlayTypedObject) {
+      return new PlayDataKey((AbstractPlayTypedObject) overlayObject);
     } else if (overlayObject instanceof PlayObjectType) {
       return new PlayDataKey(((PlayObjectType) overlayObject).getTypeName(), overlayObject.getId());
     } else {
@@ -90,7 +92,7 @@ public class PlayDataKey {
   }
 
   /**
-   * @return the {@link PlayObjectType#getId() id} of the {@link PlayTypedObject#getType() type}.
+   * @return the {@link PlayObjectType#getId() id} of the {@link AbstractPlayTypedObject#getType() type}.
    */
   public String getTypeId() {
 
@@ -106,7 +108,7 @@ public class PlayDataKey {
   }
 
   /**
-   * @return the {@link PlayTypedObject#getId() id} of the object or {@code null}.
+   * @return the {@link AbstractPlayTypedObject#getId() id} of the object or {@code null}.
    */
   public String getObjectId() {
 
