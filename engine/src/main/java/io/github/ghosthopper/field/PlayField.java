@@ -43,9 +43,20 @@ public class PlayField extends PlayTypedObjectWithItems implements PlayAttribute
    * @param level the owning {@link PlayLevel}.
    */
   public PlayField(PlayLevel level) {
+    this(level, PlayFieldType.NORMAL);
+  }
+
+  /**
+   * The constructor.
+   *
+   * @param level the owning {@link PlayLevel}.
+   * @param type the {@link #getType() type}.
+   */
+  public PlayField(PlayLevel level, PlayFieldType type) {
     super();
     this.level = level;
     this.direction2borderMap = new HashMap<>();
+    this.type = type;
   }
 
   @Override
@@ -107,6 +118,9 @@ public class PlayField extends PlayTypedObjectWithItems implements PlayAttribute
     }
     if (success) {
       this.pushItem = pushItem;
+      if (pushItem != null) {
+        pushItem.setLocation(this, false);
+      }
     }
     return success;
   }
@@ -320,14 +334,14 @@ public class PlayField extends PlayTypedObjectWithItems implements PlayAttribute
   }
 
   @Override
-  public boolean removeAsset(PlayAsset<?> asset) {
+  public boolean removeAsset(PlayAsset<?> asset, boolean updateLocation) {
 
     if (asset instanceof PlayPushItem) {
       return setPushItem(null);
     } else if (asset instanceof PlayPickItem) {
-      return removeItem((PlayPickItem) asset);
+      return removeItem((PlayPickItem) asset, updateLocation);
     } else {
-      return this.type.removeAsset(asset);
+      return this.type.removeAsset(asset, updateLocation);
     }
   }
 

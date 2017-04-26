@@ -104,6 +104,16 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
       move(PlayDirection.SOUTH);
     } else if (event.getCode() == PlayKeys.KEY_ENTER) {
       nextPlayer();
+    } else if (event.getCode() == PlayKeys.KEY_D) {
+      PlayFigure figure = getCurrentFigure();
+      if (figure != null) {
+        figure.dropItem();
+      }
+    } else if (event.getCode() == PlayKeys.KEY_P) {
+      PlayFigure figure = getCurrentFigure();
+      if (figure != null) {
+        figure.pickItem();
+      }
     }
   }
 
@@ -476,6 +486,25 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
   protected PlayLevel createFirstLevel() {
 
     return new PlayLevel("Level 1", this);
+  }
+
+  /**
+   * @return the {@link PlayBorderTypeStrategy}.
+   */
+  protected PlayBorderTypeStrategy getBorderStrategy() {
+
+    return PlayBorderTypeStrategyStatic.OPEN;
+  }
+
+  /**
+   * @param level the {@link PlayLevel} to initialize.
+   * @param width the number of {@link PlayField}s in {@link #getDirectionX() X-direction}.
+   * @param height the number of {@link PlayField}s in {@link #getDirectionY() Y-direction}.
+   * @return the given {@link PlayLevel} after initialization.
+   */
+  protected PlayLevel initLevelAsRectangular(PlayLevel level, int width, int height) {
+
+    return initLevelAsRectangular(level, width, height, getBorderStrategy());
   }
 
   /**

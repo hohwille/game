@@ -52,20 +52,24 @@ public class PlayPickItem extends PlayItem<PlayAttributePickItems, PlayPickItem>
   }
 
   @Override
-  public void setLocation(PlayAttributePickItems location) {
+  public boolean setLocation(PlayAttributePickItems location, boolean addOrRemove) {
 
     if (this.location == location) {
-      return;
+      return true;
     }
+    boolean success = true;
     PlayAttributePickItems oldLocation = this.location;
-    if (this.location != null) {
-      this.location.getItems().remove(this);
+    if ((location == null) && addOrRemove) {
+      success = oldLocation.removeItem(this, false);
+    }
+    if ((location != null) && addOrRemove) {
+      success = location.addItem(this);
     }
     this.location = location;
-    if (this.location != null) {
-      this.location.getItems().add(this);
+    if (success) {
+      getGame().sendEvent(new PlayPickItemMoveEvent(oldLocation, this, location));
     }
-    getGame().sendEvent(new PlayPickItemMoveEvent(oldLocation, this, location));
+    return success;
   }
 
 }

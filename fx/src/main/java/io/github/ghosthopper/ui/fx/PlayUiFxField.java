@@ -6,6 +6,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import io.github.ghosthopper.field.PlayField;
+import io.github.ghosthopper.item.PlayPickItem;
+import io.github.ghosthopper.item.PlayPushItem;
 import javafx.geometry.Pos;
 import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
@@ -15,12 +17,14 @@ import javafx.scene.layout.StackPane;
 /**
  * JavaFx view for a {@link PlayField}.
  */
-public class PlayUiFxField extends StackPane {
+public class PlayUiFxField extends StackPane implements PlayUiFxNode {
 
   private static final List<Pos> ALIGNMENTS = Arrays.asList(Pos.CENTER, Pos.TOP_LEFT, Pos.TOP_RIGHT, Pos.BOTTOM_RIGHT, Pos.BOTTOM_LEFT, Pos.CENTER_LEFT,
       Pos.CENTER_RIGHT, Pos.TOP_CENTER, Pos.BOTTOM_CENTER);
 
   private final PlayField field;
+
+  private final PlayUiFxLevel level;
 
   private final int[] alignmentCounts;
 
@@ -28,20 +32,43 @@ public class PlayUiFxField extends StackPane {
    * The constructor.
    *
    * @param field the {@link PlayField}.
-   * @param dataCache the {@link PlayUiFxDataCache}.
+   * @param level the {@link PlayUiFxLevel}.
    */
-  public PlayUiFxField(PlayField field, PlayUiFxDataCache dataCache) {
+  public PlayUiFxField(PlayField field, PlayUiFxLevel level) {
     super();
     this.field = field;
+    this.level = level;
     this.alignmentCounts = new int[ALIGNMENTS.size()];
     getStyleClass().add("field");
-    Image image = dataCache.getImage(field);
+    Image image = getFxDataCache().getImage(field);
     ImageView imageView = new ImageView(image);
     Effect effect = PlayUiFxColor.getEffect(field.getColor());
     if (effect != null) {
       imageView.setEffect(effect);
     }
     getChildren().add(imageView);
+    getFxGame().addFxField(this);
+    initItems();
+  }
+
+  private void initItems() {
+
+    PlayUiFxGame fxGame = getFxGame();
+    for (PlayPickItem item : this.field.getItems()) {
+      PlayUiFxPickItem fxItem = new PlayUiFxPickItem(item, fxGame);
+      addFxAsset(fxItem);
+    }
+    PlayPushItem pushItem = this.field.getPushItem();
+    if (pushItem != null) {
+      PlayUiFxPushItem fxItem = new PlayUiFxPushItem(pushItem, fxGame);
+      addFxAsset(fxItem);
+    }
+  }
+
+  @Override
+  public PlayUiFxLevel getFxParent() {
+
+    return this.level;
   }
 
   /**

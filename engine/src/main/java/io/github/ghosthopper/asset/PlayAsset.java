@@ -26,11 +26,27 @@ public interface PlayAsset<L extends PlayLocation> extends PlayTypedObject {
    *         {@link PlayField}. However a {@link PlayPickItem} can also be carried by a {@link PlayFigure}. May be
    *         {@code null} if the {@link PlayAsset} is out of the game.
    */
-  public abstract L getLocation();
+  L getLocation();
 
   /**
    * @param location the new {@link #getLocation() location} of this asset.
+   * @return {@code true} if the {@link PlayAttributeAsset#addAsset(PlayAsset) operation succeeded}, {@code false}
+   *         otherwise.
    */
-  public abstract void setLocation(L location);
+  default boolean setLocation(L location) {
+
+    return setLocation(location, true);
+  }
+
+  /**
+   * @param location the new {@link #getLocation() location} of this asset.
+   * @param addOrRemove - {@code true} if this asset shall also be {@link PlayAttributeAsset#removeAsset(PlayAsset)
+   *        removed from the original location} and {@link PlayAttributeAsset#addAsset(PlayAsset) added to the new
+   *        location} automatically, {@code false} otherwise (if called from
+   *        {@link PlayAttributeAsset#addAsset(PlayAsset)}).
+   * @return {@code true} if the {@link PlayAttributeAsset#addAsset(PlayAsset) operation succeeded}, {@code false}
+   *         otherwise.
+   */
+  boolean setLocation(L location, boolean addOrRemove);
 
 }

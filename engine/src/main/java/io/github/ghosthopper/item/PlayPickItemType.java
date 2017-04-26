@@ -13,8 +13,14 @@ public class PlayPickItemType extends PlayItemType<PlayPickItemType> {
   /** A key to open doors. */
   public static final PlayPickItemType KEY = new PlayPickItemType("Key");
 
-  /** A key to open doors. */
+  /** A valuable and beautiful gem. */
   public static final PlayPickItemType GEM = new PlayPickItemType("Gem");
+
+  /** A valuable and beautiful emerald. */
+  public static final PlayPickItemType EMERALD = new PlayPickItemType("Emerald");
+
+  /** A valuable and beautiful diamond. */
+  public static final PlayPickItemType DIAMOND = new PlayPickItemType("Diamond");
 
   /**
    * The constructor.

@@ -35,6 +35,23 @@ public interface PlayAttributeAsset<A extends PlayAsset<?>> {
    * @return {@code true} if the {@link PlayAsset} could successfully be removed, {@code false} otherwise (exotic case
    *         but field might be glued, magnetic or whatever).
    */
-  boolean removeAsset(A asset);
+  default boolean removeAsset(A asset) {
+
+    return removeAsset(asset, true);
+  }
+
+  /**
+   * @param asset the {@link PlayAsset} to remove from this holder (field). Called when a {@link PlayFigure} is moved
+   *        from this field, a {@link PlayPickItem} is {@link PlayFigure#dropItem() dropped}, a {@link PlayPushItem} is
+   *        pushed, etc.
+   * @param updateLocation - {@code true} if the {@link PlayAsset#getLocation() location} shall also be
+   *        {@link PlayAsset#setLocation(io.github.ghosthopper.object.PlayLocation) updated} and a
+   *        {@link PlayAssetMoveEvent} should be send, {@code false} otherwise (if called from
+   *        {@link #addAsset(PlayAsset)} or from
+   *        {@link PlayAsset#setLocation(io.github.ghosthopper.object.PlayLocation)}).
+   * @return {@code true} if the {@link PlayAsset} could successfully be removed, {@code false} otherwise (exotic case
+   *         but field might be glued, magnetic or whatever).
+   */
+  boolean removeAsset(A asset, boolean updateLocation);
 
 }

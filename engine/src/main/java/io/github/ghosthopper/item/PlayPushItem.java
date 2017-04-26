@@ -11,16 +11,16 @@ import io.github.ghosthopper.game.PlayGame;
  */
 public class PlayPushItem extends PlayItem<PlayField, PlayPushItem> {
 
-  private final PlayPickItemType type;
+  private final PlayPushItemType type;
 
   private PlayField location;
 
   /**
    * The constructor.
    *
-   * @param type the {@link PlayPickItemType} of this item.
+   * @param type the {@link PlayPushItemType} of this item.
    */
-  public PlayPushItem(PlayPickItemType type) {
+  public PlayPushItem(PlayPushItemType type) {
     super();
     this.type = type;
   }
@@ -29,19 +29,19 @@ public class PlayPushItem extends PlayItem<PlayField, PlayPushItem> {
    * The constructor.
    *
    * @param color - see {@link #getColor()}.
-   * @param type the {@link PlayPickItemType} of this item.
+   * @param type the {@link PlayPushItemType} of this item.
    */
-  public PlayPushItem(PlayColor color, PlayPickItemType type) {
+  public PlayPushItem(PlayColor color, PlayPushItemType type) {
     super();
     this.type = type;
     setColor(color);
   }
 
   /**
-   * @return the {@link PlayPickItemType} of this {@link PlayPushItem}.
+   * @return the {@link PlayPushItemType} of this {@link PlayPushItem}.
    */
   @Override
-  public PlayPickItemType getType() {
+  public PlayPushItemType getType() {
 
     return this.type;
   }
@@ -59,9 +59,24 @@ public class PlayPushItem extends PlayItem<PlayField, PlayPushItem> {
   }
 
   @Override
-  public void setLocation(PlayField location) {
+  public boolean setLocation(PlayField location, boolean addOrRemove) {
 
+    if (this.location == location) {
+      return true;
+    }
+    boolean success = true;
+    PlayField oldLocation = this.location;
+    if ((location == null) && addOrRemove) {
+      success = oldLocation.removeAsset(this, false);
+    }
+    if ((location != null) && addOrRemove) {
+      success = location.addAsset(this);
+    }
     this.location = location;
+    if (success) {
+      getGame().sendEvent(new PlayPushItemMoveEvent(oldLocation, this, location));
+    }
+    return success;
   }
 
 }

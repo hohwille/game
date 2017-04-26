@@ -10,11 +10,11 @@ import javafx.scene.layout.StackPane;
 /**
  * JavaFx view for a {@link PlayBorder}.
  */
-public class PlayUiFxBorder extends StackPane {
+public class PlayUiFxBorder extends StackPane implements PlayUiFxNode {
 
   private final PlayBorder border;
 
-  private final PlayUiFxDataCache dataCache;
+  private final PlayUiFxGame fxGame;
 
   private final ImageView imageView;
 
@@ -22,16 +22,23 @@ public class PlayUiFxBorder extends StackPane {
    * The constructor.
    *
    * @param border the {@link PlayBorder}.
-   * @param dataCache the {@link PlayUiFxDataCache}.
+   * @param fxGame the {@link #getFxParent() parent} {@link PlayUiFxGame game}.
    */
-  public PlayUiFxBorder(PlayBorder border, PlayUiFxDataCache dataCache) {
+  public PlayUiFxBorder(PlayBorder border, PlayUiFxGame fxGame) {
     super();
     this.border = border;
-    this.dataCache = dataCache;
+    this.fxGame = fxGame;
     getStyleClass().add("border");
-    Image image = dataCache.getImage(border);
+    Image image = getFxDataCache().getImage(border);
     this.imageView = new ImageView(image);
     getChildren().add(this.imageView);
+    this.fxGame.addFxBorder(this);
+  }
+
+  @Override
+  public PlayUiFxNode getFxParent() {
+
+    return this.fxGame;
   }
 
   /**
@@ -47,7 +54,7 @@ public class PlayUiFxBorder extends StackPane {
    */
   public void update() {
 
-    Image image = this.dataCache.getImage(this.border);
+    Image image = getFxDataCache().getImage(this.border);
     this.imageView.setImage(image);
   }
 

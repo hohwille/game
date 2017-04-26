@@ -42,12 +42,13 @@ public interface PlayAttributePickItems extends PlayLocation {
 
   /**
    * @param item the {@link PlayPickItem} to {@link List#remove(Object) remove} from the {@link #getItems() items}.
-   * @param sendEvent - {@code true} if an {@link PlayPickItemMoveEvent} should be send, {@code false} otherwise (if
-   *        called from {@link #addItem(PlayPickItem)} to move from the old {@link PlayPickItem#getLocation() location}
-   *        to the new one and send a single event).
+   * @param updateLocation - {@code true} if the {@link PlayPickItem#getLocation() location} shall also be
+   *        {@link PlayPickItem#setLocation(PlayAttributePickItems) updated} and a {@link PlayPickItemMoveEvent} should
+   *        be send, {@code false} otherwise (if called from {@link #addItem(PlayPickItem)} or from
+   *        {@link PlayPickItem#setLocation(PlayAttributePickItems)}).
    * @return {@code true} if the operation was successful, {@code false} otherwise (e.g. this object can not take the
    *         given {@link PlayPickItem}).
    */
-  boolean removeItem(PlayPickItem item, boolean sendEvent);
+  boolean removeItem(PlayPickItem item, boolean updateLocation);
 
 }

@@ -11,9 +11,7 @@ import javafx.scene.image.ImageView;
 /**
  * JavaFx view for a {@link PlayFigure}.
  */
-public abstract class PlayUiFxAsset extends ImageView {
-
-  private final PlayUiFxDataCache dataCache;
+public abstract class PlayUiFxAsset extends ImageView implements PlayUiFxNode {
 
   private PlayUiFxField field;
 
@@ -21,12 +19,11 @@ public abstract class PlayUiFxAsset extends ImageView {
    * The constructor.
    *
    * @param asset the {@link PlayAsset}.
-   * @param dataCache the {@link PlayUiFxDataCache}.
+   * @param parent the {@link #getParent() parent}.
    */
-  public PlayUiFxAsset(PlayAsset<?> asset, PlayUiFxDataCache dataCache) {
+  public PlayUiFxAsset(PlayAsset<?> asset, PlayUiFxNode parent) {
     super();
-    this.dataCache = dataCache;
-    Image image = this.dataCache.getImage(asset);
+    Image image = parent.getFxDataCache().getImage(asset);
     setImage(image);
     Effect effect = PlayUiFxColor.getEffect(asset.getColor());
     if (effect != null) {

@@ -8,7 +8,6 @@ import java.util.List;
 
 import io.github.ghosthopper.item.PlayAttributePickItems;
 import io.github.ghosthopper.item.PlayPickItem;
-import io.github.ghosthopper.item.PlayPickItemMoveEvent;
 
 /**
  * This is the abstract base class for an object that optionally can have a {@link #getColor() color}.
@@ -43,10 +42,13 @@ public abstract class PlayTypedObjectWithItems extends AbstractPlayTypedObject i
   @Override
   public boolean addItem(PlayPickItem item) {
 
+    PlayAttributePickItems oldLocation = item.getLocation();
+    if (oldLocation == this) {
+      return true;
+    }
     if (!canAddItem(item)) {
       return false;
     }
-    PlayAttributePickItems oldLocation = item.getLocation();
     if (oldLocation != null) {
       boolean success = oldLocation.removeItem(item, false);
       if (!success) {
@@ -54,16 +56,18 @@ public abstract class PlayTypedObjectWithItems extends AbstractPlayTypedObject i
       }
     }
     this.items.add(item);
-    item.setLocation(this);
-    getGame().sendEvent(new PlayPickItemMoveEvent(oldLocation, item, this));
+    item.setLocation(this, false);
     return true;
   }
 
   @Override
-  public boolean removeItem(PlayPickItem item, boolean sendEvent) {
+  public boolean removeItem(PlayPickItem item, boolean updateLocation) {
 
-    // TODO Auto-generated method stub
-    return false;
+    boolean success = this.items.remove(item);
+    if (updateLocation) {
+      item.setLocation(null);
+    }
+    return success;
   }
 
 }

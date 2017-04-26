@@ -61,7 +61,7 @@ public class PlayFieldType extends PlayObjectType implements PlayAttributeAsset<
   }
 
   @Override
-  public boolean removeAsset(PlayAsset<?> asset) {
+  public boolean removeAsset(PlayAsset<?> asset, boolean updateLocation) {
 
     return true;
   }

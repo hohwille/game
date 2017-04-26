@@ -7,13 +7,13 @@ import io.github.ghosthopper.color.PlayColor;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.figure.PlayFigureType;
-import io.github.ghosthopper.game.PlayGameSimple;
+import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.player.Player;
 
 /**
  * The game <em>chess</em>.
  */
-public class Chess extends PlayGameSimple {
+public class Chess extends PlayGame {
 
   private static final PlayFigureType KING = new PlayFigureType("ChessKing");
 
@@ -40,7 +40,7 @@ public class Chess extends PlayGameSimple {
    * The constructor.
    */
   public Chess() {
-    super("Chess", 8, 8);
+    super("Chess");
     getPlayers().add(WHITE);
     getPlayers().add(BLACK);
     PlayLevel level = getCurrentLevel();
@@ -66,6 +66,14 @@ public class Chess extends PlayGameSimple {
         playFigure.setLocation(level.getField(x, y));
       }
     }
+  }
+
+  @Override
+  protected PlayLevel createFirstLevel() {
+
+    PlayLevel firstLevel = super.createFirstLevel();
+    initLevelAsRectangular(firstLevel, 8, 8);
+    return firstLevel;
   }
 
   private PlayColor toggleColor(PlayColor color) {

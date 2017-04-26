@@ -2,14 +2,12 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.item;
 
-import io.github.ghosthopper.asset.PlayAssetMoveEvent;
-
 /**
- * A {@link PlayAssetMoveEvent} that notifies about a {@link #getAsset() pick item} that has changed its
+ * A {@link PlayItemMoveEvent} that notifies about a {@link #getAsset() pick item} that has changed its
  * {@link PlayPickItem#getLocation() location} from an {@link #getOldLocation() old location} to a
  * {@link #getNewLocation() new location}.
  */
-public class PlayPickItemMoveEvent extends PlayAssetMoveEvent<PlayAttributePickItems, PlayPickItem> {
+public class PlayPickItemMoveEvent extends PlayItemMoveEvent<PlayAttributePickItems, PlayPickItem> {
 
   /**
    * The constructor.

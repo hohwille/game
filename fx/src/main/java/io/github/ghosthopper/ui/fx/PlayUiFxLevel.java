@@ -15,7 +15,7 @@ import javafx.scene.layout.GridPane;
 /**
  * JavaFx view for a {@link PlayLevel}.
  */
-public class PlayUiFxLevel extends GridPane {
+public class PlayUiFxLevel extends GridPane implements PlayUiFxNode {
 
   private final PlayUiFxGame game;
 
@@ -32,6 +32,7 @@ public class PlayUiFxLevel extends GridPane {
     this.level = level;
     this.game = game;
     getStyleClass().add("level");
+    this.game.addFxLevel(this);
     initLevel();
   }
 
@@ -87,24 +88,34 @@ public class PlayUiFxLevel extends GridPane {
     }
   }
 
+  @Override
+  public PlayUiFxGame getFxGame() {
+
+    return this.game;
+  }
+
+  @Override
+  public PlayUiFxGame getFxParent() {
+
+    return this.game;
+  }
+
   private void addEdge(int x, int y) {
 
-    Image image = this.game.getDataCache().getImage(PlayDataKey.EDGE);
+    Image image = this.game.getFxDataCache().getImage(PlayDataKey.EDGE);
     ImageView imageView = new ImageView(image);
     add(imageView, x, y);
   }
 
   private void addField(PlayField field, int x, int y) {
 
-    PlayUiFxField fxField = new PlayUiFxField(field, this.game.getDataCache());
-    this.game.addFxField(fxField);
+    PlayUiFxField fxField = new PlayUiFxField(field, this);
     add(fxField, x, y);
   }
 
   private void addBorder(PlayBorder border, int x, int y) {
 
-    PlayUiFxBorder fxBorder = new PlayUiFxBorder(border, this.game.getDataCache());
-    this.game.addFxBorder(fxBorder);
+    PlayUiFxBorder fxBorder = new PlayUiFxBorder(border, this.game);
     add(fxBorder, x, y);
   }
 

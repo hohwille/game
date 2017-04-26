@@ -15,22 +15,32 @@ public class PlayUiFxFigure extends PlayUiFxAsset {
 
   private final Glow glow;
 
+  private PlayUiFxPlayer fxPlayer;
+
   /**
    * The constructor.
    *
    * @param figure the {@link PlayFigure}.
-   * @param dataCache the {@link PlayUiFxDataCache}.
+   * @param fxPlayer the {@link #getFxParent() parent} {@link PlayUiFxPlayer player}.
    */
-  public PlayUiFxFigure(PlayFigure figure, PlayUiFxDataCache dataCache) {
-    super(figure, dataCache);
+  public PlayUiFxFigure(PlayFigure figure, PlayUiFxPlayer fxPlayer) {
+    super(figure, fxPlayer);
     this.figure = figure;
+    this.fxPlayer = fxPlayer;
     this.glow = new Glow();
     Effect effect = getEffect();
     if (effect != null) {
       this.glow.setInput(effect);
     }
     setEffect(this.glow);
+    getFxGame().addFxFigure(this);
     update();
+  }
+
+  @Override
+  public PlayUiFxPlayer getFxParent() {
+
+    return this.fxPlayer;
   }
 
   @Override
