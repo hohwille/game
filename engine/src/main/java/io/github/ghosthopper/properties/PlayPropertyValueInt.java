@@ -14,6 +14,9 @@ public final class PlayPropertyValueInt extends PlayPropertyContainerImpl<PlayPr
   /** The maximum number of {@link PlayPickItem items} (e.g. inventory size of {@link PlayFigure}). */
   public static final PlayPropertyValueInt MAX_ITEMS = new PlayPropertyValueInt("Maximum Items", Integer.MAX_VALUE);
 
+  /** The maximum number of {@link PlayPickItem items} (e.g. inventory size of {@link PlayFigure}). */
+  public static final PlayPropertyValueInt MAX_FIGURES = new PlayPropertyValueInt("Maximum Figures", 9);
+
   private int value;
 
   /**
@@ -35,6 +38,7 @@ public final class PlayPropertyValueInt extends PlayPropertyContainerImpl<PlayPr
   private PlayPropertyValueInt(PlayPropertyValueInt defaultValue) {
 
     super(defaultValue);
+    this.value = defaultValue.value;
   }
 
   /**

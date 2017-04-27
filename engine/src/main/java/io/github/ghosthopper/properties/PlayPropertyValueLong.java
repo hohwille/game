@@ -29,6 +29,7 @@ public final class PlayPropertyValueLong extends PlayPropertyContainerImpl<PlayP
   private PlayPropertyValueLong(PlayPropertyValueLong defaultValue) {
 
     super(defaultValue);
+    this.value = defaultValue.value;
   }
 
   /**
