@@ -2,8 +2,8 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.move;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
@@ -115,9 +115,9 @@ public class PlayDirectionTest extends Assertions {
     PlayGame game = new PlayGame("180") {
 
       @Override
-      protected Set<PlayDirection> createDirections() {
+      protected List<PlayDirection> createDirections() {
 
-        Set<PlayDirection> set = new HashSet<>();
+        List<PlayDirection> set = new ArrayList<>();
         set.add(PlayDirection.WEST);
         set.add(PlayDirection.EAST);
         return set;

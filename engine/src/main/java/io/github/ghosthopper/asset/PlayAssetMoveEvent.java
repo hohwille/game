@@ -7,7 +7,7 @@ import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.object.PlayLocation;
 
 /**
- * A {@link PlayEvent} that notifies about a {@link #getAsset() figure} that changed its {@link PlayAsset#getLocation()
+ * A {@link PlayEvent} that notifies about a {@link #getAsset() asset} that changed its {@link PlayAsset#getLocation()
  * location} from an {@link #getOldLocation() old location} to a {@link #getNewLocation() new location}.
  *
  * @param <L> the type of the {@link #getOldLocation() old} and {@link #getNewLocation() new location}.

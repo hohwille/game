@@ -9,7 +9,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
-import java.util.Set;
 
 import io.github.ghosthopper.PlayLevel;
 import io.github.ghosthopper.border.PlayBorder;
@@ -23,6 +22,7 @@ import io.github.ghosthopper.event.PlayKeys;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.field.PlayFieldType;
 import io.github.ghosthopper.figure.PlayFigure;
+import io.github.ghosthopper.figure.PlayFigureGroup;
 import io.github.ghosthopper.figure.PlayFigureTurnEvent;
 import io.github.ghosthopper.figure.PlayFigureType;
 import io.github.ghosthopper.i18n.PlayTranslator;
@@ -33,6 +33,7 @@ import io.github.ghosthopper.move.PlayDirection;
 import io.github.ghosthopper.object.PlayStateObjectWithId;
 import io.github.ghosthopper.player.Player;
 import io.github.ghosthopper.player.PlayerTurnEvent;
+import io.github.ghosthopper.position.PlayPosition;
 
 /**
  * This is the main object and represents an actual game with its rules. To implement your own game, simply extend this
@@ -71,7 +72,9 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
 
   private PlayLevel currentLevel;
 
-  private Set<PlayDirection> directions;
+  private List<PlayDirection> directions;
+
+  private List<PlayPosition> position;
 
   private boolean paused;
 
@@ -103,7 +106,7 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
     } else if (event.getCode() == PlayKeys.KEY_DOWN) {
       move(PlayDirection.SOUTH);
     } else if (event.getCode() == PlayKeys.KEY_ENTER) {
-      nextPlayer();
+      nextFigure(true);
     } else if (event.getCode() == PlayKeys.KEY_D) {
       PlayFigure figure = getCurrentFigure();
       if (figure != null) {
@@ -113,6 +116,24 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
       PlayFigure figure = getCurrentFigure();
       if (figure != null) {
         figure.pickItem();
+      }
+    } else if (event.getCode() == PlayKeys.KEY_G) {
+      PlayFigure figure = getCurrentFigure();
+      if (figure != null) {
+        PlayField field = figure.getLocation();
+        if (field != null) {
+          PlayFigureGroup group = figure.getGroup();
+          Player player = figure.getPlayer();
+          for (PlayFigure fieldFigure : field.getFigures()) {
+            if ((fieldFigure != figure) && (fieldFigure.getPlayer() == player)) {
+              if (group == null) {
+                group = player.createGroup();
+                group.addFigure(figure);
+              }
+              group.addFigure(fieldFigure);
+            }
+          }
+        }
       }
     }
   }
@@ -438,12 +459,22 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
     Player player = getCurrentPlayer();
     PlayFigure oldFigure = null;
     List<PlayFigure> figures = player.getFigures();
+    PlayFigure newFigure = null;
     int size = figures.size();
-    if (this.currentFigure < size) {
-      oldFigure = figures.get(this.currentFigure);
+    while (this.currentFigure < size) {
+      if (oldFigure == null) {
+        oldFigure = figures.get(this.currentFigure);
+        assert (oldFigure != null);
+      }
       this.currentFigure++;
+      if (this.currentFigure < size) {
+        PlayFigure nextFigure = player.getFigures().get(this.currentFigure);
+        if (nextFigure.isGroupLead()) {
+          newFigure = nextFigure;
+          break;
+        }
+      }
     }
-    PlayFigure newFigure = getCurrentFigure();
     if ((newFigure == null) && (mayChangePlayer)) {
       nextPlayer();
       newFigure = getCurrentFigure();
@@ -558,12 +589,35 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
   /**
    * @return the {@link PlayDirection}s supported by this {@link PlayGame}.
    */
-  public Set<PlayDirection> getDirections() {
+  public List<PlayDirection> getDirections() {
 
     if (this.directions == null) {
-      this.directions = Collections.unmodifiableSet(createDirections());
+      List<PlayDirection> newDirections = createDirections();
+      if (new HashSet<>(newDirections).size() != newDirections.size()) {
+        throw new IllegalStateException("Duplicate direction(s)!");
+      }
+      this.directions = Collections.unmodifiableList(newDirections);
     }
     return this.directions;
+  }
+
+  /**
+   * @return the {@link #getDirections() directions}.
+   */
+  protected List<PlayDirection> createDirections() {
+
+    List<PlayDirection> list = new ArrayList<>();
+    list.add(PlayDirection.WEST);
+    list.add(getDirectionX());
+    list.add(PlayDirection.NORTH);
+    list.add(getDirectionY());
+    if (isSupportingDiagonalDirections()) {
+      list.add(PlayDirection.NORTH_WEST);
+      list.add(PlayDirection.NORTH_EAST);
+      list.add(PlayDirection.SOUTH_WEST);
+      list.add(PlayDirection.SOUTH_EAST);
+    }
+    return list;
   }
 
   /**
@@ -591,22 +645,36 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
   }
 
   /**
-   * @return the {@link #getDirections() directions}.
+   * @return the {@link PlayPosition}s supported by this {@link PlayGame}.
    */
-  protected Set<PlayDirection> createDirections() {
+  public List<PlayPosition> getPositions() {
 
-    Set<PlayDirection> set = new HashSet<>();
-    set.add(PlayDirection.WEST);
-    set.add(getDirectionX());
-    set.add(PlayDirection.NORTH);
-    set.add(getDirectionY());
-    if (isSupportingDiagonalDirections()) {
-      set.add(PlayDirection.NORTH_WEST);
-      set.add(PlayDirection.NORTH_EAST);
-      set.add(PlayDirection.SOUTH_WEST);
-      set.add(PlayDirection.SOUTH_EAST);
+    if (this.position == null) {
+      List<PlayPosition> newPositions = createPositions();
+      if (new HashSet<>(newPositions).size() != newPositions.size()) {
+        throw new IllegalStateException("Duplicate position(s)!");
+      }
+      this.position = Collections.unmodifiableList(newPositions);
     }
-    return set;
+    return this.position;
+  }
+
+  /**
+   * @return the {@link #getPositions() positions}.
+   */
+  protected List<PlayPosition> createPositions() {
+
+    List<PlayPosition> list = new ArrayList<>();
+    list.add(PlayPosition.NORTH_WEST);
+    list.add(PlayPosition.NORTH);
+    list.add(PlayPosition.NORTH_EAST);
+    list.add(PlayPosition.WEST);
+    list.add(PlayPosition.CENTER);
+    list.add(PlayPosition.EAST);
+    list.add(PlayPosition.SOUTH_WEST);
+    list.add(PlayPosition.SOUTH);
+    list.add(PlayPosition.SOUTH_EAST);
+    return list;
   }
 
   /**

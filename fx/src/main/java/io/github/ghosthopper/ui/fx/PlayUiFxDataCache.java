@@ -8,6 +8,7 @@ import java.util.Map;
 
 import io.github.ghosthopper.data.PlayDataKey;
 import io.github.ghosthopper.data.PlayDataUtil;
+import io.github.ghosthopper.data.PlayView;
 import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.move.PlayDirection;
 import io.github.ghosthopper.object.AbstractPlayTypedObject;
@@ -26,6 +27,8 @@ public class PlayUiFxDataCache {
 
   private final String gameId;
 
+  private final PlayView view;
+
   private final Map<PlayDataKey, Image> imageMap;
 
   private final Map<PlayDataKey, URL> urlMap;
@@ -34,10 +37,12 @@ public class PlayUiFxDataCache {
    * The constructor.
    *
    * @param gameId the {@link PlayGame#getId() ID} of the {@link PlayGame}.
+   * @param view the {@link PlayView}.
    */
-  public PlayUiFxDataCache(String gameId) {
+  public PlayUiFxDataCache(String gameId, PlayView view) {
     super();
     this.gameId = gameId;
+    this.view = view;
     this.imageMap = new HashMap<>();
     this.urlMap = new HashMap<>();
   }
@@ -113,7 +118,7 @@ public class PlayUiFxDataCache {
 
     URL url = this.urlMap.get(key);
     if (url == null) {
-      url = PlayDataUtil.getImageUrl(this.gameId, key);
+      url = PlayDataUtil.getImageUrl(this.view, this.gameId, key);
       this.urlMap.put(key, url);
     }
     return url;

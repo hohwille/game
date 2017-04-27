@@ -6,10 +6,10 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 import java.util.Objects;
-import java.util.Set;
 
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.object.PlayObjectWithId;
@@ -52,7 +52,7 @@ public class PlayDirection extends PlayObjectWithId {
 
   private static final PlayDirection[] TURN_CLOCKWISE = new PlayDirection[] { NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST, NORTH_WEST };
 
-  private final Collection<PlayDirection> combinations;
+  private final List<PlayDirection> combinations;
 
   private final double rotationZ;
 
@@ -221,9 +221,9 @@ public class PlayDirection extends PlayObjectWithId {
   }
 
   /**
-   * @return the {@link Collection} with the atomic {@link PlayDirection}s combined by this {@link PlayDirection}.
+   * @return the {@link List} with the atomic {@link PlayDirection}s combined by this {@link PlayDirection}.
    */
-  public Collection<PlayDirection> getCombinations() {
+  public List<PlayDirection> getCombinations() {
 
     return this.combinations;
   }
@@ -243,7 +243,7 @@ public class PlayDirection extends PlayObjectWithId {
    */
   public PlayDirection turn(boolean clockwise) {
 
-    Set<PlayDirection> directions = getGame().getDirections();
+    Collection<PlayDirection> directions = getGame().getDirections();
     int index = 0;
     while (index < TURN_CLOCKWISE.length) {
       if (TURN_CLOCKWISE[index] == this) {

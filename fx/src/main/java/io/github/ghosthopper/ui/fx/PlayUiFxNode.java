@@ -10,6 +10,12 @@ import io.github.ghosthopper.game.PlayGame;
 public interface PlayUiFxNode {
 
   /**
+   * @return the parent {@link PlayUiFxNode} of this object (here parent must not strictly correspond to the JavaFx
+   *         scene graph) or {@code null} if this is the {@link PlayUiFx root object}.
+   */
+  PlayUiFxNode getFxParent();
+
+  /**
    * @return the owning {@link PlayUiFxGame}.
    */
   default PlayUiFxGame getFxGame() {
@@ -26,10 +32,12 @@ public interface PlayUiFxNode {
   }
 
   /**
-   * @return the parent {@link PlayUiFxNode} of this object (here parent must not strictly correspond to the JavaFx
-   *         scene graph) or {@code null} if this is the {@link #getFxGame() root node}.
+   * @return the owning {@link PlayUiFx} (root object).
    */
-  PlayUiFxNode getFxParent();
+  default PlayUiFx getPlayUiFx() {
+
+    return getFxParent().getPlayUiFx();
+  }
 
   /**
    * @return the {@link PlayUiFxDataCache}.

@@ -1,18 +1,19 @@
 package io.github.ghosthopper.field;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-import java.util.Set;
-import java.util.function.Predicate;
 
 import io.github.ghosthopper.PlayLevel;
 import io.github.ghosthopper.asset.PlayAsset;
+import io.github.ghosthopper.asset.PlayAssetPositionEvent;
 import io.github.ghosthopper.asset.PlayAttributeAsset;
 import io.github.ghosthopper.border.PlayBorder;
 import io.github.ghosthopper.border.PlayBorderType;
 import io.github.ghosthopper.border.PlayBorderTypeWall;
+import io.github.ghosthopper.figure.PlayAttributeFiguresAdvanced;
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.item.PlayAttributePushItem;
@@ -21,21 +22,29 @@ import io.github.ghosthopper.item.PlayPushItem;
 import io.github.ghosthopper.move.PlayDirection;
 import io.github.ghosthopper.object.PlayTypedObjectWithItems;
 import io.github.ghosthopper.player.Player;
+import io.github.ghosthopper.position.PlayPosition;
+import io.github.ghosthopper.properties.PlayPropertyValueInt;
 
 /**
  * A single field on the {@link #getLevel() level}. Such {@link PlayLevel} is a two-dimensional area divided into
  * {@link PlayField}s. Each {@link PlayField} has {@link PlayBorder}s that can be navigated via
  * {@link #getBorder(PlayDirection)} and also {@link #getField(PlayDirection)}.
  */
-public class PlayField extends PlayTypedObjectWithItems implements PlayAttributePushItem, PlayAttributeAsset<PlayAsset<?>> {
+public class PlayField extends PlayTypedObjectWithItems implements PlayAttributePushItem, PlayAttributeAsset<PlayAsset<?>>, PlayAttributeFiguresAdvanced {
 
   private final PlayLevel level;
 
   private final Map<PlayDirection, PlayBorder> direction2borderMap;
 
+  private final List<PlayFigure> figures;
+
+  private final List<PlayFigure> figuresView;
+
   private PlayFieldType type;
 
   private PlayPushItem pushItem;
+
+  private final int[] positionCounts;
 
   /**
    * The constructor.
@@ -55,8 +64,11 @@ public class PlayField extends PlayTypedObjectWithItems implements PlayAttribute
   public PlayField(PlayLevel level, PlayFieldType type) {
     super();
     this.level = level;
-    this.direction2borderMap = new HashMap<>();
     this.type = type;
+    this.direction2borderMap = new HashMap<>();
+    this.figures = new ArrayList<>();
+    this.figuresView = Collections.unmodifiableList(this.figures);
+    this.positionCounts = new int[getGame().getPositions().size()];
   }
 
   @Override
@@ -126,43 +138,14 @@ public class PlayField extends PlayTypedObjectWithItems implements PlayAttribute
   }
 
   /**
-   * @param filter the {@link Predicate} used to filter the {@link Player}s.
-   * @return the {@link Collection} containing the {@link PlayFigure}s of the {@link Player}s
-   *         {@link Predicate#test(Object) accepted} by the given {@link Predicate} that are currently on this
+   * @return the {@link PlayFigure}s that are {@link PlayFigure#getLocation() currently located} on this
    *         {@link PlayField}.
+   * @see PlayFigure#getLocation()
    */
-  public Collection<PlayFigure> getCurrentFigures(Predicate<Player> filter) {
+  @Override
+  public List<PlayFigure> getFigures() {
 
-    Collection<PlayFigure> figures = new ArrayList<>();
-    PlayGame game = this.level.getGame();
-    for (Player player : game.getPlayers()) {
-      if (filter.test(player)) {
-        collectCurrentFigures(player, figures);
-      }
-    }
-    return figures;
-  }
-
-  /**
-   * @param player the {@link Player} whose {@link Player#getFigures() figures} shall be checked.
-   * @param figures the {@link Collection} where to {@link Collection#add(Object) add} the {@link PlayFigure}s of the
-   *        given {@link Player} if they are on this {@link PlayField}.
-   */
-  public void collectCurrentFigures(Player player, Collection<PlayFigure> figures) {
-
-    for (PlayFigure figure : player.getFigures()) {
-      if (figure.getLocation() == this) {
-        figures.add(figure);
-      }
-    }
-  }
-
-  /**
-   * @return the number of {@link PlayFigure}s currently on this {@link PlayField}.
-   */
-  public int getCurrentFigureCount() {
-
-    return getCurrentFigures(x -> true).size();
+    return this.figuresView;
   }
 
   /**
@@ -171,7 +154,95 @@ public class PlayField extends PlayTypedObjectWithItems implements PlayAttribute
    */
   public boolean hasHumanFigure() {
 
-    return !getCurrentFigures(x -> x.isHuman()).isEmpty();
+    return this.figures.stream().anyMatch(x -> x.getPlayer().isHuman());
+  }
+
+  @Override
+  public boolean canAddFigure(PlayFigure figure) {
+
+    int maxFigures = PlayPropertyValueInt.MAX_FIGURES.get(this);
+    int figureCount = this.figures.size();
+    if (figureCount >= maxFigures) {
+      return false;
+    }
+    return this.type.canAddAsset(figure);
+  }
+
+  @Override
+  public boolean addFigure(PlayFigure figure) {
+
+    PlayField oldLocation = figure.getLocation();
+    if (oldLocation == this) {
+      return true;
+    }
+    if (!canAddFigure(figure)) {
+      return false;
+    }
+    if (oldLocation != null) {
+      boolean success = oldLocation.removeFigure(figure, false);
+      if (!success) {
+        return false;
+      }
+    }
+    this.figures.add(figure);
+    PlayPosition position = figure.getPosition();
+    List<PlayPosition> positions = getGame().getPositions();
+    int alignmentIndex = positions.indexOf(position);
+    if (this.positionCounts[alignmentIndex] > 0) {
+      int minIndex = findMinAlignmentIndex();
+      if (minIndex != alignmentIndex) {
+        position = positions.get(minIndex);
+        figure.setPosition(position, false);
+        alignmentIndex = minIndex;
+      }
+    }
+    this.positionCounts[alignmentIndex]++;
+    figure.setLocation(this, false);
+    return true;
+  }
+
+  private int findMinAlignmentIndex() {
+
+    int minAlignment = this.positionCounts[0];
+    if (minAlignment == 0) {
+      return 0;
+    }
+    int index = 0;
+    for (int i = 1; i < this.positionCounts.length; i++) {
+      if (this.positionCounts[i] < minAlignment) {
+        index = i;
+        minAlignment = this.positionCounts[i];
+      }
+    }
+    return index;
+  }
+
+  @Override
+  public boolean removeFigure(PlayFigure figure, boolean updateLocation) {
+
+    boolean success = this.figures.remove(figure);
+    if (success) {
+      addPositionCount(figure.getPosition(), -1, getGame().getPositions());
+      if (updateLocation) {
+        figure.setLocation(null);
+      }
+    }
+    return success;
+  }
+
+  @Override
+  public void updatePosition(PlayAssetPositionEvent<?> positionEvent) {
+
+    List<PlayPosition> positions = getGame().getPositions();
+    addPositionCount(positionEvent.getOldPosition(), -1, positions);
+    addPositionCount(positionEvent.getNewPosition(), 1, positions);
+  }
+
+  private void addPositionCount(PlayPosition position, int add, List<PlayPosition> positions) {
+
+    int oldIndex = positions.indexOf(position);
+    assert ((oldIndex >= 0) && (oldIndex < this.positionCounts.length));
+    this.positionCounts[oldIndex] = this.positionCounts[oldIndex] + add;
   }
 
   /**
@@ -225,14 +296,21 @@ public class PlayField extends PlayTypedObjectWithItems implements PlayAttribute
    */
   public PlayBorder getBorder(PlayDirection direction) {
 
-    if (direction.isCombined()) {
-      throw new IllegalStateException(direction.toString());
+    PlayBorder playBorder = this.direction2borderMap.get(direction);
+    if ((playBorder == null) && (direction != null) && direction.isCombined()) {
+      PlayField field = this;
+      for (PlayDirection dir : direction.getCombinations()) {
+        if (field == null) {
+          return null;
+        }
+        playBorder = field.direction2borderMap.get(dir);
+        if (playBorder == null) {
+          return null;
+        }
+        field = playBorder.getField(dir);
+      }
     }
-    PlayBorder border = this.direction2borderMap.get(direction);
-    if (border == null) {
-      throw new IllegalStateException("No border defined for direction: " + direction.toString());
-    }
-    return border;
+    return playBorder;
   }
 
   /**
@@ -242,7 +320,7 @@ public class PlayField extends PlayTypedObjectWithItems implements PlayAttribute
    */
   public void initEdge() {
 
-    Set<PlayDirection> directions = this.level.getGame().getDirections();
+    List<PlayDirection> directions = this.level.getGame().getDirections();
     for (PlayDirection direction : directions) {
       if (!direction.isCombined() && !direction.isNatural()) {
         createWall(direction);
@@ -318,7 +396,13 @@ public class PlayField extends PlayTypedObjectWithItems implements PlayAttribute
   @Override
   public boolean canAddAsset(PlayAsset<?> asset) {
 
-    return this.type.canAddAsset(asset);
+    if (asset instanceof PlayPickItem) {
+      return canAddItem((PlayPickItem) asset);
+    } else if (asset instanceof PlayFigure) {
+      return canAddFigure((PlayFigure) asset);
+    } else {
+      return this.type.addAsset(asset);
+    }
   }
 
   @Override
@@ -328,6 +412,8 @@ public class PlayField extends PlayTypedObjectWithItems implements PlayAttribute
       return setPushItem((PlayPushItem) asset);
     } else if (asset instanceof PlayPickItem) {
       return addItem((PlayPickItem) asset);
+    } else if (asset instanceof PlayFigure) {
+      return addFigure((PlayFigure) asset);
     } else {
       return this.type.addAsset(asset);
     }

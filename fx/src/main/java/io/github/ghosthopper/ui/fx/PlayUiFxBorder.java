@@ -32,7 +32,6 @@ public class PlayUiFxBorder extends StackPane implements PlayUiFxNode {
     Image image = getFxDataCache().getImage(border);
     this.imageView = new ImageView(image);
     getChildren().add(this.imageView);
-    this.fxGame.addFxBorder(this);
   }
 
   @Override

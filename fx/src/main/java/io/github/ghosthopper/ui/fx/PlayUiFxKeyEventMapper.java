@@ -14,11 +14,11 @@ import javafx.scene.input.KeyEvent;
 /**
  * {@link #convertEvent(KeyEvent) Converter} from {@link KeyEvent} to {@link PlayKeyEvent}.
  */
-public class PlayUiFxKeyEvent {
+public class PlayUiFxKeyEventMapper {
 
   private static final Map<KeyCode, Character> KEY_CODE_MAP = createKeyCodeMap();
 
-  private PlayUiFxKeyEvent() {}
+  private PlayUiFxKeyEventMapper() {}
 
   @SuppressWarnings("boxing")
   private static Map<KeyCode, Character> createKeyCodeMap() {

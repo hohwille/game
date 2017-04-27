@@ -10,7 +10,9 @@ import javafx.stage.Stage;
 /**
  * The main program of the game-engine for JavaFX UI.
  */
-public class PlayUiFx extends Application {
+public class PlayUiFx extends Application implements PlayUiFxNode {
+
+  private PlayUiFxPositionMapper positionMapper;
 
   /**
    * The constructor.
@@ -23,10 +25,42 @@ public class PlayUiFx extends Application {
   public void start(Stage stage) throws Exception {
 
     PlayGame game = new Ghosty();
-    PlayUiFxGame fxGame = new PlayUiFxGame(game);
+    PlayUiFxGame fxGame = new PlayUiFxGame(game, this);
     stage.setTitle(game.getLocalizedName());
     stage.setScene(fxGame);
     stage.show();
+  }
+
+  /**
+   * @return the positionMapper
+   */
+  public PlayUiFxPositionMapper getPositionMapper() {
+
+    if (this.positionMapper == null) {
+      this.positionMapper = createPositionMapper();
+    }
+    return this.positionMapper;
+  }
+
+  /**
+   * @return a new instance of {@link PlayUiFxPositionMapper}. Override this method to provide your custom extension if
+   *         required.
+   */
+  protected PlayUiFxPositionMapper createPositionMapper() {
+
+    return new PlayUiFxPositionMapper();
+  }
+
+  @Override
+  public PlayUiFxNode getFxParent() {
+
+    return null;
+  }
+
+  @Override
+  public PlayUiFx getPlayUiFx() {
+
+    return this;
   }
 
   /**

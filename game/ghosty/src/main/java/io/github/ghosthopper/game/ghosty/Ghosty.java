@@ -10,6 +10,8 @@ import io.github.ghosthopper.border.PlayBorderTypeOpen;
 import io.github.ghosthopper.border.PlayBorderTypeWall;
 import io.github.ghosthopper.color.PlayColor;
 import io.github.ghosthopper.field.PlayField;
+import io.github.ghosthopper.figure.PlayFigure;
+import io.github.ghosthopper.figure.PlayFigureGroup;
 import io.github.ghosthopper.figure.PlayFigureType;
 import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.item.PlayPickItem;
@@ -18,6 +20,7 @@ import io.github.ghosthopper.item.PlayPushItem;
 import io.github.ghosthopper.item.PlayPushItemType;
 import io.github.ghosthopper.move.PlayDirection;
 import io.github.ghosthopper.player.Player;
+import io.github.ghosthopper.position.PlayPosition;
 
 /**
  * The game <em>ghosty</em>: {@link Player}s of different {@link PlayFigureType}s hunt for the ghost.
@@ -56,19 +59,33 @@ public class Ghosty extends PlayGame {
 
     Player player1 = new Player(PlayColor.GREEN, FROG);
     addPlayer(player1);
-    player1.getFigures().get(0).setLocation(level.getField(0, 0));
+    PlayFigure figure = player1.getFigures().get(0);
+    figure.setLocation(level.getField(0, 0));
+    figure.setPosition(PlayPosition.NORTH_WEST);
 
     Player player2 = new Player(PlayColor.RED, BUG);
     addPlayer(player2);
-    player2.getFigures().get(0).setLocation(level.getField(WIDTH - 1, 0));
+    figure = player2.getFigures().get(0);
+    figure.setLocation(level.getField(WIDTH - 1, 0));
+    figure.setPosition(PlayPosition.NORTH_EAST);
 
     Player player3 = new Player(PlayColor.BLUE, FROG);
     addPlayer(player3);
-    player3.getFigures().get(0).setLocation(level.getField(WIDTH - 1, HEIGHT - 1));
+    figure = player3.getFigures().get(0);
+    figure.setLocation(level.getField(WIDTH - 1, HEIGHT - 1));
+    figure.setPosition(PlayPosition.SOUTH_EAST);
 
-    Player player4 = new Player(PlayColor.YELLOW, BUG);
+    Player player4 = new Player(PlayColor.YELLOW, BUG, FROG);
     addPlayer(player4);
-    player4.getFigures().get(0).setLocation(level.getField(0, HEIGHT - 1));
+    PlayFigureGroup group = player4.createGroup();
+    figure = player4.getFigures().get(0);
+    figure.setLocation(level.getField(0, HEIGHT - 1));
+    figure.setPosition(PlayPosition.NORTH_WEST);
+    group.addFigure(figure);
+    figure = player4.getFigures().get(1);
+    figure.setLocation(level.getField(0, HEIGHT - 1));
+    figure.setPosition(PlayPosition.CENTER);
+    group.addFigure(figure);
 
     PlayPushItem pushItem = new PlayPushItem(PlayColor.WHITE, DIAMOND);
     level.getField(3, 4).setPushItem(pushItem);

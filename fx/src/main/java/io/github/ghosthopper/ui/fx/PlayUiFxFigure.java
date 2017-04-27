@@ -3,6 +3,7 @@
 package io.github.ghosthopper.ui.fx;
 
 import io.github.ghosthopper.figure.PlayFigure;
+import io.github.ghosthopper.figure.PlayFigureGroup;
 import javafx.scene.effect.Effect;
 import javafx.scene.effect.Glow;
 
@@ -33,8 +34,14 @@ public class PlayUiFxFigure extends PlayUiFxAsset {
       this.glow.setInput(effect);
     }
     setEffect(this.glow);
-    getFxGame().addFxFigure(this);
-    update();
+  }
+
+  /**
+   * @return the {@link PlayFigure}.
+   */
+  public PlayFigure getPlayFigure() {
+
+    return this.figure;
   }
 
   @Override
@@ -50,15 +57,30 @@ public class PlayUiFxFigure extends PlayUiFxAsset {
   }
 
   /**
-   * Updates this figure.
+   * Updates the {@link PlayFigure#isActiveFigure() activity} of this figure.
    */
-  public void update() {
+  public void updateActivitySingle() {
 
-    boolean selected = this.figure.isCurrentFigure();
+    boolean selected = this.figure.isActiveFigure();
     if (selected) {
       this.glow.setLevel(0.8);
     } else {
       this.glow.setLevel(0);
+    }
+  }
+
+  /**
+   * Updates the {@link PlayFigure#isActiveFigure() activity} of this figure.
+   */
+  public void updateActivity() {
+
+    PlayFigureGroup group = this.figure.getGroup();
+    if (group != null) {
+      for (PlayFigure groupFigure : group.getFigures()) {
+        getFxGame().getFxFigure(groupFigure).updateActivitySingle();
+      }
+    } else {
+      updateActivitySingle();
     }
   }
 

@@ -21,6 +21,8 @@ public class PlayUiFxLevel extends GridPane implements PlayUiFxNode {
 
   private final PlayLevel level;
 
+  private boolean initialized;
+
   /**
    * The constructor.
    *
@@ -32,12 +34,14 @@ public class PlayUiFxLevel extends GridPane implements PlayUiFxNode {
     this.level = level;
     this.game = game;
     getStyleClass().add("level");
-    this.game.addFxLevel(this);
-    initLevel();
   }
 
-  private void initLevel() {
+  void initialize() {
 
+    if (this.initialized) {
+      return;
+    }
+    this.initialized = true;
     PlayGame playGame = this.level.getGame();
     PlayField startField = this.level.getStartField();
     PlayDirection xDir = playGame.getDirectionX();
@@ -109,13 +113,14 @@ public class PlayUiFxLevel extends GridPane implements PlayUiFxNode {
 
   private void addField(PlayField field, int x, int y) {
 
-    PlayUiFxField fxField = new PlayUiFxField(field, this);
+    PlayUiFxField fxField = this.game.getFxField(field);
     add(fxField, x, y);
   }
 
   private void addBorder(PlayBorder border, int x, int y) {
 
-    PlayUiFxBorder fxBorder = new PlayUiFxBorder(border, this.game);
+    System.out.println("X:" + x + ",Y:" + y + ", Border: " + border);
+    PlayUiFxBorder fxBorder = this.game.getFxBorder(border);
     add(fxBorder, x, y);
   }
 

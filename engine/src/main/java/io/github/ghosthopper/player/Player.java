@@ -3,10 +3,13 @@
 package io.github.ghosthopper.player;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import io.github.ghosthopper.color.PlayColor;
 import io.github.ghosthopper.figure.PlayFigure;
+import io.github.ghosthopper.figure.PlayFigureGroup;
 import io.github.ghosthopper.figure.PlayFigureType;
 import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.object.PlayObjectType;
@@ -18,6 +21,10 @@ import io.github.ghosthopper.object.PlayTypedObjectWithItems;
 public class Player extends PlayTypedObjectWithItems {
 
   private final List<PlayFigure> figures;
+
+  private final List<PlayFigureGroup> groups;
+
+  private final List<PlayFigureGroup> groupsView;
 
   private final PlayerType type;
 
@@ -62,6 +69,8 @@ public class Player extends PlayTypedObjectWithItems {
     this.human = human;
     this.type = type;
     this.figures = new ArrayList<>();
+    this.groups = new ArrayList<>();
+    this.groupsView = Collections.unmodifiableList(this.groups);
     if (color != null) {
       setColor(color);
     }
@@ -139,6 +148,49 @@ public class Player extends PlayTypedObjectWithItems {
   public boolean isCurrentPlayer() {
 
     return (this.game.getCurrentPlayer() == this);
+  }
+
+  /**
+   * @return the groups
+   */
+  public List<PlayFigureGroup> getGroups() {
+
+    return this.groupsView;
+  }
+
+  /**
+   * @return the new {@link PlayFigureGroup}.
+   */
+  public PlayFigureGroup createGroup() {
+
+    return createGroup("Group-" + (this.groups.size() + 1));
+  }
+
+  /**
+   * @param groupName the {@link PlayFigureGroup#getId() group name}.
+   * @return the new {@link PlayFigureGroup}.
+   */
+  public PlayFigureGroup createGroup(String groupName) {
+
+    PlayFigureGroup group = new PlayFigureGroup(groupName, this);
+    this.groups.add(group);
+    return group;
+  }
+
+  /**
+   * @param group destroys the given {@link PlayFigureGroup} (Calls {@link PlayFigureGroup#clear()} and removes it from
+   *        the {@link #getGroups() groups}).
+   */
+  public void destroyGroup(PlayFigureGroup group) {
+
+    Objects.requireNonNull(group, "group");
+    if (group.getPlayer() != this) {
+      throw new IllegalArgumentException("Group belongs to different player!");
+    }
+    boolean removed = this.groups.remove(group);
+    if (removed) {
+      group.clear();
+    }
   }
 
 }

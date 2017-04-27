@@ -1,5 +1,7 @@
 package io.github.ghosthopper.border;
 
+import java.util.List;
+
 import io.github.ghosthopper.asset.PlayAsset;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.figure.PlayFigure;
@@ -80,9 +82,14 @@ public class PlayBorder extends AbstractPlayTypedObject implements PlayAttribute
 
     if (this.direction == playDirection) {
       return this.targetField;
-    } else {
-      assert (this.direction.getInverse() == playDirection);
+    } else if (this.direction.getInverse() == playDirection) {
       return this.sourceField;
+    } else if ((playDirection != null) && playDirection.isCombined()) {
+      List<PlayDirection> combinations = playDirection.getCombinations();
+      PlayDirection lastDirection = combinations.get(combinations.size() - 1);
+      return getField(lastDirection);
+    } else {
+      return null;
     }
   }
 

@@ -23,7 +23,6 @@ public class PlayUiFxPlayer implements PlayUiFxNode {
     super();
     this.game = game;
     this.player = player;
-    this.game.addFxPlayer(this);
   }
 
   @Override

@@ -2,12 +2,10 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.ui.fx;
 
-import java.util.Arrays;
-import java.util.List;
-
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.item.PlayPickItem;
 import io.github.ghosthopper.item.PlayPushItem;
+import io.github.ghosthopper.position.PlayPosition;
 import javafx.geometry.Pos;
 import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
@@ -19,14 +17,9 @@ import javafx.scene.layout.StackPane;
  */
 public class PlayUiFxField extends StackPane implements PlayUiFxNode {
 
-  private static final List<Pos> ALIGNMENTS = Arrays.asList(Pos.CENTER, Pos.TOP_LEFT, Pos.TOP_RIGHT, Pos.BOTTOM_RIGHT, Pos.BOTTOM_LEFT, Pos.CENTER_LEFT,
-      Pos.CENTER_RIGHT, Pos.TOP_CENTER, Pos.BOTTOM_CENTER);
-
   private final PlayField field;
 
   private final PlayUiFxLevel level;
-
-  private final int[] alignmentCounts;
 
   /**
    * The constructor.
@@ -38,7 +31,6 @@ public class PlayUiFxField extends StackPane implements PlayUiFxNode {
     super();
     this.field = field;
     this.level = level;
-    this.alignmentCounts = new int[ALIGNMENTS.size()];
     getStyleClass().add("field");
     Image image = getFxDataCache().getImage(field);
     ImageView imageView = new ImageView(image);
@@ -47,7 +39,6 @@ public class PlayUiFxField extends StackPane implements PlayUiFxNode {
       imageView.setEffect(effect);
     }
     getChildren().add(imageView);
-    getFxGame().addFxField(this);
     initItems();
   }
 
@@ -84,13 +75,6 @@ public class PlayUiFxField extends StackPane implements PlayUiFxNode {
    */
   public void removeFxAsset(PlayUiFxAsset asset) {
 
-    Pos alignment = getAlignment(asset);
-    if (alignment != null) {
-      int index = ALIGNMENTS.indexOf(alignment);
-      if ((index >= 0) && (this.alignmentCounts[index] > 0)) {
-        this.alignmentCounts[index]--;
-      }
-    }
     getChildren().remove(asset);
   }
 
@@ -99,27 +83,10 @@ public class PlayUiFxField extends StackPane implements PlayUiFxNode {
    */
   public void addFxAsset(PlayUiFxAsset asset) {
 
-    int index = findMinimumAlignment();
-    this.alignmentCounts[index]++;
-    Pos alignment = ALIGNMENTS.get(index);
+    PlayPosition position = asset.getPlayAsset().getPosition();
+    Pos alignment = getPlayUiFx().getPositionMapper().getFxPosition(position);
     getChildren().add(asset);
     setAlignment(asset, alignment);
-  }
-
-  private int findMinimumAlignment() {
-
-    int minAlignment = this.alignmentCounts[0];
-    if (minAlignment == 0) {
-      return 0;
-    }
-    int index = 0;
-    for (int i = 1; i < this.alignmentCounts.length; i++) {
-      if (this.alignmentCounts[i] < minAlignment) {
-        index = i;
-        minAlignment = this.alignmentCounts[i];
-      }
-    }
-    return index;
   }
 
 }

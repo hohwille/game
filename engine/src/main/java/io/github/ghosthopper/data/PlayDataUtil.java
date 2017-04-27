@@ -8,8 +8,8 @@ import java.util.logging.Logger;
 import io.github.ghosthopper.game.PlayGame;
 
 /**
- * A utility class that gives access to data resources such as {@link #getImageUrl(String, PlayDataKey) image} or
- * {@link #getAudioUrl(String, PlayDataKey) audio} files.
+ * A utility class that gives access to data resources such as {@link #getImageUrl(PlayView, String, PlayDataKey) image}
+ * or {@link #getAudioUrl(String, PlayDataKey) audio} files.
  */
 public final class PlayDataUtil {
 
@@ -17,7 +17,9 @@ public final class PlayDataUtil {
 
   private static final String DATA_PACKAGE = "io/github/ghosthopper/data/";
 
-  private static final String ROOT = "Root";
+  private static final String FOLDER_ROOT = "Root";
+
+  private static final String FOLDER_AUDIO = "Audio";
 
   private static final String IMG_EXTENSION = ".png";
 
@@ -26,13 +28,14 @@ public final class PlayDataUtil {
   private PlayDataUtil() {}
 
   /**
+   * @param view the {@link PlayView}.
    * @param gameId the {@link PlayGame#getId() ID} of the {@link PlayGame}.
    * @param key the {@link PlayDataKey}.
    * @return the {@link URL} of the according image.
    */
-  public static URL getImageUrl(String gameId, PlayDataKey key) {
+  public static URL getImageUrl(PlayView view, String gameId, PlayDataKey key) {
 
-    return getResource(gameId, key, IMG_EXTENSION);
+    return getResource(view.getId(), gameId, key, IMG_EXTENSION);
   }
 
   /**
@@ -42,13 +45,18 @@ public final class PlayDataUtil {
    */
   public static URL getAudioUrl(String gameId, PlayDataKey key) {
 
-    return getResource(gameId, key, AUDIO_EXTENSION);
+    return getResource(FOLDER_AUDIO, gameId, key, AUDIO_EXTENSION);
   }
 
-  private static URL getResource(String gameId, PlayDataKey key, String extension) {
+  private static URL getResource(String view, String gameId, PlayDataKey key, String extension) {
 
     ClassLoader ccl = Thread.currentThread().getContextClassLoader();
-    StringBuilder pathBuffer = new StringBuilder(key.getTypeName() + "/");
+    StringBuilder pathBuffer = new StringBuilder(48);
+    pathBuffer.append(view);
+    pathBuffer.append('/');
+    pathBuffer.append(key.getTypeName());
+    pathBuffer.append('/');
+
     // PlayColor color = key.getColor(); // TODO optional?
     // if (color != null) {
     // pathBuffer.append(color.getId());
@@ -68,7 +76,7 @@ public final class PlayDataUtil {
     String path = pathBuffer.toString();
     URL resource = getResource(path, key, ccl, gameId, extension);
     if (resource == null) {
-      resource = getResource(path, key, ccl, ROOT, extension);
+      resource = getResource(path, key, ccl, FOLDER_ROOT, extension);
     }
     if (resource == null) {
       // TODO - fallback to default ?
