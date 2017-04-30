@@ -48,27 +48,27 @@ public class PlayDirectionTest extends Assertions {
   }
 
   /**
-   * Test of {@link PlayDirection#turn(boolean)} with 90 degrees per step (default).
+   * Test of {@link PlayDirection#rotate(boolean)} with 90 degrees per step (default).
    */
   @Test
   public void testTurn90() {
 
     PlayGame.getCurrentGame().end();
     // clockwise
-    assertThat(PlayDirection.EAST.turn(true)).isSameAs(PlayDirection.SOUTH);
-    assertThat(PlayDirection.SOUTH.turn(true)).isSameAs(PlayDirection.WEST);
-    assertThat(PlayDirection.WEST.turn(true)).isSameAs(PlayDirection.NORTH);
-    assertThat(PlayDirection.NORTH.turn(true)).isSameAs(PlayDirection.EAST);
+    assertThat(PlayDirection.EAST.rotate(true)).isSameAs(PlayDirection.SOUTH);
+    assertThat(PlayDirection.SOUTH.rotate(true)).isSameAs(PlayDirection.WEST);
+    assertThat(PlayDirection.WEST.rotate(true)).isSameAs(PlayDirection.NORTH);
+    assertThat(PlayDirection.NORTH.rotate(true)).isSameAs(PlayDirection.EAST);
 
     // counter-clockwise
-    assertThat(PlayDirection.EAST.turn(false)).isSameAs(PlayDirection.NORTH);
-    assertThat(PlayDirection.NORTH.turn(false)).isSameAs(PlayDirection.WEST);
-    assertThat(PlayDirection.WEST.turn(false)).isSameAs(PlayDirection.SOUTH);
-    assertThat(PlayDirection.SOUTH.turn(false)).isSameAs(PlayDirection.EAST);
+    assertThat(PlayDirection.EAST.rotate(false)).isSameAs(PlayDirection.NORTH);
+    assertThat(PlayDirection.NORTH.rotate(false)).isSameAs(PlayDirection.WEST);
+    assertThat(PlayDirection.WEST.rotate(false)).isSameAs(PlayDirection.SOUTH);
+    assertThat(PlayDirection.SOUTH.rotate(false)).isSameAs(PlayDirection.EAST);
   }
 
   /**
-   * Test of {@link PlayDirection#turn(boolean)} with 45 degrees per step (custom game).
+   * Test of {@link PlayDirection#rotate(boolean)} with 45 degrees per step (custom game).
    */
   @Test
   public void testTurn45() {
@@ -81,33 +81,33 @@ public class PlayDirectionTest extends Assertions {
         return true;
       }
     };
-    game.start();
+    game.begin();
 
     // clockwise
-    assertThat(PlayDirection.EAST.turn(true)).isSameAs(PlayDirection.SOUTH_EAST);
-    assertThat(PlayDirection.SOUTH_EAST.turn(true)).isSameAs(PlayDirection.SOUTH);
-    assertThat(PlayDirection.SOUTH.turn(true)).isSameAs(PlayDirection.SOUTH_WEST);
-    assertThat(PlayDirection.SOUTH_WEST.turn(true)).isSameAs(PlayDirection.WEST);
-    assertThat(PlayDirection.WEST.turn(true)).isSameAs(PlayDirection.NORTH_WEST);
-    assertThat(PlayDirection.NORTH_WEST.turn(true)).isSameAs(PlayDirection.NORTH);
-    assertThat(PlayDirection.NORTH.turn(true)).isSameAs(PlayDirection.NORTH_EAST);
-    assertThat(PlayDirection.NORTH_EAST.turn(true)).isSameAs(PlayDirection.EAST);
+    assertThat(PlayDirection.EAST.rotate(true)).isSameAs(PlayDirection.SOUTH_EAST);
+    assertThat(PlayDirection.SOUTH_EAST.rotate(true)).isSameAs(PlayDirection.SOUTH);
+    assertThat(PlayDirection.SOUTH.rotate(true)).isSameAs(PlayDirection.SOUTH_WEST);
+    assertThat(PlayDirection.SOUTH_WEST.rotate(true)).isSameAs(PlayDirection.WEST);
+    assertThat(PlayDirection.WEST.rotate(true)).isSameAs(PlayDirection.NORTH_WEST);
+    assertThat(PlayDirection.NORTH_WEST.rotate(true)).isSameAs(PlayDirection.NORTH);
+    assertThat(PlayDirection.NORTH.rotate(true)).isSameAs(PlayDirection.NORTH_EAST);
+    assertThat(PlayDirection.NORTH_EAST.rotate(true)).isSameAs(PlayDirection.EAST);
 
     // counter-clockwise
-    assertThat(PlayDirection.EAST.turn(false)).isSameAs(PlayDirection.NORTH_EAST);
-    assertThat(PlayDirection.NORTH_EAST.turn(false)).isSameAs(PlayDirection.NORTH);
-    assertThat(PlayDirection.NORTH.turn(false)).isSameAs(PlayDirection.NORTH_WEST);
-    assertThat(PlayDirection.NORTH_WEST.turn(false)).isSameAs(PlayDirection.WEST);
-    assertThat(PlayDirection.WEST.turn(false)).isSameAs(PlayDirection.SOUTH_WEST);
-    assertThat(PlayDirection.SOUTH_WEST.turn(false)).isSameAs(PlayDirection.SOUTH);
-    assertThat(PlayDirection.SOUTH.turn(false)).isSameAs(PlayDirection.SOUTH_EAST);
-    assertThat(PlayDirection.SOUTH_EAST.turn(false)).isSameAs(PlayDirection.EAST);
+    assertThat(PlayDirection.EAST.rotate(false)).isSameAs(PlayDirection.NORTH_EAST);
+    assertThat(PlayDirection.NORTH_EAST.rotate(false)).isSameAs(PlayDirection.NORTH);
+    assertThat(PlayDirection.NORTH.rotate(false)).isSameAs(PlayDirection.NORTH_WEST);
+    assertThat(PlayDirection.NORTH_WEST.rotate(false)).isSameAs(PlayDirection.WEST);
+    assertThat(PlayDirection.WEST.rotate(false)).isSameAs(PlayDirection.SOUTH_WEST);
+    assertThat(PlayDirection.SOUTH_WEST.rotate(false)).isSameAs(PlayDirection.SOUTH);
+    assertThat(PlayDirection.SOUTH.rotate(false)).isSameAs(PlayDirection.SOUTH_EAST);
+    assertThat(PlayDirection.SOUTH_EAST.rotate(false)).isSameAs(PlayDirection.EAST);
 
     game.end();
   }
 
   /**
-   * Test of {@link PlayDirection#turn(boolean)} with 180 degrees per step (custom game).
+   * Test of {@link PlayDirection#rotate(boolean)} with 180 degrees per step (custom game).
    */
   @Test
   public void testTurn180() {
@@ -123,15 +123,15 @@ public class PlayDirectionTest extends Assertions {
         return set;
       }
     };
-    game.start();
+    game.begin();
 
     // clockwise
-    assertThat(PlayDirection.EAST.turn(true)).isSameAs(PlayDirection.WEST);
-    assertThat(PlayDirection.WEST.turn(true)).isSameAs(PlayDirection.EAST);
+    assertThat(PlayDirection.EAST.rotate(true)).isSameAs(PlayDirection.WEST);
+    assertThat(PlayDirection.WEST.rotate(true)).isSameAs(PlayDirection.EAST);
 
     // counter-clockwise
-    assertThat(PlayDirection.EAST.turn(false)).isSameAs(PlayDirection.WEST);
-    assertThat(PlayDirection.WEST.turn(false)).isSameAs(PlayDirection.EAST);
+    assertThat(PlayDirection.EAST.rotate(false)).isSameAs(PlayDirection.WEST);
+    assertThat(PlayDirection.WEST.rotate(false)).isSameAs(PlayDirection.EAST);
 
     game.end();
   }

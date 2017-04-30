@@ -5,16 +5,15 @@ package io.github.ghosthopper.object;
 import java.util.Locale;
 import java.util.Objects;
 
+import io.github.ghosthopper.game.PlayAttributeGame;
 import io.github.ghosthopper.game.PlayGame;
 
 /**
  * Interface for any play object of this game.
  */
-public interface PlayObject {
+public interface PlayObject extends PlayAttributeGame {
 
-  /**
-   * @return the {@link PlayGame} owning this object.
-   */
+  @Override
   default PlayGame getGame() {
 
     PlayGame game = PlayGame.getCurrentGame();
@@ -23,7 +22,8 @@ public interface PlayObject {
   }
 
   /**
-   * @return the ID of this item used to find corresponding graphics or audio information.
+   * @return the ID of this item used to find the corresponding {@link #getLocalizedName() localized name} as well as
+   *         graphics or audio information.
    */
   String getId();
 

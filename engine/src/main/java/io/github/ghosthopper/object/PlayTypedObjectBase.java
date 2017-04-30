@@ -9,12 +9,12 @@ import io.github.ghosthopper.properties.PlayProperties;
  * This is the abstract base class for an object that has a {@link #getType() type} and optionally a {@link #getColor()
  * color}.
  */
-public abstract class AbstractPlayTypedObject extends AbstractPlayStateObject implements PlayTypedObject, PlayEvent {
+public abstract class PlayTypedObjectBase extends PlayStateObjectBase implements PlayTypedObject, PlayEvent {
 
   /**
    * The constructor.
    */
-  public AbstractPlayTypedObject() {
+  public PlayTypedObjectBase() {
     super();
   }
 

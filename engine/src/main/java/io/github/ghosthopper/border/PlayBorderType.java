@@ -12,6 +12,9 @@ import io.github.ghosthopper.object.PlayObjectType;
  */
 public abstract class PlayBorderType extends PlayObjectType {
 
+  /** The {@link #getTypeName() type name}. */
+  public static final String TYPE_NAME = "Border";
+
   /**
    * The constructor.
    *
@@ -24,7 +27,7 @@ public abstract class PlayBorderType extends PlayObjectType {
   @Override
   public String getTypeName() {
 
-    return "Border";
+    return TYPE_NAME;
   }
 
   /**
@@ -32,9 +35,8 @@ public abstract class PlayBorderType extends PlayObjectType {
    *
    * @param asset the {@link PlayFigure}.
    * @param border the {@link PlayBorder}.
-   * @param move {@code true} if the {@link PlayFigure} actually {@link PlayBorder#pass(PlayAsset) performs the move}
-   *        if possible, {@code false} otherwise (only to {@link PlayBorder#canPass(PlayAsset) check a simulated
-   *        move}).
+   * @param move {@code true} if the {@link PlayFigure} actually {@link PlayBorder#pass(PlayAsset) performs the move} if
+   *        possible, {@code false} otherwise (only to {@link PlayBorder#canPass(PlayAsset) check a simulated move}).
    * @return {@code true} if the given {@link PlayFigure} can pass this border, {@code false} otherwise.
    */
   public abstract boolean canPass(PlayAsset<?> asset, PlayBorder border, boolean move);

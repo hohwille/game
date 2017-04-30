@@ -2,85 +2,91 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.choice;
 
-import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
+
+import io.github.ghosthopper.game.PlayGame;
+import io.github.ghosthopper.object.PlayObject;
 
 /**
- * A choice for the user. Either to configure or initialize the game or potentially also for quiz games.
+ * A choice that the player has to take. The generic UI can render a screen where the user can pick the option(s) that
+ * should be {@link #select(List) selected}. A {@link PlayChoice} may e.g. allow to {@link #select(List) select} the
+ * number of players for the game.
+ *
+ * @param <O> the type of the option.
  */
-public class PlayChoice {
-
-  private final String title;
-
-  private final String question;
-
-  private final List<PlayOption> options;
-
-  private final int minimum;
-
-  private final int maximum;
+public interface PlayChoice<O> extends PlayObject {
 
   /**
-   * The constructor.
-   *
-   * @param title - see {@link #getTitle()}.
-   * @param question - see {@link #getQuestion()}.
-   * @param min - see {@link #getMinimum()}.
-   * @param max - see {@link #getMaximum()}.
-   * @param options - see {@link #getOptions()}.
+   * This ID is required to render the label for this {@link PlayChoice} via {@link #getLocalizedName() localized name}.
    */
-  public PlayChoice(String title, String question, int min, int max, PlayOption... options) {
-    super();
-    assert (min >= 0);
-    assert (max <= options.length);
-    this.title = title;
-    this.question = question;
-    this.minimum = min;
-    this.maximum = max;
-    this.options = Collections.unmodifiableList(Arrays.asList(options));
+  @Override
+  String getId();
+
+  /**
+   * @return an optional description of this choice more detailed than the {@link #getId() id}
+   *         ({@link #getLocalizedName() localized name}). Will be
+   *         {@link io.github.ghosthopper.i18n.PlayTranslator#translate(String) localized} and used as additional info
+   *         text or tooltip. May be {@link String#isEmpty() empty} or {@code null} to omit additional details.
+   */
+  default String getDescription() {
+
+    return null;
   }
 
   /**
-   * @return the minimum number of {@link #getOptions() options} the user has to choose.
+   * @return the minimum number of {@link #select(List) options to select}.
    */
-  public int getMinimum() {
+  default int getMinOptions() {
 
-    return this.minimum;
+    return 1;
   }
 
   /**
-   * @return the maximum number of {@link #getOptions() options} the user has to choose.
+   * @return the maximum number of {@link #select(List) options to select}.
    */
-  public int getMaximum() {
+  default int getMaxOptions() {
 
-    return this.maximum;
+    return 1;
   }
 
   /**
-   * @return the title as a very short summary of the choice (e.g. "Players", "Difficulty" or "Level").
+   * @return {@code true} if the {@link #select(List) selected options} have to be unique, {@code false} if the same
+   *         option can be {@link #select(List) selected} more than once. Only relevant if {@link #getMaxOptions() max
+   *         options} is greater than {@code 1}.
    */
-  public String getTitle() {
+  default boolean isUniqueSelection() {
 
-    return this.title;
+    return true;
   }
 
   /**
-   * @return an optional question that describes the choice more detailed than the {@link #getTitle() title}. Can be
-   *         {@link String#isEmpty() empty} or {@code null} to omit the question (if {@link #getTitle() title} is
-   *         sufficient).
+   * @return {@code true} if the order of the {@link #select(List) selected options} matters (the user will then be
+   *         allowed to change the order of the options to select), {@code false} otherwise. Only relevant if
+   *         {@link #getMaxOptions() max options} is greater than {@code 1}.
    */
-  public String getQuestion() {
+  default boolean isOrderedSelection() {
 
-    return this.question;
+    return false;
   }
 
   /**
-   * @return the available {@link PlayOption}s.
+   * @param options the option(s) that has/have been selected. Will be called from the view after the user has submitted
+   *        his choice. The number of options will be in the range from {@link #getMinOptions()} to
+   *        {@link #getMaxOptions()}.
    */
-  public List<PlayOption> getOptions() {
+  default void select(List<O> options) {
 
-    return this.options;
+    Objects.requireNonNull(options, "options");
+    assert (options.size() >= getMinOptions());
+    assert (options.size() <= getMaxOptions());
+    getGame().sendEvent(new PlayChoiceSelectEvent(this, options));
   }
+
+  /**
+   * @return the {@link PlayGame} owning this {@link PlayChoice}.
+   */
+  @Override
+  PlayGame getGame();
 
 }

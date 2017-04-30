@@ -15,16 +15,6 @@ public interface PlayAttributePosition {
   /**
    * @param position the new {@link PlayPosition}.
    */
-  default void setPosition(PlayPosition position) {
-
-    setPosition(position, true);
-  }
-
-  /**
-   * @param position the new {@link PlayPosition}.
-   * @param updateLocation - {@code true} if the {@link io.github.ghosthopper.asset.PlayAsset#getLocation() location}
-   *        shall be updated, {@code false} otherwise (if called from the location).
-   */
-  void setPosition(PlayPosition position, boolean updateLocation);
+  void setPosition(PlayPosition position);
 
 }

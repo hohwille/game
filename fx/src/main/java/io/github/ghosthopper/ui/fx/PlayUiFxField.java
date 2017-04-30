@@ -46,12 +46,12 @@ public class PlayUiFxField extends StackPane implements PlayUiFxNode {
 
     PlayUiFxGame fxGame = getFxGame();
     for (PlayPickItem item : this.field.getItems()) {
-      PlayUiFxPickItem fxItem = new PlayUiFxPickItem(item, fxGame);
+      PlayUiFxPickItem fxItem = fxGame.getFxPickItem(item);
       addFxAsset(fxItem);
     }
     PlayPushItem pushItem = this.field.getPushItem();
     if (pushItem != null) {
-      PlayUiFxPushItem fxItem = new PlayUiFxPushItem(pushItem, fxGame);
+      PlayUiFxPushItem fxItem = fxGame.getFxPushItem(pushItem);
       addFxAsset(fxItem);
     }
   }
@@ -83,9 +83,14 @@ public class PlayUiFxField extends StackPane implements PlayUiFxNode {
    */
   public void addFxAsset(PlayUiFxAsset asset) {
 
+    getChildren().add(asset);
+    updatePosition(asset);
+  }
+
+  void updatePosition(PlayUiFxAsset asset) {
+
     PlayPosition position = asset.getPlayAsset().getPosition();
     Pos alignment = getPlayUiFx().getPositionMapper().getFxPosition(position);
-    getChildren().add(asset);
     setAlignment(asset, alignment);
   }
 

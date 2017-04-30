@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Objects;
 
 import io.github.ghosthopper.color.PlayColor;
+import io.github.ghosthopper.figure.PlayAttributeFigures;
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.figure.PlayFigureGroup;
 import io.github.ghosthopper.figure.PlayFigureType;
@@ -18,9 +19,11 @@ import io.github.ghosthopper.object.PlayTypedObjectWithItems;
 /**
  * A {@link Player} of the {@link PlayGame}.
  */
-public class Player extends PlayTypedObjectWithItems {
+public class Player extends PlayTypedObjectWithItems implements PlayAttributeFigures {
 
   private final List<PlayFigure> figures;
+
+  private final List<PlayFigure> figuresView;
 
   private final List<PlayFigureGroup> groups;
 
@@ -69,6 +72,7 @@ public class Player extends PlayTypedObjectWithItems {
     this.human = human;
     this.type = type;
     this.figures = new ArrayList<>();
+    this.figuresView = Collections.unmodifiableList(this.figures);
     this.groups = new ArrayList<>();
     this.groupsView = Collections.unmodifiableList(this.groups);
     if (color != null) {
@@ -137,9 +141,35 @@ public class Player extends PlayTypedObjectWithItems {
   /**
    * @return the figures
    */
+  @Override
   public List<PlayFigure> getFigures() {
 
-    return this.figures;
+    return this.figuresView;
+  }
+
+  @Override
+  public boolean addFigure(PlayFigure figure) {
+
+    Objects.requireNonNull(figure, "figure");
+    if (figure.getPlayer() != this) {
+      throw new IllegalStateException("Only figures of this player can be added!");
+    }
+    if (this.figures.contains(figure)) {
+      return true; // already contained
+    }
+    this.figures.add(figure);
+    return true;
+  }
+
+  @Override
+  public boolean removeFigure(PlayFigure figure) {
+
+    Objects.requireNonNull(figure, "figure");
+    boolean success = this.figures.remove(figure);
+    if (success) {
+      figure.setLocation(null);
+    }
+    return success;
   }
 
   /**

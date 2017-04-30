@@ -3,10 +3,11 @@ package io.github.ghosthopper.figure;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Objects;
 import java.util.Set;
 
-import io.github.ghosthopper.asset.AbstractPlayAsset;
-import io.github.ghosthopper.asset.PlayAssetPositionEvent;
+import io.github.ghosthopper.asset.PlayAssetBase;
+import io.github.ghosthopper.asset.PlayAttributeAsset;
 import io.github.ghosthopper.border.PlayBorder;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.game.PlayGame;
@@ -25,13 +26,11 @@ import io.github.ghosthopper.properties.PlayPropertyValueInt;
  * moment in time of the {@link PlayGame} each {@link PlayFigure} is {@link #getLocation() located on} a specific
  * {@link PlayField}.
  */
-public class PlayFigure extends AbstractPlayAsset<PlayField> implements PlayAttributeDirection {
+public class PlayFigure extends PlayAssetBase<PlayField> implements PlayAttributeDirection {
 
   private final Player player;
 
   private final PlayFigureType type;
-
-  private PlayField location;
 
   private PlayDirection direction;
 
@@ -47,6 +46,7 @@ public class PlayFigure extends AbstractPlayAsset<PlayField> implements PlayAttr
     super();
     this.player = player;
     this.type = type;
+    this.direction = PlayDirection.NORTH;
     if (player != null) {
       setColor(player.getColor());
     }
@@ -59,9 +59,9 @@ public class PlayFigure extends AbstractPlayAsset<PlayField> implements PlayAttr
   }
 
   @Override
-  protected PlayAssetPositionEvent<?> createPositionEvent(PlayPosition oldPosition, PlayPosition newPosition) {
+  protected PlayFigureMoveEvent createMoveEvent(PlayField oldLocation, PlayPosition oldPosition, PlayField newLocation, PlayPosition newPosition) {
 
-    return new PlayFigurePositionEvent(oldPosition, this, newPosition);
+    return new PlayFigureMoveEvent(oldLocation, oldPosition, this, newLocation, newPosition);
   }
 
   /**
@@ -125,33 +125,6 @@ public class PlayFigure extends AbstractPlayAsset<PlayField> implements PlayAttr
     return this.player.getGame();
   }
 
-  @Override
-  public PlayField getLocation() {
-
-    return this.location;
-  }
-
-  @Override
-  public boolean setLocation(PlayField location, boolean addOrRemove) {
-
-    if (this.location == location) {
-      return true;
-    }
-    boolean success = true;
-    PlayField oldLocation = this.location;
-    if ((location == null) && addOrRemove) {
-      success = oldLocation.removeFigure(this, false);
-    }
-    if ((location != null) && addOrRemove) {
-      success = location.addFigure(this);
-    }
-    this.location = location;
-    if (success) {
-      getGame().sendEvent(new PlayFigureMoveEvent(oldLocation, this, location));
-    }
-    return success;
-  }
-
   /**
    * @return {@code true} if this is the {@link PlayGame#getCurrentFigure() current figure}, {@code false} otherwise.
    */
@@ -191,7 +164,10 @@ public class PlayFigure extends AbstractPlayAsset<PlayField> implements PlayAttr
    */
   public void setDirection(PlayDirection direction) {
 
+    Objects.requireNonNull(direction, "direction");
+    PlayDirection old = this.direction;
     this.direction = direction;
+    getGame().sendEvent(new PlayFigureDirectionEvent(old, this, this.direction));
   }
 
   /**
@@ -204,16 +180,29 @@ public class PlayFigure extends AbstractPlayAsset<PlayField> implements PlayAttr
   }
 
   /**
-   * @param clockwise {@code true} if figure should turn clockwise, {@code false} otherwise (opposite direction).
-   * @return the new {@link PlayDirection}. May be {@code null} if {@link #getDirection() current direction} was already
-   *         {@code null}.
+   * @param clockwise {@code true} if figure should rotate clockwise, {@code false} otherwise (opposite direction).
+   * @return the new {@link PlayDirection}.
    */
-  public PlayDirection turn(boolean clockwise) {
+  public PlayDirection rotate(boolean clockwise) {
+
+    PlayDirection result = rotateSingle(clockwise);
+    if (this.group != null) {
+      for (PlayFigure figure : this.group.getFigures()) {
+        if (figure != this) {
+          figure.rotateSingle(clockwise);
+        }
+      }
+    }
+    return result;
+  }
+
+  private PlayDirection rotateSingle(boolean clockwise) {
 
     if (this.direction == null) {
-      return null;
+      this.direction = PlayDirection.NORTH;
     }
-    this.direction = this.direction.turn(clockwise);
+    setDirection(this.direction.rotate(clockwise));
+    setPosition(getPosition().rotate(clockwise));
     return this.direction;
   }
 
@@ -224,13 +213,14 @@ public class PlayFigure extends AbstractPlayAsset<PlayField> implements PlayAttr
    */
   public PlayField move(PlayDirection dir) {
 
-    if (this.location == null) {
+    PlayField location = getLocation();
+    if (location == null) {
       return null;
     }
     if ((this.group != null) && (this.group.getFigures().size() > 1)) {
       return moveGrouped(dir);
     }
-    PlayBorder border = this.location.getBorder(dir);
+    PlayBorder border = location.getBorder(dir);
     if ((border == null) || !border.canPass(this)) {
       return null;
     }
@@ -248,12 +238,19 @@ public class PlayFigure extends AbstractPlayAsset<PlayField> implements PlayAttr
       return null;
     }
     setLocation(targetField);
+    if (getGame().isAutoPickItem()) {
+      PlayPickItem item;
+      do {
+        item = pickItem();
+      } while (item != null);
+    }
     return targetField;
   }
 
   private PlayField moveGrouped(PlayDirection dir) {
 
-    PlayBorder border = this.location.getBorder(dir);
+    PlayField location = getLocation();
+    PlayBorder border = location.getBorder(dir);
     if (border == null) {
       return null;
     }
@@ -377,14 +374,15 @@ public class PlayFigure extends AbstractPlayAsset<PlayField> implements PlayAttr
    */
   public PlayPickItem pickItem() {
 
-    if (this.location == null) {
+    PlayField location = getLocation();
+    if (location == null) {
       return null;
     }
-    if (this.location.getItems().isEmpty()) {
+    if (location.getItems().isEmpty()) {
       return null;
     }
-    int itemIndex = this.location.getItems().size() - 1;
-    PlayPickItem item = this.location.getItems().get(itemIndex);
+    int itemIndex = location.getItems().size() - 1;
+    PlayPickItem item = location.getItems().get(itemIndex);
     return pickItem(item, itemIndex);
   }
 
@@ -397,10 +395,11 @@ public class PlayFigure extends AbstractPlayAsset<PlayField> implements PlayAttr
    */
   public PlayPickItem pickItem(PlayPickItem item) {
 
-    if (this.location == null) {
+    PlayField location = getLocation();
+    if (location == null) {
       return null;
     }
-    int itemIndex = this.location.getItems().indexOf(item);
+    int itemIndex = location.getItems().indexOf(item);
     return pickItem(item, itemIndex);
   }
 
@@ -421,7 +420,8 @@ public class PlayFigure extends AbstractPlayAsset<PlayField> implements PlayAttr
    */
   public PlayPickItem dropItem() {
 
-    if (this.location == null) {
+    PlayField location = getLocation();
+    if (location == null) {
       return null;
     }
     List<PlayPickItem> items = getItems();
@@ -441,7 +441,8 @@ public class PlayFigure extends AbstractPlayAsset<PlayField> implements PlayAttr
    */
   public PlayPickItem dropItem(PlayPickItem item) {
 
-    if (this.location == null) {
+    PlayField location = getLocation();
+    if (location == null) {
       return null;
     }
     int itemIndex = getItems().indexOf(item);
@@ -450,8 +451,9 @@ public class PlayFigure extends AbstractPlayAsset<PlayField> implements PlayAttr
 
   private PlayPickItem dropItem(PlayPickItem item, int itemIndex) {
 
-    if ((itemIndex >= 0) && item.getType().isDroppable(this.location)) {
-      if (this.location.addItem(item)) {
+    PlayField location = getLocation();
+    if ((itemIndex >= 0) && item.getType().isDroppable(location)) {
+      if (location.addItem(item)) {
         return item;
       }
     }

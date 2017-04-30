@@ -19,7 +19,7 @@ public class PlayGameNone extends PlayGame {
    */
   public PlayGameNone() {
     super(ID);
-    start();
+    begin();
   }
 
 }

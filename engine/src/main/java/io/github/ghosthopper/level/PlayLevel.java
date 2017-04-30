@@ -1,4 +1,4 @@
-package io.github.ghosthopper;
+package io.github.ghosthopper.level;
 
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.game.PlayGame;

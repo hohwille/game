@@ -111,4 +111,64 @@ public class PlayPosition extends PlayObjectWithId {
     return position;
   }
 
+  /**
+   * @param clockwise {@code true} to rotate clockwise, {@code false} otherwise (opposite direction).
+   * @return the new {@link PlayPosition}.
+   */
+  public PlayPosition rotate(boolean clockwise) {
+
+    if (this == WEST) {
+      if (clockwise) {
+        return NORTH;
+      } else {
+        return SOUTH;
+      }
+    } else if (this == EAST) {
+      if (clockwise) {
+        return SOUTH;
+      } else {
+        return NORTH;
+      }
+    } else if (this == NORTH) {
+      if (clockwise) {
+        return EAST;
+      } else {
+        return WEST;
+      }
+    } else if (this == SOUTH) {
+      if (clockwise) {
+        return WEST;
+      } else {
+        return EAST;
+      }
+    } else if (this == NORTH_WEST) {
+      if (clockwise) {
+        return NORTH_EAST;
+      } else {
+        return SOUTH_WEST;
+      }
+    } else if (this == NORTH_EAST) {
+      if (clockwise) {
+        return SOUTH_EAST;
+      } else {
+        return NORTH_WEST;
+      }
+    } else if (this == SOUTH_WEST) {
+      if (clockwise) {
+        return NORTH_WEST;
+      } else {
+        return SOUTH_EAST;
+      }
+    } else if (this == SOUTH_EAST) {
+      if (clockwise) {
+        return SOUTH_WEST;
+      } else {
+        return NORTH_EAST;
+      }
+    } else if (this == CENTER) {
+      return CENTER;
+    } else {
+      throw new IllegalStateException("You have to override this method if you introduce new positions!");
+    }
+  }
 }

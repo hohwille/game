@@ -6,9 +6,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import io.github.ghosthopper.PlayLevel;
 import io.github.ghosthopper.asset.PlayAsset;
-import io.github.ghosthopper.asset.PlayAssetPositionEvent;
 import io.github.ghosthopper.asset.PlayAttributeAsset;
 import io.github.ghosthopper.border.PlayBorder;
 import io.github.ghosthopper.border.PlayBorderType;
@@ -19,10 +17,10 @@ import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.item.PlayAttributePushItem;
 import io.github.ghosthopper.item.PlayPickItem;
 import io.github.ghosthopper.item.PlayPushItem;
+import io.github.ghosthopper.level.PlayLevel;
 import io.github.ghosthopper.move.PlayDirection;
 import io.github.ghosthopper.object.PlayTypedObjectWithItems;
 import io.github.ghosthopper.player.Player;
-import io.github.ghosthopper.position.PlayPosition;
 import io.github.ghosthopper.properties.PlayPropertyValueInt;
 
 /**
@@ -30,7 +28,7 @@ import io.github.ghosthopper.properties.PlayPropertyValueInt;
  * {@link PlayField}s. Each {@link PlayField} has {@link PlayBorder}s that can be navigated via
  * {@link #getBorder(PlayDirection)} and also {@link #getField(PlayDirection)}.
  */
-public class PlayField extends PlayTypedObjectWithItems implements PlayAttributePushItem, PlayAttributeAsset<PlayAsset<?>>, PlayAttributeFiguresAdvanced {
+public class PlayField extends PlayTypedObjectWithItems implements PlayAttributePushItem, PlayAttributeAsset, PlayAttributeFiguresAdvanced {
 
   private final PlayLevel level;
 
@@ -43,8 +41,6 @@ public class PlayField extends PlayTypedObjectWithItems implements PlayAttribute
   private PlayFieldType type;
 
   private PlayPushItem pushItem;
-
-  private final int[] positionCounts;
 
   /**
    * The constructor.
@@ -68,7 +64,6 @@ public class PlayField extends PlayTypedObjectWithItems implements PlayAttribute
     this.direction2borderMap = new HashMap<>();
     this.figures = new ArrayList<>();
     this.figuresView = Collections.unmodifiableList(this.figures);
-    this.positionCounts = new int[getGame().getPositions().size()];
   }
 
   @Override
@@ -131,7 +126,7 @@ public class PlayField extends PlayTypedObjectWithItems implements PlayAttribute
     if (success) {
       this.pushItem = pushItem;
       if (pushItem != null) {
-        pushItem.setLocation(this, false);
+        pushItem.setLocation(this, pushItem.getPosition(), false);
       }
     }
     return success;
@@ -172,7 +167,7 @@ public class PlayField extends PlayTypedObjectWithItems implements PlayAttribute
   public boolean addFigure(PlayFigure figure) {
 
     PlayField oldLocation = figure.getLocation();
-    if (oldLocation == this) {
+    if ((oldLocation == this) || (this.figures.contains(figure))) {
       return true;
     }
     if (!canAddFigure(figure)) {
@@ -185,36 +180,8 @@ public class PlayField extends PlayTypedObjectWithItems implements PlayAttribute
       }
     }
     this.figures.add(figure);
-    PlayPosition position = figure.getPosition();
-    List<PlayPosition> positions = getGame().getPositions();
-    int alignmentIndex = positions.indexOf(position);
-    if (this.positionCounts[alignmentIndex] > 0) {
-      int minIndex = findMinAlignmentIndex();
-      if (minIndex != alignmentIndex) {
-        position = positions.get(minIndex);
-        figure.setPosition(position, false);
-        alignmentIndex = minIndex;
-      }
-    }
-    this.positionCounts[alignmentIndex]++;
-    figure.setLocation(this, false);
+    figure.setLocation(this, figure.getPosition(), false);
     return true;
-  }
-
-  private int findMinAlignmentIndex() {
-
-    int minAlignment = this.positionCounts[0];
-    if (minAlignment == 0) {
-      return 0;
-    }
-    int index = 0;
-    for (int i = 1; i < this.positionCounts.length; i++) {
-      if (this.positionCounts[i] < minAlignment) {
-        index = i;
-        minAlignment = this.positionCounts[i];
-      }
-    }
-    return index;
   }
 
   @Override
@@ -222,27 +189,11 @@ public class PlayField extends PlayTypedObjectWithItems implements PlayAttribute
 
     boolean success = this.figures.remove(figure);
     if (success) {
-      addPositionCount(figure.getPosition(), -1, getGame().getPositions());
       if (updateLocation) {
         figure.setLocation(null);
       }
     }
     return success;
-  }
-
-  @Override
-  public void updatePosition(PlayAssetPositionEvent<?> positionEvent) {
-
-    List<PlayPosition> positions = getGame().getPositions();
-    addPositionCount(positionEvent.getOldPosition(), -1, positions);
-    addPositionCount(positionEvent.getNewPosition(), 1, positions);
-  }
-
-  private void addPositionCount(PlayPosition position, int add, List<PlayPosition> positions) {
-
-    int oldIndex = positions.indexOf(position);
-    assert ((oldIndex >= 0) && (oldIndex < this.positionCounts.length));
-    this.positionCounts[oldIndex] = this.positionCounts[oldIndex] + add;
   }
 
   /**

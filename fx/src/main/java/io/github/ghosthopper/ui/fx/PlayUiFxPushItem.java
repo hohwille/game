@@ -2,11 +2,10 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.ui.fx;
 
-import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.item.PlayPushItem;
 
 /**
- * JavaFx view for a {@link PlayFigure}.
+ * JavaFx view for a {@link PlayPushItem}.
  */
 public class PlayUiFxPushItem extends PlayUiFxItem {
 
@@ -21,7 +20,6 @@ public class PlayUiFxPushItem extends PlayUiFxItem {
   public PlayUiFxPushItem(PlayPushItem item, PlayUiFxGame fxGame) {
     super(item, fxGame);
     this.item = item;
-    fxGame.addFxPushItem(this);
   }
 
   @Override

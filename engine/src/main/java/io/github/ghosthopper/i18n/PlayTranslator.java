@@ -18,7 +18,7 @@ public class PlayTranslator {
 
   private static final Logger LOG = Logger.getLogger(PlayTranslator.class.getName());
 
-  private static final String BUNDLE_PREFIX = "io.github.ghosthopper.i18n.";
+  private static final String BUNDLE_PREFIX = "game.i18n.";
 
   private static final String BUNDLE_ROOT = BUNDLE_PREFIX + "Root";
 

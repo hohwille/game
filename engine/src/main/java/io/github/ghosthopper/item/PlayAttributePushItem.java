@@ -10,7 +10,23 @@ import io.github.ghosthopper.field.PlayField;
 public interface PlayAttributePushItem {
 
   /**
+   * @param pushItem the {@link PlayPushItem} that shall potentially be {@link #setPushItem(PlayPushItem) added}.
+   * @return {@code true} if it can be {@link #setPushItem(PlayPushItem) added}, {@code false} otherwise.
+   */
+  default boolean canAddPushItem(PlayPushItem pushItem) {
+
+    return (getPushItem() == null);
+  }
+
+  /**
    * @return the {@link PlayPushItem} that is on this {@link PlayField} or {@code null} if there is no such item here.
    */
   PlayPushItem getPushItem();
+
+  /**
+   * @param pushItem the new value of {@link #getPushItem()}.
+   * @return {@code true} if the {@link PlayPushItem} has been set successfully, {@code false} otherwise.
+   */
+  boolean setPushItem(PlayPushItem pushItem);
+
 }

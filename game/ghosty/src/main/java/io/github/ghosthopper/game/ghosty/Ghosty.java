@@ -1,6 +1,5 @@
 package io.github.ghosthopper.game.ghosty;
 
-import io.github.ghosthopper.PlayLevel;
 import io.github.ghosthopper.border.PlayBorder;
 import io.github.ghosthopper.border.PlayBorderTypeDoor;
 import io.github.ghosthopper.border.PlayBorderTypeHidden;
@@ -18,8 +17,10 @@ import io.github.ghosthopper.item.PlayPickItem;
 import io.github.ghosthopper.item.PlayPickItemType;
 import io.github.ghosthopper.item.PlayPushItem;
 import io.github.ghosthopper.item.PlayPushItemType;
+import io.github.ghosthopper.level.PlayLevel;
 import io.github.ghosthopper.move.PlayDirection;
 import io.github.ghosthopper.player.Player;
+import io.github.ghosthopper.player.PlayerConfigBase;
 import io.github.ghosthopper.position.PlayPosition;
 
 /**
@@ -57,26 +58,38 @@ public class Ghosty extends PlayGame {
     PlayLevel level = getCurrentLevel();
     initLevel(level);
 
+    PlayPushItem pushItem = new PlayPushItem(PlayColor.WHITE, DIAMOND);
+    level.getField(3, 4).setPushItem(pushItem);
+    pushItem = new PlayPushItem(PlayColor.WHITE, DIAMOND);
+    level.getField(4, 4).setPushItem(pushItem);
+  }
+
+  @Override
+  protected PlayerConfigBase createPlayerConfig() {
+
+    PlayLevel level = getCurrentLevel();
+    PlayerConfigBase playerConfig = super.createPlayerConfig();
+
     Player player1 = new Player(PlayColor.GREEN, FROG);
-    addPlayer(player1);
+    playerConfig.addPlayer(player1);
     PlayFigure figure = player1.getFigures().get(0);
     figure.setLocation(level.getField(0, 0));
     figure.setPosition(PlayPosition.NORTH_WEST);
 
     Player player2 = new Player(PlayColor.RED, BUG);
-    addPlayer(player2);
+    playerConfig.addPlayer(player2);
     figure = player2.getFigures().get(0);
     figure.setLocation(level.getField(WIDTH - 1, 0));
     figure.setPosition(PlayPosition.NORTH_EAST);
 
     Player player3 = new Player(PlayColor.BLUE, FROG);
-    addPlayer(player3);
+    playerConfig.addPlayer(player3);
     figure = player3.getFigures().get(0);
     figure.setLocation(level.getField(WIDTH - 1, HEIGHT - 1));
     figure.setPosition(PlayPosition.SOUTH_EAST);
 
     Player player4 = new Player(PlayColor.YELLOW, BUG, FROG);
-    addPlayer(player4);
+    playerConfig.addPlayer(player4);
     PlayFigureGroup group = player4.createGroup();
     figure = player4.getFigures().get(0);
     figure.setLocation(level.getField(0, HEIGHT - 1));
@@ -84,13 +97,9 @@ public class Ghosty extends PlayGame {
     group.addFigure(figure);
     figure = player4.getFigures().get(1);
     figure.setLocation(level.getField(0, HEIGHT - 1));
-    figure.setPosition(PlayPosition.CENTER);
+    figure.setPosition(PlayPosition.SOUTH);
     group.addFigure(figure);
-
-    PlayPushItem pushItem = new PlayPushItem(PlayColor.WHITE, DIAMOND);
-    level.getField(3, 4).setPushItem(pushItem);
-    pushItem = new PlayPushItem(PlayColor.WHITE, DIAMOND);
-    level.getField(4, 4).setPushItem(pushItem);
+    return playerConfig;
   }
 
   @Override

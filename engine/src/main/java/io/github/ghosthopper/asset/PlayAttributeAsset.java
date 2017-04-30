@@ -2,23 +2,44 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.asset;
 
+import io.github.ghosthopper.figure.PlayAttributeFiguresAdvanced;
 import io.github.ghosthopper.figure.PlayFigure;
+import io.github.ghosthopper.item.PlayAttributePickItems;
+import io.github.ghosthopper.item.PlayAttributePushItem;
 import io.github.ghosthopper.item.PlayPickItem;
 import io.github.ghosthopper.item.PlayPushItem;
+import io.github.ghosthopper.item.PlayShotItem;
+import io.github.ghosthopper.object.PlayLocation;
 
 /**
  * Interface for the holder of {@link PlayAsset}s.
- *
- * @param <A> the type of the {@link PlayAsset}.
  */
-public interface PlayAttributeAsset<A extends PlayAsset<?>> {
+public interface PlayAttributeAsset extends PlayLocation {
 
   /**
    * @param asset the {@link PlayAsset} to check.
    * @return {@code true} if this holder (field) can hold the given {@link PlayAsset} so that it can become the new
    *         {@link PlayAsset#getLocation() location} of the {@link PlayAsset}, {@code false} otherwise.
    */
-  boolean canAddAsset(A asset);
+  default boolean canAddAsset(PlayAsset<?> asset) {
+
+    if (asset instanceof PlayPickItem) {
+      if (this instanceof PlayAttributePickItems) {
+        return ((PlayAttributePickItems) this).canAddItem((PlayPickItem) asset);
+      }
+    } else if (asset instanceof PlayFigure) {
+      if (this instanceof PlayAttributeFiguresAdvanced) {
+        return ((PlayAttributeFiguresAdvanced) this).canAddFigure((PlayFigure) asset);
+      }
+    } else if (asset instanceof PlayPushItem) {
+      if (this instanceof PlayAttributePushItem) {
+        return ((PlayAttributePushItem) this).canAddPushItem((PlayPushItem) asset);
+      }
+    } else if (asset instanceof PlayShotItem) {
+      return true;
+    }
+    return false;
+  }
 
   /**
    * @param asset the {@link PlayAsset} to add to this holder (e.g. field). This happens when a {@link PlayFigure} is
@@ -26,7 +47,25 @@ public interface PlayAttributeAsset<A extends PlayAsset<?>> {
    *        is pushed, etc. Unlike {@link #canAddAsset(PlayAsset)} this method changes the state of this holder.
    * @return {@code true} if the {@link PlayAsset} {@link #canAddAsset(PlayAsset) can be hold}, {@code false} otherwise.
    */
-  boolean addAsset(A asset);
+  default boolean addAsset(PlayAsset<?> asset) {
+
+    if (asset instanceof PlayPickItem) {
+      if (this instanceof PlayAttributePickItems) {
+        return ((PlayAttributePickItems) this).addItem((PlayPickItem) asset);
+      }
+    } else if (asset instanceof PlayFigure) {
+      if (this instanceof PlayAttributeFiguresAdvanced) {
+        return ((PlayAttributeFiguresAdvanced) this).addFigure((PlayFigure) asset);
+      }
+    } else if (asset instanceof PlayPushItem) {
+      if (this instanceof PlayAttributePushItem) {
+        return ((PlayAttributePushItem) this).setPushItem((PlayPushItem) asset);
+      }
+    } else if (asset instanceof PlayShotItem) {
+      return true;
+    }
+    return false;
+  }
 
   /**
    * @param asset the {@link PlayAsset} to remove from this holder (field). Called when a {@link PlayFigure} is moved
@@ -35,7 +74,7 @@ public interface PlayAttributeAsset<A extends PlayAsset<?>> {
    * @return {@code true} if the {@link PlayAsset} could successfully be removed, {@code false} otherwise (exotic case
    *         but field might be glued, magnetic or whatever).
    */
-  default boolean removeAsset(A asset) {
+  default boolean removeAsset(PlayAsset<?> asset) {
 
     return removeAsset(asset, true);
   }
@@ -52,6 +91,24 @@ public interface PlayAttributeAsset<A extends PlayAsset<?>> {
    * @return {@code true} if the {@link PlayAsset} could successfully be removed, {@code false} otherwise (exotic case
    *         but field might be glued, magnetic or whatever).
    */
-  boolean removeAsset(A asset, boolean updateLocation);
+  default boolean removeAsset(PlayAsset<?> asset, boolean updateLocation) {
+
+    if (asset instanceof PlayPickItem) {
+      if (this instanceof PlayAttributePickItems) {
+        return ((PlayAttributePickItems) this).removeItem((PlayPickItem) asset);
+      }
+    } else if (asset instanceof PlayFigure) {
+      if (this instanceof PlayAttributeFiguresAdvanced) {
+        return ((PlayAttributeFiguresAdvanced) this).removeFigure((PlayFigure) asset);
+      }
+    } else if (asset instanceof PlayPushItem) {
+      if (this instanceof PlayAttributePushItem) {
+        return ((PlayAttributePushItem) this).setPushItem(null);
+      }
+    } else if (asset instanceof PlayShotItem) {
+      return true;
+    }
+    return false;
+  }
 
 }

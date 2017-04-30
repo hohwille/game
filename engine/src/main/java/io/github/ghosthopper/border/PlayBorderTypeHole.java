@@ -4,7 +4,7 @@ import io.github.ghosthopper.asset.PlayAsset;
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.figure.PlayFigureType;
 import io.github.ghosthopper.item.PlayPickItem;
-import io.github.ghosthopper.object.AbstractPlayStateObject;
+import io.github.ghosthopper.object.PlayStateObjectBase;
 
 /**
  * A {@link PlayBorderType} that is a hole where only {@link PlayFigure}s of specific {@link PlayFigure#getType() types}
@@ -29,7 +29,7 @@ public class PlayBorderTypeHole extends PlayBorderType {
   }
 
   @Override
-  public AbstractPlayStateObject getOverlay() {
+  public PlayStateObjectBase getOverlay() {
 
     return this.figureType;
   }

@@ -10,7 +10,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-import io.github.ghosthopper.PlayLevel;
 import io.github.ghosthopper.border.PlayBorder;
 import io.github.ghosthopper.border.PlayBorderType;
 import io.github.ghosthopper.event.PlayEvent;
@@ -29,9 +28,13 @@ import io.github.ghosthopper.i18n.PlayTranslator;
 import io.github.ghosthopper.item.PlayItem;
 import io.github.ghosthopper.item.PlayItemType;
 import io.github.ghosthopper.item.PlayPickItem;
+import io.github.ghosthopper.level.PlayLevel;
 import io.github.ghosthopper.move.PlayDirection;
 import io.github.ghosthopper.object.PlayStateObjectWithId;
 import io.github.ghosthopper.player.Player;
+import io.github.ghosthopper.player.PlayerConfig;
+import io.github.ghosthopper.player.PlayerConfigBase;
+import io.github.ghosthopper.player.PlayerConfigImpl;
 import io.github.ghosthopper.player.PlayerTurnEvent;
 import io.github.ghosthopper.position.PlayPosition;
 
@@ -60,11 +63,9 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
 
   private final PlayTranslator translator;
 
-  private final List<Player> players;
-
-  private final List<Player> playersView;
-
   private final Map<Class<?>, PlayEventDispatcher<?>> dispatcherMap;
+
+  private PlayerConfigBase playerConfig;
 
   private int currentPlayer;
 
@@ -86,8 +87,6 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
   public PlayGame(String id) {
     super(id);
     this.translator = new PlayTranslator(this);
-    this.players = new ArrayList<>();
-    this.playersView = Collections.unmodifiableList(this.players);
     this.dispatcherMap = new HashMap<>();
     addListener(PlayKeyEvent.class, this::onKeyPressed);
   }
@@ -98,13 +97,29 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
   protected void onKeyPressed(PlayKeyEvent event) {
 
     if (event.getCode() == PlayKeys.KEY_LEFT) {
-      move(PlayDirection.WEST);
+      if (event.getModifiers().isControl()) {
+        rotate(false);
+      } else {
+        move(PlayDirection.WEST);
+      }
     } else if (event.getCode() == PlayKeys.KEY_RIGHT) {
-      move(PlayDirection.EAST);
+      if (event.getModifiers().isControl()) {
+        rotate(true);
+      } else {
+        move(PlayDirection.EAST);
+      }
     } else if (event.getCode() == PlayKeys.KEY_UP) {
-      move(PlayDirection.NORTH);
+      if (event.getModifiers().isControl()) {
+        move(true);
+      } else {
+        move(PlayDirection.NORTH);
+      }
     } else if (event.getCode() == PlayKeys.KEY_DOWN) {
-      move(PlayDirection.SOUTH);
+      if (event.getModifiers().isControl()) {
+        move(false);
+      } else {
+        move(PlayDirection.SOUTH);
+      }
     } else if (event.getCode() == PlayKeys.KEY_ENTER) {
       nextFigure(true);
     } else if (event.getCode() == PlayKeys.KEY_D) {
@@ -139,7 +154,8 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
   }
 
   /**
-   * Moves the {@link #getCurrentFigure() current figure} in the given {@link PlayDirection}.
+   * {@link PlayFigure#move(PlayDirection) Moves} the {@link #getCurrentFigure() current figure} in the given
+   * {@link PlayDirection}.
    *
    * @param direction the {@link PlayDirection} to move.
    */
@@ -148,6 +164,38 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
     PlayFigure figure = getCurrentFigure();
     if (figure != null) {
       figure.move(direction);
+    }
+  }
+
+  /**
+   * {@link PlayFigure#move() Moves} the {@link #getCurrentFigure() current figure} in its direction forwards or
+   * backwards.
+   *
+   * @param forward - {@code true} to {@link PlayFigure#move() move forwards} and {@code false} to move backwards (in
+   *        the {@link PlayDirection#getInverse() inverse direction}).
+   */
+  protected void move(boolean forward) {
+
+    PlayFigure figure = getCurrentFigure();
+    if (figure != null) {
+      if (forward) {
+        figure.move();
+      } else {
+        figure.move(figure.getDirection().getInverse());
+      }
+    }
+  }
+
+  /**
+   * {@link PlayFigure#rotate(boolean) Rotates} the {@link #getCurrentFigure() current figure}.
+   *
+   * @param clockwise {@code true} if figure should rotate clockwise, {@code false} otherwise (opposite direction).
+   */
+  protected void rotate(boolean clockwise) {
+
+    PlayFigure figure = getCurrentFigure();
+    if (figure != null) {
+      figure.rotate(clockwise);
     }
   }
 
@@ -252,9 +300,24 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
   /**
    * Starts this {@link PlayGame}.
    */
+  public final void begin() {
+
+    if (currentGame == this) {
+      return;
+    }
+    if (currentGame != null) {
+      currentGame.end();
+    }
+    currentGame = this;
+    sendEvent(PlayState.BEGIN);
+  }
+
+  /**
+   * Starts this {@link PlayGame}.
+   */
   public final void start() {
 
-    currentGame = this;
+    assert (currentGame == this);
     sendEvent(PlayState.START);
   }
 
@@ -367,22 +430,32 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
   }
 
   /**
-   * @return an {@link Collections#unmodifiableList(List) unmodifiable list} of the {@link Player}s.
-   *
-   * @see #addPlayer(Player)
+   * @return the playerConfig
    */
-  public List<Player> getPlayers() {
+  public PlayerConfig getPlayerConfig() {
 
-    return this.playersView;
+    if (this.playerConfig == null) {
+      this.playerConfig = createPlayerConfig();
+    }
+    return this.playerConfig;
   }
 
   /**
-   * @param player the {@link Player} to add.
+   * @return the new {@link PlayerConfigBase}.
    */
-  protected void addPlayer(Player player) {
+  protected PlayerConfigBase createPlayerConfig() {
 
-    player.setGame(this);
-    this.players.add(player);
+    return new PlayerConfigImpl(this);
+  }
+
+  /**
+   * @return an {@link Collections#unmodifiableList(List) unmodifiable list} of the {@link Player}s.
+   *
+   * @see #getPlayerConfig()
+   */
+  public List<Player> getPlayers() {
+
+    return getPlayerConfig().getPlayers();
   }
 
   /**
@@ -390,7 +463,7 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
    */
   public Player getCurrentPlayer() {
 
-    return this.players.get(this.currentPlayer);
+    return getPlayers().get(this.currentPlayer);
   }
 
   /**
@@ -410,7 +483,7 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
       oldPlayer = oldFigure.getPlayer();
     }
     this.currentPlayer++;
-    if (this.currentPlayer >= this.players.size()) {
+    if (this.currentPlayer >= getPlayers().size()) {
       this.currentPlayer = 0;
     }
     this.currentFigure = 0;

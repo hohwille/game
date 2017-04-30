@@ -11,7 +11,7 @@ import io.github.ghosthopper.object.PlayObjectType;
 /**
  * The type of a {@link PlayField}.
  */
-public class PlayFieldType extends PlayObjectType implements PlayAttributeAsset<PlayAsset<?>> {
+public class PlayFieldType extends PlayObjectType implements PlayAttributeAsset {
 
   /** Type of a normal/regular {@link PlayField}. */
   public static final PlayFieldType NORMAL = new PlayFieldType("Normal");

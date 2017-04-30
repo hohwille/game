@@ -4,6 +4,7 @@ package io.github.ghosthopper.item;
 
 import io.github.ghosthopper.asset.PlayAssetMoveEvent;
 import io.github.ghosthopper.object.PlayLocation;
+import io.github.ghosthopper.position.PlayPosition;
 
 /**
  * A {@link PlayAssetMoveEvent} that notifies about a {@link #getAsset() item} that has changed its
@@ -19,21 +20,24 @@ public abstract class PlayItemMoveEvent<L extends PlayLocation, A extends PlayIt
    * The constructor.
    *
    * @param oldLocation the {@link #getOldLocation() old location}.
+   * @param oldPosition the {@link #getOldPosition() old position}.
    * @param asset the {@link #getAsset() item}.
    */
-  public PlayItemMoveEvent(L oldLocation, A asset) {
-    super(oldLocation, asset);
+  public PlayItemMoveEvent(L oldLocation, PlayPosition oldPosition, A asset) {
+    super(oldLocation, oldPosition, asset);
   }
 
   /**
    * The constructor.
    *
    * @param oldLocation the {@link #getOldLocation() old location}.
+   * @param oldPosition the {@link #getOldPosition() old position}.
    * @param asset the {@link #getAsset() item}.
    * @param newLocation the {@link #getNewLocation() new location}.
+   * @param newPosition the {@link #getNewPosition() new position}.
    */
-  public PlayItemMoveEvent(L oldLocation, A asset, L newLocation) {
-    super(oldLocation, asset, newLocation);
+  public PlayItemMoveEvent(L oldLocation, PlayPosition oldPosition, A asset, L newLocation, PlayPosition newPosition) {
+    super(oldLocation, oldPosition, asset, newLocation, newPosition);
   }
 
 }

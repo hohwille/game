@@ -5,16 +5,16 @@ package io.github.ghosthopper.object;
 import io.github.ghosthopper.properties.PlayProperties;
 
 /**
- * A {@link AbstractPlayObject} that has a state such as {@link #getProperties() properties}.
+ * A {@link PlayObjectBase} that has a state such as {@link #getProperties() properties}.
  */
-public abstract class AbstractPlayStateObject extends AbstractPlayObject implements PlayStateObject {
+public abstract class PlayStateObjectBase extends PlayObjectBase implements PlayStateObject {
 
   private PlayProperties properties;
 
   /**
    * The constructor.
    */
-  public AbstractPlayStateObject() {
+  public PlayStateObjectBase() {
     super();
   }
 

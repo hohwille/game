@@ -3,9 +3,9 @@
 package io.github.ghosthopper.object;
 
 /**
- * A {@link AbstractPlayStateObject} that can be identified by and {@link #getId() ID}.
+ * A {@link PlayStateObjectBase} that can be identified by and {@link #getId() ID}.
  */
-public abstract class PlayStateObjectWithId extends AbstractPlayStateObject {
+public abstract class PlayStateObjectWithId extends PlayStateObjectBase {
 
   private final String id;
 

@@ -3,7 +3,9 @@
 package io.github.ghosthopper.ui.fx;
 
 import io.github.ghosthopper.asset.PlayAsset;
+import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.figure.PlayFigure;
+import io.github.ghosthopper.object.PlayLocation;
 import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -49,6 +51,9 @@ public abstract class PlayUiFxAsset extends ImageView implements PlayUiFxNode {
    */
   public void setPlayField(PlayUiFxField newField) {
 
+    if (this.field == newField) {
+      return;
+    }
     if (this.field != null) {
       this.field.removeFxAsset(this);
     }
@@ -56,6 +61,21 @@ public abstract class PlayUiFxAsset extends ImageView implements PlayUiFxNode {
     if (this.field != null) {
       assert (getPlayAsset().getLocation() == this.field.getPlayField());
       newField.addFxAsset(this);
+    }
+  }
+
+  /**
+   * Updates the {@link PlayAsset#getPosition() position} of this figure.
+   */
+  public void updatePosition() {
+
+    PlayAsset<?> asset = getPlayAsset();
+    PlayLocation location = asset.getLocation();
+    if (location instanceof PlayField) {
+      PlayUiFxGame fxGame = getFxGame();
+      PlayUiFxField fxField = fxGame.getFxField((PlayField) location);
+      PlayUiFxAsset fxAsset = fxGame.getFxAsset(asset);
+      fxField.updatePosition(fxAsset);
     }
   }
 

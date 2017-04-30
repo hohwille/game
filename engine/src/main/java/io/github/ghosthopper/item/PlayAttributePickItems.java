@@ -4,12 +4,12 @@ package io.github.ghosthopper.item;
 
 import java.util.List;
 
-import io.github.ghosthopper.object.PlayLocation;
+import io.github.ghosthopper.asset.PlayAttributeAsset;
 
 /**
  * This is the interface for an object that may have {@link #getItems() items}.
  */
-public interface PlayAttributePickItems extends PlayLocation {
+public interface PlayAttributePickItems extends PlayAttributeAsset {
 
   /**
    * @return an {@link java.util.Collections#unmodifiableList(List) unmodifiable list} of {@link PlayPickItem}s

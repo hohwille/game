@@ -5,6 +5,7 @@ package io.github.ghosthopper.item;
 import io.github.ghosthopper.color.PlayColor;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.game.PlayGame;
+import io.github.ghosthopper.position.PlayPosition;
 
 /**
  * An item of the {@link PlayGame} such as a key or a gem.
@@ -12,8 +13,6 @@ import io.github.ghosthopper.game.PlayGame;
 public class PlayPushItem extends PlayItem<PlayField, PlayPushItem> {
 
   private final PlayPushItemType type;
-
-  private PlayField location;
 
   /**
    * The constructor.
@@ -53,30 +52,9 @@ public class PlayPushItem extends PlayItem<PlayField, PlayPushItem> {
   }
 
   @Override
-  public PlayField getLocation() {
+  protected PlayPushItemMoveEvent createMoveEvent(PlayField oldLocation, PlayPosition oldPosition, PlayField newLocation, PlayPosition newPosition) {
 
-    return this.location;
-  }
-
-  @Override
-  public boolean setLocation(PlayField location, boolean addOrRemove) {
-
-    if (this.location == location) {
-      return true;
-    }
-    boolean success = true;
-    PlayField oldLocation = this.location;
-    if ((location == null) && addOrRemove) {
-      success = oldLocation.removeAsset(this, false);
-    }
-    if ((location != null) && addOrRemove) {
-      success = location.addAsset(this);
-    }
-    this.location = location;
-    if (success) {
-      getGame().sendEvent(new PlayPushItemMoveEvent(oldLocation, this, location));
-    }
-    return success;
+    return new PlayPushItemMoveEvent(oldLocation, oldPosition, this, newLocation, newPosition);
   }
 
 }

@@ -5,6 +5,7 @@ package io.github.ghosthopper.asset;
 import io.github.ghosthopper.object.PlayLocation;
 import io.github.ghosthopper.object.PlayTypedObject;
 import io.github.ghosthopper.position.PlayAttributePosition;
+import io.github.ghosthopper.position.PlayPosition;
 
 /**
  * Interface for a {@link PlayTypedObject} that represents an <em>asset</em> that can be
@@ -36,11 +37,30 @@ public interface PlayAsset<L extends PlayLocation> extends PlayTypedObject, Play
    */
   default boolean setLocation(L location) {
 
-    return setLocation(location, true);
+    return setLocation(location, getPosition(), true);
   }
 
   /**
+   * <b>ATTENTION:</b> This is a low-level operation. For consistent behavior consider using high-level operations such
+   * as {@link io.github.ghosthopper.figure.PlayFigure#move()} instead.
+   *
    * @param location the new {@link #getLocation() location} of this asset.
+   * @param position the new {@link #getPosition() position} of this asset (allows to move assets in smaller steps than
+   *        fields via position).
+   * @return {@code true} if the {@link PlayAttributeAsset#addAsset(PlayAsset) operation succeeded}, {@code false}
+   *         otherwise.
+   */
+  default boolean setLocation(L location, PlayPosition position) {
+
+    return setLocation(location, position, true);
+  }
+
+  /**
+   * <b>ATTENTION:</b> This is to be considered an internal operation.
+   *
+   * @param location the new {@link #getLocation() location} of this asset.
+   * @param position the new {@link #getPosition() position} of this asset (allows to move assets in smaller steps than
+   *        fields via position).
    * @param addOrRemove - {@code true} if this asset shall also be {@link PlayAttributeAsset#removeAsset(PlayAsset)
    *        removed from the original location} and {@link PlayAttributeAsset#addAsset(PlayAsset) added to the new
    *        location} automatically, {@code false} otherwise (if called from
@@ -48,6 +68,17 @@ public interface PlayAsset<L extends PlayLocation> extends PlayTypedObject, Play
    * @return {@code true} if the {@link PlayAttributeAsset#addAsset(PlayAsset) operation succeeded}, {@code false}
    *         otherwise.
    */
-  boolean setLocation(L location, boolean addOrRemove);
+  boolean setLocation(L location, PlayPosition position, boolean addOrRemove);
+
+  /**
+   * @return {@code true} if the {@link #getLocation() location} is {@code null} and the asset is therefore out of the
+   *         game (dead {@link io.github.ghosthopper.figure.PlayFigure figure}, fallen
+   *         {@link io.github.ghosthopper.item.PlayShotItem shot}, exploded dynamite
+   *         {@link io.github.ghosthopper.item.PlayPickItem item} etc.), {@code false} otherwise.
+   */
+  default boolean isOutOfGame() {
+
+    return (getLocation() == null);
+  }
 
 }

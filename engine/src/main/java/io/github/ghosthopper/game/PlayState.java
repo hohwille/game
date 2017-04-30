@@ -12,6 +12,9 @@ import io.github.ghosthopper.event.PlayEventListener;
  */
 public class PlayState implements PlayEvent {
 
+  /** The {@link PlayState} for {@link PlayGame#begin()}. */
+  public static final PlayState BEGIN = new PlayState("Begin");
+
   /** The {@link PlayState} for {@link PlayGame#start()}. */
   public static final PlayState START = new PlayState("Start");
 

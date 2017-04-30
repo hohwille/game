@@ -2,11 +2,10 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.ui.fx;
 
-import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.item.PlayItem;
 
 /**
- * JavaFx view for a {@link PlayFigure}.
+ * JavaFx view for a {@link PlayItem}.
  */
 public abstract class PlayUiFxItem extends PlayUiFxAsset {
 

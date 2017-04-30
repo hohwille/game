@@ -5,12 +5,12 @@ package io.github.ghosthopper.object;
 /**
  * This is the abstract base class for any play object of this game.
  */
-public abstract class AbstractPlayObject implements PlayObject {
+public abstract class PlayObjectBase implements PlayObject {
 
   /**
    * The constructor.
    */
-  public AbstractPlayObject() {
+  public PlayObjectBase() {
     super();
   }
 

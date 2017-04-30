@@ -42,7 +42,7 @@ public class PlayUiFxPositionMapper {
     add(PlayPosition.EAST, Pos.CENTER_RIGHT);
     add(PlayPosition.SOUTH_WEST, Pos.BOTTOM_LEFT);
     add(PlayPosition.SOUTH, Pos.BOTTOM_CENTER);
-    add(PlayPosition.SOUTH_EAST, Pos.BASELINE_RIGHT);
+    add(PlayPosition.SOUTH_EAST, Pos.BOTTOM_RIGHT);
   }
 
   /**

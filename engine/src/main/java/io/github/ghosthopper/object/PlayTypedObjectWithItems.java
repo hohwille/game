@@ -12,7 +12,7 @@ import io.github.ghosthopper.item.PlayPickItem;
 /**
  * This is the abstract base class for an object that optionally can have a {@link #getColor() color}.
  */
-public abstract class PlayTypedObjectWithItems extends AbstractPlayTypedObject implements PlayAttributePickItems {
+public abstract class PlayTypedObjectWithItems extends PlayTypedObjectBase implements PlayAttributePickItems {
 
   private final List<PlayPickItem> items;
 
@@ -56,7 +56,7 @@ public abstract class PlayTypedObjectWithItems extends AbstractPlayTypedObject i
       }
     }
     this.items.add(item);
-    item.setLocation(this, false);
+    item.setLocation(this, item.getPosition(), false);
     return true;
   }
 

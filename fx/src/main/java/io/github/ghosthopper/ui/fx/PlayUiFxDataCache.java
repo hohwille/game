@@ -6,12 +6,13 @@ import java.net.URL;
 import java.util.HashMap;
 import java.util.Map;
 
+import io.github.ghosthopper.border.PlayBorderType;
 import io.github.ghosthopper.data.PlayDataKey;
 import io.github.ghosthopper.data.PlayDataUtil;
 import io.github.ghosthopper.data.PlayView;
 import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.move.PlayDirection;
-import io.github.ghosthopper.object.AbstractPlayTypedObject;
+import io.github.ghosthopper.object.PlayTypedObjectBase;
 import io.github.ghosthopper.object.PlayTypedObject;
 import javafx.scene.Node;
 import javafx.scene.SnapshotParameters;
@@ -83,10 +84,10 @@ public class PlayUiFxDataCache {
       }
       PlayDirection direction = key.getDirection();
       if (direction != null) {
-        double rotation = direction.getRotationZ() - 180;
-        if (rotation < 0) {
-          rotation += 360;
+        if (key.getTypeName() == PlayBorderType.TYPE_NAME) {
+          direction = direction.getInverse();
         }
+        double rotation = direction.getRotationZ();
         if (rotation > 0) {
           if (imageTransformator == null) {
             imageTransformator = new ImageView(image);
@@ -105,10 +106,10 @@ public class PlayUiFxDataCache {
   }
 
   /**
-   * @param object the {@link AbstractPlayTypedObject}.
+   * @param object the {@link PlayTypedObjectBase}.
    * @return the {@link URL} of the image for the given object.
    */
-  public URL getImageUrl(AbstractPlayTypedObject object) {
+  public URL getImageUrl(PlayTypedObjectBase object) {
 
     PlayDataKey key = new PlayDataKey(object);
     return getImageUrl(key);

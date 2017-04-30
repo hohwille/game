@@ -2,11 +2,11 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.ui.fx;
 
-import io.github.ghosthopper.PlayLevel;
 import io.github.ghosthopper.border.PlayBorder;
 import io.github.ghosthopper.data.PlayDataKey;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.game.PlayGame;
+import io.github.ghosthopper.level.PlayLevel;
 import io.github.ghosthopper.move.PlayDirection;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -119,7 +119,6 @@ public class PlayUiFxLevel extends GridPane implements PlayUiFxNode {
 
   private void addBorder(PlayBorder border, int x, int y) {
 
-    System.out.println("X:" + x + ",Y:" + y + ", Border: " + border);
     PlayUiFxBorder fxBorder = this.game.getFxBorder(border);
     add(fxBorder, x, y);
   }

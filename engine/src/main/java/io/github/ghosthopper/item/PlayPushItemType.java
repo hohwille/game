@@ -7,7 +7,7 @@ import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.move.PlayDirection;
 
 /**
- * The {@link PlayPickItem#getType() type} of a {@link PlayPickItem}. Such as
+ * The {@link PlayPushItem#getType() type} of a {@link PlayPushItem} such as a {@link #ROCK}.
  */
 public class PlayPushItemType extends PlayItemType<PlayPushItemType> {
 

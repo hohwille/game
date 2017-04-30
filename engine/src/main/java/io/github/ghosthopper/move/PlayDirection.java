@@ -50,7 +50,7 @@ public class PlayDirection extends PlayObjectWithId {
   /** {@link PlayDirection} moving {@link #SOUTH} and {@link #EAST} (diagonal). */
   public static final PlayDirection SOUTH_EAST = new PlayDirection(SOUTH, EAST);
 
-  private static final PlayDirection[] TURN_CLOCKWISE = new PlayDirection[] { NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST, NORTH_WEST };
+  private static final PlayDirection[] ROTATE_CLOCKWISE = new PlayDirection[] { NORTH, NORTH_EAST, EAST, SOUTH_EAST, SOUTH, SOUTH_WEST, WEST, NORTH_WEST };
 
   private final List<PlayDirection> combinations;
 
@@ -238,35 +238,35 @@ public class PlayDirection extends PlayObjectWithId {
   }
 
   /**
-   * @param clockwise {@code true} to turn clockwise, {@code false} otherwise (opposite direction).
+   * @param clockwise {@code true} to rotate clockwise, {@code false} otherwise (opposite direction).
    * @return the new {@link PlayDirection}.
    */
-  public PlayDirection turn(boolean clockwise) {
+  public PlayDirection rotate(boolean clockwise) {
 
     Collection<PlayDirection> directions = getGame().getDirections();
     int index = 0;
-    while (index < TURN_CLOCKWISE.length) {
-      if (TURN_CLOCKWISE[index] == this) {
+    while (index < ROTATE_CLOCKWISE.length) {
+      if (ROTATE_CLOCKWISE[index] == this) {
         break;
       }
       index++;
     }
-    if (index >= TURN_CLOCKWISE.length) {
+    if (index >= ROTATE_CLOCKWISE.length) {
       throw new IllegalStateException("Custom Implementations of PlayDirection have to override this method!");
     }
     while (true) {
       if (clockwise) {
         index++;
-        if (index >= TURN_CLOCKWISE.length) {
+        if (index >= ROTATE_CLOCKWISE.length) {
           index = 0;
         }
       } else {
         index--;
         if (index < 0) {
-          index = TURN_CLOCKWISE.length - 1;
+          index = ROTATE_CLOCKWISE.length - 1;
         }
       }
-      PlayDirection dir = TURN_CLOCKWISE[index];
+      PlayDirection dir = ROTATE_CLOCKWISE[index];
       if (directions.contains(dir)) {
         return dir;
       }

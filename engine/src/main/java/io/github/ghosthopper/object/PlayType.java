@@ -5,7 +5,7 @@ package io.github.ghosthopper.object;
 /**
  * Interface for any object type.
  *
- * @see AbstractPlayTypedObject#getType()
+ * @see PlayTypedObjectBase#getType()
  */
 public interface PlayType extends PlayStateObject {
 
@@ -17,7 +17,7 @@ public interface PlayType extends PlayStateObject {
   /**
    * @return the optional overlay type or {@code null} for none.
    */
-  default AbstractPlayStateObject getOverlay() {
+  default PlayStateObjectBase getOverlay() {
 
     return null;
   }

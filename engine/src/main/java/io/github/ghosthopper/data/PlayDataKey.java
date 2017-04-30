@@ -7,8 +7,8 @@ import java.util.Objects;
 import io.github.ghosthopper.color.PlayColor;
 import io.github.ghosthopper.move.PlayAttributeDirection;
 import io.github.ghosthopper.move.PlayDirection;
-import io.github.ghosthopper.object.AbstractPlayStateObject;
-import io.github.ghosthopper.object.AbstractPlayTypedObject;
+import io.github.ghosthopper.object.PlayStateObjectBase;
+import io.github.ghosthopper.object.PlayTypedObjectBase;
 import io.github.ghosthopper.object.PlayObject;
 import io.github.ghosthopper.object.PlayObjectType;
 import io.github.ghosthopper.object.PlayType;
@@ -65,12 +65,12 @@ public class PlayDataKey {
     this.direction = null;
   }
 
-  private static PlayDataKey convertOverlay(AbstractPlayStateObject overlayObject) {
+  private static PlayDataKey convertOverlay(PlayStateObjectBase overlayObject) {
 
     if (overlayObject == null) {
       return null;
-    } else if (overlayObject instanceof AbstractPlayTypedObject) {
-      return new PlayDataKey((AbstractPlayTypedObject) overlayObject);
+    } else if (overlayObject instanceof PlayTypedObjectBase) {
+      return new PlayDataKey((PlayTypedObjectBase) overlayObject);
     } else if (overlayObject instanceof PlayObjectType) {
       return new PlayDataKey(((PlayObjectType) overlayObject).getTypeName(), overlayObject.getId());
     } else {
@@ -92,7 +92,7 @@ public class PlayDataKey {
   }
 
   /**
-   * @return the {@link PlayObjectType#getId() id} of the {@link AbstractPlayTypedObject#getType() type}.
+   * @return the {@link PlayObjectType#getId() id} of the {@link PlayTypedObjectBase#getType() type}.
    */
   public String getTypeId() {
 
@@ -108,7 +108,7 @@ public class PlayDataKey {
   }
 
   /**
-   * @return the {@link AbstractPlayTypedObject#getId() id} of the object or {@code null}.
+   * @return the {@link PlayTypedObjectBase#getId() id} of the object or {@code null}.
    */
   public String getObjectId() {
 

@@ -2,12 +2,12 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.game.chess;
 
-import io.github.ghosthopper.PlayLevel;
 import io.github.ghosthopper.color.PlayColor;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.figure.PlayFigureType;
 import io.github.ghosthopper.game.PlayGame;
+import io.github.ghosthopper.level.PlayLevel;
 import io.github.ghosthopper.player.Player;
 
 /**

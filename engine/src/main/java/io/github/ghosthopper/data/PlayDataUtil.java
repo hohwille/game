@@ -15,7 +15,7 @@ public final class PlayDataUtil {
 
   private static final Logger LOG = Logger.getLogger(PlayDataUtil.class.getName());
 
-  private static final String DATA_PACKAGE = "io/github/ghosthopper/data/";
+  private static final String DATA_PACKAGE = "game/data/";
 
   private static final String FOLDER_ROOT = "Root";
 

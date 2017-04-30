@@ -4,6 +4,7 @@ package io.github.ghosthopper.ui.fx;
 
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.figure.PlayFigureGroup;
+import io.github.ghosthopper.move.PlayDirection;
 import javafx.scene.effect.Effect;
 import javafx.scene.effect.Glow;
 
@@ -17,6 +18,8 @@ public class PlayUiFxFigure extends PlayUiFxAsset {
   private final Glow glow;
 
   private PlayUiFxPlayer fxPlayer;
+
+  private PlayDirection direction;
 
   /**
    * The constructor.
@@ -82,6 +85,47 @@ public class PlayUiFxFigure extends PlayUiFxAsset {
     } else {
       updateActivitySingle();
     }
+  }
+
+  /**
+   * Updates the {@link PlayFigure#getDirection() direction} of this figure.
+   */
+  public void updateDirectionSingle() {
+
+    PlayDirection dir = this.figure.getDirection();
+    if (dir == this.direction) {
+      return;
+    }
+    double rotate = 0;
+    if (dir != null) {
+      rotate = dir.getRotationZ();
+    }
+    setRotate(rotate);
+    this.direction = dir;
+  }
+
+  /**
+   * Updates the {@link PlayFigure#getDirection() direction} of this figure.
+   */
+  public void updateDirection() {
+
+    PlayFigureGroup group = this.figure.getGroup();
+    if (group != null) {
+      for (PlayFigure groupFigure : group.getFigures()) {
+        getFxGame().getFxFigure(groupFigure).updateDirectionSingle();
+      }
+    } else {
+      updateDirectionSingle();
+    }
+  }
+
+  /**
+   * Performs all updates only on this figure (single means not considering {@link PlayFigure#getGroup() groups}).
+   */
+  public void updateAllSingle() {
+
+    updateActivitySingle();
+    updateDirectionSingle();
   }
 
 }

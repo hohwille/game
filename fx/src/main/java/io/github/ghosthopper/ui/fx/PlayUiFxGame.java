@@ -5,20 +5,21 @@ package io.github.ghosthopper.ui.fx;
 import java.util.HashMap;
 import java.util.Map;
 
-import io.github.ghosthopper.PlayLevel;
+import io.github.ghosthopper.asset.PlayAsset;
+import io.github.ghosthopper.asset.PlayAssetMoveEvent;
 import io.github.ghosthopper.border.PlayBorder;
 import io.github.ghosthopper.data.PlayView;
 import io.github.ghosthopper.event.PlayKeyEvent;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.figure.PlayFigure;
+import io.github.ghosthopper.figure.PlayFigureDirectionEvent;
 import io.github.ghosthopper.figure.PlayFigureGroupEvent;
-import io.github.ghosthopper.figure.PlayFigureMoveEvent;
 import io.github.ghosthopper.figure.PlayFigureTurnEvent;
 import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.item.PlayItem;
-import io.github.ghosthopper.item.PlayItemMoveEvent;
 import io.github.ghosthopper.item.PlayPickItem;
 import io.github.ghosthopper.item.PlayPushItem;
+import io.github.ghosthopper.level.PlayLevel;
 import io.github.ghosthopper.object.PlayLocation;
 import io.github.ghosthopper.player.Player;
 import javafx.scene.Scene;
@@ -70,16 +71,16 @@ public class PlayUiFxGame extends Scene implements PlayUiFxNode {
     this.figureMap = new HashMap<>();
     this.pickItemMap = new HashMap<>();
     this.pushItemMap = new HashMap<>();
-    this.game.start();
+    this.game.begin();
     this.level = getFxLevel(game.getCurrentLevel());
     initPlayers();
     ((VBox) getRoot()).getChildren().add(this.level);
     setOnKeyPressed(this::handleKeyEvent);
-    this.game.addListener(PlayFigureMoveEvent.class, this::onMoveFigure);
-    this.game.addListener(PlayFigureTurnEvent.class, this::onTurnFigure);
-    this.game.addListener(PlayBorder.class, this::onUpdateBorder);
-    this.game.addListener(PlayItemMoveEvent.class, this::onMoveItem);
+    this.game.addListener(PlayAssetMoveEvent.class, this::onAssetMove);
+    this.game.addListener(PlayFigureTurnEvent.class, this::onFigureTurn);
+    this.game.addListener(PlayBorder.class, this::onBorderUpdate);
     this.game.addListener(PlayFigureGroupEvent.class, this::onGroupFigure);
+    this.game.addListener(PlayFigureDirectionEvent.class, this::onFigureDirection);
   }
 
   private void initPlayers() {
@@ -95,7 +96,7 @@ public class PlayUiFxGame extends Scene implements PlayUiFxNode {
             fxFigure.setPlayField(playField);
           }
         }
-        fxFigure.updateActivity();
+        fxFigure.updateAllSingle();
       }
     }
   }
@@ -132,33 +133,34 @@ public class PlayUiFxGame extends Scene implements PlayUiFxNode {
     }
   }
 
-  private void onMoveFigure(PlayFigureMoveEvent moveFigure) {
+  private void onAssetMove(PlayAssetMoveEvent<?, ?> moveAsset) {
 
-    PlayUiFxFigure fxFigure = getFxFigure(moveFigure.getAsset());
-    if (fxFigure != null) {
-      PlayUiFxField fxField = getFxField(moveFigure.getNewLocation());
-      fxFigure.setPlayField(fxField);
+    PlayUiFxAsset fxAsset = getFxAsset(moveAsset.getAsset());
+    if (moveAsset.isPositionChange()) {
+      fxAsset.updatePosition();
     }
-  }
-
-  private void onMoveItem(PlayItemMoveEvent<?, ?> moveItem) {
-
-    PlayUiFxItem fxItem = getFxItem(moveItem.getAsset());
-    if (fxItem != null) {
-      PlayLocation oldLocation = moveItem.getOldLocation();
-      if (oldLocation instanceof PlayField) {
-        PlayUiFxField fxField = getFxField((PlayField) oldLocation);
-        fxField.removeFxAsset(fxItem);
-      }
-      PlayLocation newLocation = moveItem.getNewLocation();
+    if (moveAsset.isLocationChange()) {
+      PlayLocation newLocation = moveAsset.getNewLocation();
       if (newLocation instanceof PlayField) {
         PlayUiFxField fxField = getFxField((PlayField) newLocation);
-        fxField.addFxAsset(fxItem);
+        fxAsset.setPlayField(fxField);
+        return;
+      }
+      PlayLocation oldLocation = moveAsset.getOldLocation();
+      if (oldLocation instanceof PlayField) {
+        PlayUiFxField fxField = getFxField((PlayField) oldLocation);
+        fxField.removeFxAsset(fxAsset);
       }
     }
   }
 
-  private void onTurnFigure(PlayFigureTurnEvent turnFigure) {
+  private void onFigureDirection(PlayFigureDirectionEvent figureDirection) {
+
+    PlayUiFxFigure fxFigure = getFxFigure(figureDirection.getFigure());
+    fxFigure.updateDirectionSingle();
+  }
+
+  private void onFigureTurn(PlayFigureTurnEvent turnFigure) {
 
     updateActivity(turnFigure.getOldFigure());
     updateActivity(turnFigure.getNewFigure());
@@ -177,7 +179,7 @@ public class PlayUiFxGame extends Scene implements PlayUiFxNode {
     }
   }
 
-  private void onUpdateBorder(PlayBorder border) {
+  private void onBorderUpdate(PlayBorder border) {
 
     PlayUiFxBorder fxBorder = getFxBorder(border);
     if (fxBorder != null) {
@@ -191,6 +193,9 @@ public class PlayUiFxGame extends Scene implements PlayUiFxNode {
    */
   public PlayUiFxLevel getFxLevel(PlayLevel playLevel) {
 
+    if (playLevel == null) {
+      return null;
+    }
     PlayUiFxLevel fxLevel = this.levelMap.computeIfAbsent(playLevel, x -> new PlayUiFxLevel(playLevel, this));
     fxLevel.initialize();
     return fxLevel;
@@ -202,6 +207,9 @@ public class PlayUiFxGame extends Scene implements PlayUiFxNode {
    */
   public PlayUiFxField getFxField(PlayField field) {
 
+    if (field == null) {
+      return null;
+    }
     return this.fieldMap.computeIfAbsent(field, x -> new PlayUiFxField(field, getFxLevel(field.getLevel())));
   }
 
@@ -211,6 +219,9 @@ public class PlayUiFxGame extends Scene implements PlayUiFxNode {
    */
   public PlayUiFxBorder getFxBorder(PlayBorder border) {
 
+    if (border == null) {
+      return null;
+    }
     return this.borderMap.computeIfAbsent(border, x -> new PlayUiFxBorder(border, this));
   }
 
@@ -220,6 +231,9 @@ public class PlayUiFxGame extends Scene implements PlayUiFxNode {
    */
   public PlayUiFxPlayer getFxPlayer(Player player) {
 
+    if (player == null) {
+      return null;
+    }
     return this.playerMap.computeIfAbsent(player, x -> new PlayUiFxPlayer(player, this));
   }
 
@@ -229,15 +243,10 @@ public class PlayUiFxGame extends Scene implements PlayUiFxNode {
    */
   public PlayUiFxFigure getFxFigure(PlayFigure figure) {
 
+    if (figure == null) {
+      return null;
+    }
     return this.figureMap.computeIfAbsent(figure, x -> new PlayUiFxFigure(figure, getFxPlayer(figure.getPlayer())));
-  }
-
-  /**
-   * @param fxItem the {@link PlayUiFxPickItem} to add.
-   */
-  void addFxPickItem(PlayUiFxPickItem fxItem) {
-
-    this.pickItemMap.put(fxItem.getPlayAsset(), fxItem);
   }
 
   /**
@@ -246,38 +255,57 @@ public class PlayUiFxGame extends Scene implements PlayUiFxNode {
    */
   public PlayUiFxPickItem getFxPickItem(PlayPickItem item) {
 
-    return this.pickItemMap.get(item);
-  }
-
-  /**
-   * @param fxItem the {@link PlayUiFxPushItem} to add.
-   */
-  void addFxPushItem(PlayUiFxPushItem fxItem) {
-
-    this.pushItemMap.put(fxItem.getPlayAsset(), fxItem);
+    if (item == null) {
+      return null;
+    }
+    return this.pickItemMap.computeIfAbsent(item, x -> new PlayUiFxPickItem(item, this));
   }
 
   /**
    * @param item the {@link PlayPushItem}.
-   * @return the corresponding {@link PlayUiFxPushItem} or {@code null} if undefined.
+   * @return the corresponding {@link PlayUiFxPushItem}.
    */
   public PlayUiFxPushItem getFxPushItem(PlayPushItem item) {
 
-    return this.pushItemMap.get(item);
+    if (item == null) {
+      return null;
+    }
+    return this.pushItemMap.computeIfAbsent(item, x -> new PlayUiFxPushItem(item, this));
   }
 
   /**
    * @param item the {@link PlayPickItem}.
-   * @return the corresponding {@link PlayUiFxPickItem} or {@code null} if undefined.
+   * @return the corresponding {@link PlayUiFxPickItem}.
    */
   public PlayUiFxItem getFxItem(PlayItem<?, ?> item) {
 
+    if (item == null) {
+      return null;
+    }
     if (item instanceof PlayPickItem) {
       return getFxPickItem((PlayPickItem) item);
     } else if (item instanceof PlayPushItem) {
       return getFxPushItem((PlayPushItem) item);
     } else {
       throw new IllegalStateException(item.getClass().getName());
+    }
+  }
+
+  /**
+   * @param asset the {@link PlayAsset}.
+   * @return the corresponding {@link PlayUiFxAsset}.
+   */
+  public PlayUiFxAsset getFxAsset(PlayAsset<?> asset) {
+
+    if (asset == null) {
+      return null;
+    }
+    if (asset instanceof PlayItem) {
+      return getFxItem((PlayItem<?, ?>) asset);
+    } else if (asset instanceof PlayFigure) {
+      return getFxFigure((PlayFigure) asset);
+    } else {
+      throw new IllegalStateException(asset.getClass().getName());
     }
   }
 

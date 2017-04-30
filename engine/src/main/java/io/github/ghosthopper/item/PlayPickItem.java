@@ -3,16 +3,15 @@
 package io.github.ghosthopper.item;
 
 import io.github.ghosthopper.color.PlayColor;
-import io.github.ghosthopper.game.PlayGame;
+import io.github.ghosthopper.position.PlayPosition;
 
 /**
- * An item of the {@link PlayGame} such as a key or a gem.
+ * A {@link PlayItem} that can be {@link io.github.ghosthopper.figure.PlayFigure#pickItem(PlayPickItem) picked} such as
+ * a {@link PlayPickItemType#KEY key} or a {@link PlayPickItemType#GEM gem}.
  */
 public class PlayPickItem extends PlayItem<PlayAttributePickItems, PlayPickItem> {
 
   private final PlayPickItemType type;
-
-  private PlayAttributePickItems location;
 
   /**
    * The constructor.
@@ -46,30 +45,10 @@ public class PlayPickItem extends PlayItem<PlayAttributePickItems, PlayPickItem>
   }
 
   @Override
-  public PlayAttributePickItems getLocation() {
+  protected PlayPickItemMoveEvent createMoveEvent(PlayAttributePickItems oldLocation, PlayPosition oldPosition, PlayAttributePickItems newLocation,
+      PlayPosition newPosition) {
 
-    return this.location;
-  }
-
-  @Override
-  public boolean setLocation(PlayAttributePickItems location, boolean addOrRemove) {
-
-    if (this.location == location) {
-      return true;
-    }
-    boolean success = true;
-    PlayAttributePickItems oldLocation = this.location;
-    if ((location == null) && addOrRemove) {
-      success = oldLocation.removeItem(this, false);
-    }
-    if ((location != null) && addOrRemove) {
-      success = location.addItem(this);
-    }
-    this.location = location;
-    if (success) {
-      getGame().sendEvent(new PlayPickItemMoveEvent(oldLocation, this, location));
-    }
-    return success;
+    return new PlayPickItemMoveEvent(oldLocation, oldPosition, this, newLocation, newPosition);
   }
 
 }

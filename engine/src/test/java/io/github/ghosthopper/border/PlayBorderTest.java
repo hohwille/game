@@ -1,11 +1,8 @@
 package io.github.ghosthopper.border;
 
-import java.util.List;
-
 import org.assertj.core.api.Assertions;
 import org.junit.Test;
 
-import io.github.ghosthopper.PlayLevel;
 import io.github.ghosthopper.color.PlayColor;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.figure.PlayFigure;
@@ -14,8 +11,10 @@ import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.game.PlayGameNone;
 import io.github.ghosthopper.item.PlayPickItem;
 import io.github.ghosthopper.item.PlayPickItemType;
+import io.github.ghosthopper.level.PlayLevel;
 import io.github.ghosthopper.move.PlayDirection;
 import io.github.ghosthopper.player.Player;
+import io.github.ghosthopper.player.PlayerConfigBase;
 
 /**
  * Test for {@link PlayBorder} with arbitrary {@link PlayBorderType}s.
@@ -87,7 +86,7 @@ public class PlayBorderTest extends Assertions {
   public void testDoor() {
 
     // given
-    BLUE_MOUSE_FIGURE.getItems().add(RED_KEY);
+    BLUE_MOUSE_FIGURE.addItem(RED_KEY);
     PlayBorder open = new PlayBorder(null, PlayDirection.EAST, null, PlayBorderTypeDoor.get(RED_KEY));
 
     // when + then
@@ -102,11 +101,11 @@ public class PlayBorderTest extends Assertions {
   public void testMagicDoor() {
 
     // given
-    BLUE_MOUSE_FIGURE.getItems().add(RED_KEY);
+    BLUE_MOUSE_FIGURE.addItem(RED_KEY);
     PlayGame game = new PlayGameNone();
-    List<Player> players = game.getPlayers();
-    players.add(BLUE_MOUSE);
-    players.add(GREEN_RABBIT);
+    PlayerConfigBase playerConfig = (PlayerConfigBase) game.getPlayerConfig();
+    playerConfig.addPlayer(BLUE_MOUSE);
+    playerConfig.addPlayer(GREEN_RABBIT);
     PlayLevel level = game.getCurrentLevel();
     PlayField sourceField = level.getStartField();
     PlayField targetField = new PlayField(level);
