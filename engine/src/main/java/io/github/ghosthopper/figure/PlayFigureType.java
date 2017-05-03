@@ -6,15 +6,15 @@ import io.github.ghosthopper.asset.PlayAssetType;
 import io.github.ghosthopper.asset.PlayAttributeAsset;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.item.PlayPickItem;
-import io.github.ghosthopper.object.PlayObjectType;
 import io.github.ghosthopper.properties.PlayProperties;
 import io.github.ghosthopper.properties.PlayPropertyValueDouble;
 import io.github.ghosthopper.properties.PlayPropertyValueInt;
+import io.github.ghosthopper.type.PlayTypeBase;
 
 /**
  * The {@link PlayFigure#getType() type} of a {@link PlayField}.
  */
-public class PlayFigureType extends PlayObjectType implements PlayAssetType {
+public class PlayFigureType extends PlayTypeBase implements PlayAssetType {
 
   private final boolean invisible;
 

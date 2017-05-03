@@ -3,9 +3,9 @@
 package io.github.ghosthopper.choice;
 
 import java.util.List;
-import java.util.Objects;
 
 import io.github.ghosthopper.game.PlayGame;
+import io.github.ghosthopper.i18n.PlayTranslator;
 import io.github.ghosthopper.object.PlayObject;
 
 /**
@@ -16,6 +16,12 @@ import io.github.ghosthopper.object.PlayObject;
  * @param <O> the type of the option.
  */
 public interface PlayChoice<O> extends PlayObject {
+
+  /** The default title (ID) used if no {@link PlayChoiceGroup} is present. */
+  String DEFAULT_TITLE = "Choice";
+
+  /** The default {@link io.github.ghosthopper.type.PlayType#getTypeName() type name} for a {@link PlayChoice}. */
+  String TYPE_NAME = "Choice";
 
   /**
    * This ID is required to render the label for this {@link PlayChoice} via {@link #getLocalizedName() localized name}.
@@ -32,6 +38,32 @@ public interface PlayChoice<O> extends PlayObject {
   default String getDescription() {
 
     return null;
+  }
+
+  /**
+   * @return the {@link PlayTranslator#translate(String) localized} {@link #getDescription() description} or
+   *         {@code null} if the no decsription is available.
+   */
+  default String getLocalizedDescription() {
+
+    String description = getDescription();
+    if ((description == null) || description.isEmpty()) {
+      return null;
+    }
+    return getGame().getTranslator().translate(description);
+  }
+
+  /**
+   * @param selection the {@link List} of options for {@link #select(List) selection}.
+   * @return {@code null} if the given {@code selection} is valid, or a validation error message (will be
+   *         {@link io.github.ghosthopper.i18n.PlayTranslator#translate(String) localized}).
+   */
+  default String validate(List<O> selection) {
+
+    if (selection == null) {
+      return "Selection must not be null";
+    }
+    return PlayValidator.validateRange(selection.size(), getMinOptions(), getMaxOptions());
   }
 
   /**
@@ -71,16 +103,20 @@ public interface PlayChoice<O> extends PlayObject {
   }
 
   /**
-   * @param options the option(s) that has/have been selected. Will be called from the view after the user has submitted
-   *        his choice. The number of options will be in the range from {@link #getMinOptions()} to
+   * @param selection the option(s) that has/have been selected. Will be called from the view after the user has
+   *        submitted his choice. The number of options will be in the range from {@link #getMinOptions()} to
    *        {@link #getMaxOptions()}.
+   * @return {@code null} if valid or otherwise a validation error message. See {@link #validate(List)} for further
+   *         details.
    */
-  default void select(List<O> options) {
+  default String select(List<O> selection) {
 
-    Objects.requireNonNull(options, "options");
-    assert (options.size() >= getMinOptions());
-    assert (options.size() <= getMaxOptions());
-    getGame().sendEvent(new PlayChoiceSelectEvent(this, options));
+    String error = validate(selection);
+    if (error != null) {
+      return error;
+    }
+    getGame().sendEvent(new PlayChoiceSelectEvent(this, selection));
+    return null;
   }
 
   /**

@@ -2,17 +2,17 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.player;
 
-import io.github.ghosthopper.object.PlayObjectType;
+import io.github.ghosthopper.type.PlayTypeBase;
 
 /**
  * The type of a {@link Player}.
  *
  * @see Player#getType()
  */
-public class PlayerType extends PlayObjectType {
+public class PlayerType extends PlayTypeBase {
 
   /** The default {@link PlayerType}. */
-  public static final PlayerType DEFAULT = new PlayerType("Player");
+  public static final PlayerType DEFAULT = new PlayerType("Default");
 
   /**
    * The constructor.

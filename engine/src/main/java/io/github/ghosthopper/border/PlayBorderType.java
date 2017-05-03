@@ -2,7 +2,7 @@ package io.github.ghosthopper.border;
 
 import io.github.ghosthopper.asset.PlayAsset;
 import io.github.ghosthopper.figure.PlayFigure;
-import io.github.ghosthopper.object.PlayObjectType;
+import io.github.ghosthopper.type.PlayTypeBase;
 
 /**
  * The abstract class for the {@link PlayBorder#getType() type} of a {@link PlayBorder}.
@@ -10,7 +10,7 @@ import io.github.ghosthopper.object.PlayObjectType;
  * {@link #canPass(PlayAsset, PlayBorder, boolean)} what makes the actual decision according to this
  * {@link PlayBorderType} and its potential state.
  */
-public abstract class PlayBorderType extends PlayObjectType {
+public abstract class PlayBorderType extends PlayTypeBase {
 
   /** The {@link #getTypeName() type name}. */
   public static final String TYPE_NAME = "Border";
@@ -28,6 +28,12 @@ public abstract class PlayBorderType extends PlayObjectType {
   public String getTypeName() {
 
     return TYPE_NAME;
+  }
+
+  @Override
+  public boolean isMutable() {
+
+    return true;
   }
 
   /**

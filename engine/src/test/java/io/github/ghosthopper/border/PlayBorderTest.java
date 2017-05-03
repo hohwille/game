@@ -27,11 +27,11 @@ public class PlayBorderTest extends Assertions {
 
   private static final PlayBorderType MOUSE_HOLE = PlayBorderTypeHole.get(MOUSE);
 
-  private static final Player BLUE_MOUSE = new Player(PlayColor.BLUE, MOUSE);
+  private static final Player BLUE_MOUSE = new Player(PlayGameNone.INSTANCE, PlayColor.BLUE, MOUSE);
 
   private static final PlayFigure BLUE_MOUSE_FIGURE = BLUE_MOUSE.getFigures().get(0);
 
-  private static final Player GREEN_RABBIT = new Player(PlayColor.GREEN, RABBIT);
+  private static final Player GREEN_RABBIT = new Player(PlayGameNone.INSTANCE, PlayColor.GREEN, RABBIT);
 
   private static final PlayFigure GREEN_RABBIT_FIGURE = GREEN_RABBIT.getFigures().get(0);
 
@@ -102,7 +102,7 @@ public class PlayBorderTest extends Assertions {
 
     // given
     BLUE_MOUSE_FIGURE.addItem(RED_KEY);
-    PlayGame game = new PlayGameNone();
+    PlayGame game = PlayGameNone.INSTANCE;
     PlayerConfigBase playerConfig = (PlayerConfigBase) game.getPlayerConfig();
     playerConfig.addPlayer(BLUE_MOUSE);
     playerConfig.addPlayer(GREEN_RABBIT);

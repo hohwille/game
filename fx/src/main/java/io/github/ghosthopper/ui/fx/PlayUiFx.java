@@ -4,6 +4,7 @@ package io.github.ghosthopper.ui.fx;
 
 import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.game.ghosty.Ghosty;
+import io.github.ghosthopper.ui.fx.choice.PlayUiFxChoiceDialog;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -25,10 +26,16 @@ public class PlayUiFx extends Application implements PlayUiFxNode {
   public void start(Stage stage) throws Exception {
 
     PlayGame game = new Ghosty();
+    game.begin();
     PlayUiFxGame fxGame = new PlayUiFxGame(game, this);
-    stage.setTitle(game.getLocalizedName());
-    stage.setScene(fxGame);
-    stage.show();
+    PlayUiFxChoiceDialog dialog = new PlayUiFxChoiceDialog(fxGame);
+    dialog.selectChoice(game.getPlayerConfig().getChoice());
+    dialog.setOnHidden(e -> {
+      game.start();
+      stage.setTitle(game.getLocalizedName());
+      stage.setScene(fxGame);
+      stage.show();
+    });
   }
 
   /**

@@ -3,7 +3,7 @@
 package io.github.ghosthopper.item;
 
 import io.github.ghosthopper.asset.PlayAssetType;
-import io.github.ghosthopper.object.PlayObjectType;
+import io.github.ghosthopper.type.PlayTypeBase;
 
 /**
  * The {@link PlayItem#getType() type} of a {@link PlayItem}. It is either a {@link PlayPickItemType} or a
@@ -11,7 +11,7 @@ import io.github.ghosthopper.object.PlayObjectType;
  *
  * @param <S> this {@link PlayItemType} itself.
  */
-public abstract class PlayItemType<S extends PlayItemType<S>> extends PlayObjectType implements PlayAssetType, PlayAttributeWeight<S> {
+public abstract class PlayItemType<S extends PlayItemType<S>> extends PlayTypeBase implements PlayAssetType, PlayAttributeWeight<S> {
 
   /**
    * The constructor.

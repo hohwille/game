@@ -5,7 +5,7 @@ package io.github.ghosthopper.choice;
 /**
  * A {@link PlayChoice} to {@link #select(java.util.List) select} (an) {@link Integer} value(s).
  */
-public interface PlayChoiceInteger extends PlayChoice<Integer> {
+public interface PlayChoiceInteger extends PlayChoiceSingle<Integer> {
 
   /**
    * @return the minimum value to {@link #select(java.util.List) select}.

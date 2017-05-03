@@ -3,23 +3,28 @@
 package io.github.ghosthopper.data;
 
 import java.net.URL;
-import java.util.logging.Logger;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import io.github.ghosthopper.game.PlayGame;
+import io.github.ghosthopper.type.PlayType;
 
 /**
- * A utility class that gives access to data resources such as {@link #getImageUrl(PlayView, String, PlayDataKey) image}
- * or {@link #getAudioUrl(String, PlayDataKey) audio} files.
+ * A utility class that gives access to data resources such as {@link #getImageUrl(PlayView, String, PlayType) image} or
+ * {@link #getAudioUrl(String, PlayType) audio} files.
  */
 public final class PlayDataUtil {
 
-  private static final Logger LOG = Logger.getLogger(PlayDataUtil.class.getName());
+  private static final Logger LOG = LoggerFactory.getLogger(PlayDataUtil.class);
 
   private static final String DATA_PACKAGE = "game/data/";
 
   private static final String FOLDER_ROOT = "Root";
 
   private static final String FOLDER_AUDIO = "Audio";
+
+  private static final String FOLDER_GRAPHICS = "Graphics";
 
   private static final String IMG_EXTENSION = ".png";
 
@@ -30,66 +35,50 @@ public final class PlayDataUtil {
   /**
    * @param view the {@link PlayView}.
    * @param gameId the {@link PlayGame#getId() ID} of the {@link PlayGame}.
-   * @param key the {@link PlayDataKey}.
+   * @param type the {@link PlayType}.
    * @return the {@link URL} of the according image.
    */
-  public static URL getImageUrl(PlayView view, String gameId, PlayDataKey key) {
+  public static URL getImageUrl(PlayView view, String gameId, PlayType type) {
 
-    return getResource(view.getId(), gameId, key, IMG_EXTENSION);
+    return getResource(FOLDER_GRAPHICS + "/" + view.getId(), gameId, type, IMG_EXTENSION);
   }
 
   /**
    * @param gameId the {@link PlayGame#getId() ID} of the {@link PlayGame}.
-   * @param key the {@link PlayDataKey}.
+   * @param type the {@link PlayType}.
    * @return the {@link URL} of the according audio file.
    */
-  public static URL getAudioUrl(String gameId, PlayDataKey key) {
+  public static URL getAudioUrl(String gameId, PlayType type) {
 
-    return getResource(FOLDER_AUDIO, gameId, key, AUDIO_EXTENSION);
+    return getResource(FOLDER_AUDIO, gameId, type, AUDIO_EXTENSION);
   }
 
-  private static URL getResource(String view, String gameId, PlayDataKey key, String extension) {
+  private static URL getResource(String folder, String gameId, PlayType type, String extension) {
 
     ClassLoader ccl = Thread.currentThread().getContextClassLoader();
     StringBuilder pathBuffer = new StringBuilder(48);
-    pathBuffer.append(view);
+    pathBuffer.append(folder);
     pathBuffer.append('/');
-    pathBuffer.append(key.getTypeName());
+    pathBuffer.append(type.getTypeName());
     pathBuffer.append('/');
-
-    // PlayColor color = key.getColor(); // TODO optional?
-    // if (color != null) {
-    // pathBuffer.append(color.getId());
-    // pathBuffer.append('/');
-    // }
-    // PlayDirection direction = key.getDirection();
-    // if (direction != null) {
-    // pathBuffer.append(direction.getId());
-    // pathBuffer.append('/');
-    // }
-    String objectId = key.getObjectId();
-    if (objectId != null) {
-      pathBuffer.append(objectId);
-      pathBuffer.append('/');
-    }
-    pathBuffer.append(key.getTypeId());
+    pathBuffer.append(type.getId());
     String path = pathBuffer.toString();
-    URL resource = getResource(path, key, ccl, gameId, extension);
+    URL resource = getResource(path, ccl, gameId, extension);
     if (resource == null) {
-      resource = getResource(path, key, ccl, FOLDER_ROOT, extension);
+      resource = getResource(path, ccl, FOLDER_ROOT, extension);
     }
     if (resource == null) {
       // TODO - fallback to default ?
-      throw new IllegalStateException("resource for '" + key + "' not found!");
+      throw new IllegalStateException("resource for '" + path + "' not found!");
     }
     return resource;
   }
 
-  private static URL getResource(String path, PlayDataKey key, ClassLoader ccl, String gameId, String extension) {
+  private static URL getResource(String path, ClassLoader classloader, String gameId, String extension) {
 
     String resource = DATA_PACKAGE + gameId + "/" + path + extension;
-    LOG.fine(resource);
-    return ccl.getResource(resource);
+    LOG.debug("Searching data resource {}", resource);
+    return classloader.getResource(resource);
   }
 
 }

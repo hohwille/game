@@ -3,7 +3,7 @@
 package io.github.ghosthopper.border;
 
 import io.github.ghosthopper.asset.PlayAsset;
-import io.github.ghosthopper.object.PlayStateObjectBase;
+import io.github.ghosthopper.type.PlayTypeAccess;
 
 /**
  * A {@link PlayBorderType} that wraps a {@link #getDelegate() delegate border type} that is hidden until the
@@ -52,7 +52,7 @@ public class PlayBorderTypeHidden extends PlayBorderType {
   }
 
   @Override
-  public PlayStateObjectBase getOverlay() {
+  public PlayTypeAccess getOverlay() {
 
     if (this.hidden) {
       return super.getOverlay();

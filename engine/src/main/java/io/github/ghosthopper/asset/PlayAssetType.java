@@ -2,7 +2,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package io.github.ghosthopper.asset;
 
-import io.github.ghosthopper.object.PlayType;
+import io.github.ghosthopper.type.PlayType;
 
 /**
  * The {@link PlayAsset#getType() type} of a {@link PlayAsset}.

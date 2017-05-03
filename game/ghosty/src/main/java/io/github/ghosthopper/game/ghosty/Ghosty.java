@@ -21,6 +21,7 @@ import io.github.ghosthopper.level.PlayLevel;
 import io.github.ghosthopper.move.PlayDirection;
 import io.github.ghosthopper.player.Player;
 import io.github.ghosthopper.player.PlayerConfigBase;
+import io.github.ghosthopper.player.PlayerConfigChoiceGroup;
 import io.github.ghosthopper.position.PlayPosition;
 
 /**
@@ -68,28 +69,23 @@ public class Ghosty extends PlayGame {
   protected PlayerConfigBase createPlayerConfig() {
 
     PlayLevel level = getCurrentLevel();
-    PlayerConfigBase playerConfig = super.createPlayerConfig();
 
-    Player player1 = new Player(PlayColor.GREEN, FROG);
-    playerConfig.addPlayer(player1);
+    Player player1 = new Player(this, PlayColor.GREEN, FROG);
     PlayFigure figure = player1.getFigures().get(0);
     figure.setLocation(level.getField(0, 0));
     figure.setPosition(PlayPosition.NORTH_WEST);
 
-    Player player2 = new Player(PlayColor.RED, BUG);
-    playerConfig.addPlayer(player2);
+    Player player2 = new Player(this, PlayColor.RED, BUG);
     figure = player2.getFigures().get(0);
     figure.setLocation(level.getField(WIDTH - 1, 0));
     figure.setPosition(PlayPosition.NORTH_EAST);
 
-    Player player3 = new Player(PlayColor.BLUE, FROG);
-    playerConfig.addPlayer(player3);
+    Player player3 = new Player(this, PlayColor.BLUE, FROG);
     figure = player3.getFigures().get(0);
     figure.setLocation(level.getField(WIDTH - 1, HEIGHT - 1));
     figure.setPosition(PlayPosition.SOUTH_EAST);
 
-    Player player4 = new Player(PlayColor.YELLOW, BUG, FROG);
-    playerConfig.addPlayer(player4);
+    Player player4 = new Player(this, PlayColor.YELLOW, BUG, FROG);
     PlayFigureGroup group = player4.createGroup();
     figure = player4.getFigures().get(0);
     figure.setLocation(level.getField(0, HEIGHT - 1));
@@ -99,6 +95,9 @@ public class Ghosty extends PlayGame {
     figure.setLocation(level.getField(0, HEIGHT - 1));
     figure.setPosition(PlayPosition.SOUTH);
     group.addFigure(figure);
+
+    PlayerConfigBase playerConfig = new PlayerConfigChoiceGroup(this, 2);
+    playerConfig.addPlayers(player1, player2, player3, player4);
     return playerConfig;
   }
 

@@ -16,12 +16,14 @@ import io.github.ghosthopper.figure.PlayFigureDirectionEvent;
 import io.github.ghosthopper.figure.PlayFigureGroupEvent;
 import io.github.ghosthopper.figure.PlayFigureTurnEvent;
 import io.github.ghosthopper.game.PlayGame;
+import io.github.ghosthopper.game.PlayState;
 import io.github.ghosthopper.item.PlayItem;
 import io.github.ghosthopper.item.PlayPickItem;
 import io.github.ghosthopper.item.PlayPushItem;
 import io.github.ghosthopper.level.PlayLevel;
 import io.github.ghosthopper.object.PlayLocation;
 import io.github.ghosthopper.player.Player;
+import io.github.ghosthopper.ui.fx.data.PlayUiFxDataCache;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
@@ -71,11 +73,10 @@ public class PlayUiFxGame extends Scene implements PlayUiFxNode {
     this.figureMap = new HashMap<>();
     this.pickItemMap = new HashMap<>();
     this.pushItemMap = new HashMap<>();
-    this.game.begin();
     this.level = getFxLevel(game.getCurrentLevel());
-    initPlayers();
     ((VBox) getRoot()).getChildren().add(this.level);
     setOnKeyPressed(this::handleKeyEvent);
+    this.game.addListener(PlayState.class, this::onPlayState);
     this.game.addListener(PlayAssetMoveEvent.class, this::onAssetMove);
     this.game.addListener(PlayFigureTurnEvent.class, this::onFigureTurn);
     this.game.addListener(PlayBorder.class, this::onBorderUpdate);
@@ -130,6 +131,13 @@ public class PlayUiFxGame extends Scene implements PlayUiFxNode {
     PlayKeyEvent event = PlayUiFxKeyEventMapper.convertEvent(keyEvent);
     if (event != null) {
       this.game.sendEvent(event);
+    }
+  }
+
+  private void onPlayState(PlayState state) {
+
+    if (state == PlayState.START) {
+      initPlayers();
     }
   }
 

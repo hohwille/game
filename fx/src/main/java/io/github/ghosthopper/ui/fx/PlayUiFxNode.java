@@ -3,6 +3,7 @@
 package io.github.ghosthopper.ui.fx;
 
 import io.github.ghosthopper.game.PlayGame;
+import io.github.ghosthopper.ui.fx.data.PlayUiFxDataCache;
 
 /**
  * The interface for any {@link PlayUiFx}-{@link javafx.scene.Node}.

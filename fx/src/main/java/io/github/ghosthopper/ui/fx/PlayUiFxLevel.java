@@ -3,7 +3,7 @@
 package io.github.ghosthopper.ui.fx;
 
 import io.github.ghosthopper.border.PlayBorder;
-import io.github.ghosthopper.data.PlayDataKey;
+import io.github.ghosthopper.border.PlayEdgeType;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.level.PlayLevel;
@@ -106,7 +106,7 @@ public class PlayUiFxLevel extends GridPane implements PlayUiFxNode {
 
   private void addEdge(int x, int y) {
 
-    Image image = this.game.getFxDataCache().getImage(PlayDataKey.EDGE);
+    Image image = this.game.getFxDataCache().getImage(PlayEdgeType.DEFAULT);
     ImageView imageView = new ImageView(image);
     add(imageView, x, y);
   }

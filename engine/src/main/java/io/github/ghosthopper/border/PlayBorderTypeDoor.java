@@ -4,7 +4,7 @@ import io.github.ghosthopper.asset.PlayAsset;
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.item.PlayAttributePickItems;
 import io.github.ghosthopper.item.PlayPickItem;
-import io.github.ghosthopper.object.PlayStateObjectBase;
+import io.github.ghosthopper.type.PlayTypeAccess;
 
 /**
  * A {@link PlayBorderType} that is a door that {@link #canPass(PlayAsset, PlayBorder, boolean) can only be passed} by
@@ -29,7 +29,7 @@ public class PlayBorderTypeDoor extends PlayBorderType {
   }
 
   @Override
-  public PlayStateObjectBase getOverlay() {
+  public PlayTypeAccess getOverlay() {
 
     return this.key;
   }

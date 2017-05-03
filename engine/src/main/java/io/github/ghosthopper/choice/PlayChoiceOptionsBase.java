@@ -13,13 +13,13 @@ import io.github.ghosthopper.game.PlayGame;
  *
  * @param <O> the type of the option.
  */
-public class PlayChoiceOptionsBase<O> extends PlayChoiceBase<O> implements PlayChoiceOptions<O> {
+public class PlayChoiceOptionsBase<O> extends PlayChoiceSingleBase<O> implements PlayChoiceOptions<O> {
 
   private final List<O> options;
 
-  private final int maxOptions;
+  private final int minOptions;
 
-  private List<O> selection;
+  private final int maxOptions;
 
   /**
    * The constructor.
@@ -31,7 +31,7 @@ public class PlayChoiceOptionsBase<O> extends PlayChoiceBase<O> implements PlayC
    */
   @SafeVarargs
   public PlayChoiceOptionsBase(PlayGame game, String id, String description, O... options) {
-    this(game, id, description, 1, options);
+    this(game, id, description, 1, 1, options);
   }
 
   /**
@@ -40,14 +40,57 @@ public class PlayChoiceOptionsBase<O> extends PlayChoiceBase<O> implements PlayC
    * @param game - see {@link #getGame()}.
    * @param id - see {@link #getId()}.
    * @param description - see {@link #getDescription()}.
+   * @param minOptions - see {@link #getMinOptions()}.
+   * @param options - see {@link #getOptions()}.
+   */
+  @SafeVarargs
+  public PlayChoiceOptionsBase(PlayGame game, String id, String description, int minOptions, O... options) {
+    this(game, id, description, Arrays.asList(options), minOptions);
+  }
+
+  /**
+   * The constructor.
+   *
+   * @param game - see {@link #getGame()}.
+   * @param id - see {@link #getId()}.
+   * @param description - see {@link #getDescription()}.
+   * @param minOptions - see {@link #getMinOptions()}.
    * @param maxOptions - see {@link #getMaxOptions()}.
    * @param options - see {@link #getOptions()}.
    */
   @SafeVarargs
-  public PlayChoiceOptionsBase(PlayGame game, String id, String description, int maxOptions, O... options) {
+  public PlayChoiceOptionsBase(PlayGame game, String id, String description, int minOptions, int maxOptions, O... options) {
+    this(game, id, description, Arrays.asList(options), minOptions, maxOptions);
+  }
+
+  /**
+   * The constructor.
+   *
+   * @param game - see {@link #getGame()}.
+   * @param id - see {@link #getId()}.
+   * @param description - see {@link #getDescription()}.
+   * @param options - see {@link #getOptions()}.
+   * @param minOptions - see {@link #getMinOptions()}.
+   */
+  public PlayChoiceOptionsBase(PlayGame game, String id, String description, List<O> options, int minOptions) {
+    this(game, id, description, options, minOptions, options.size());
+  }
+
+  /**
+   * The constructor.
+   *
+   * @param game - see {@link #getGame()}.
+   * @param id - see {@link #getId()}.
+   * @param description - see {@link #getDescription()}.
+   * @param options - see {@link #getOptions()}.
+   * @param minOptions - see {@link #getMinOptions()}.
+   * @param maxOptions - see {@link #getMaxOptions()}.
+   */
+  public PlayChoiceOptionsBase(PlayGame game, String id, String description, List<O> options, int minOptions, int maxOptions) {
     super(game, id, description);
+    this.minOptions = minOptions;
     this.maxOptions = maxOptions;
-    this.options = Collections.unmodifiableList(Arrays.asList(options));
+    this.options = Collections.unmodifiableList(options);
   }
 
   /**
@@ -60,25 +103,15 @@ public class PlayChoiceOptionsBase<O> extends PlayChoiceBase<O> implements PlayC
   }
 
   @Override
-  public int getMaxOptions() {
+  public int getMinOptions() {
 
-    return this.maxOptions;
+    return this.minOptions;
   }
 
   @Override
-  public void select(List<O> selectedOptions) {
+  public int getMaxOptions() {
 
-    this.selection = selectedOptions;
-    super.select(selectedOptions);
-  }
-
-  /**
-   * @return the {@link #select(List) selected} options or {@code null} if {@link #select(List)} has not yet been
-   *         called.
-   */
-  public List<O> getSelection() {
-
-    return this.selection;
+    return this.maxOptions;
   }
 
   /**

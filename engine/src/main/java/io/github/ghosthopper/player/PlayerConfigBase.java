@@ -3,10 +3,11 @@
 package io.github.ghosthopper.player;
 
 import java.util.ArrayList;
-import java.util.Arrays;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
+import io.github.ghosthopper.choice.PlayChoice;
 import io.github.ghosthopper.game.PlayGame;
 
 /**
@@ -16,9 +17,13 @@ public abstract class PlayerConfigBase implements PlayerConfig {
 
   private final PlayGame game;
 
-  private final List<Player> players;
+  /** Internal mutable {@link List} for {@link #getPlayers()}. */
+  protected final List<Player> players;
 
   private final List<Player> playersView;
+
+  /** Internal mutable {@link List} of potential {@link Player}s to {@link #getChoice() choose} from. */
+  protected final List<Player> playerOptions;
 
   private int minPlayers;
 
@@ -46,17 +51,17 @@ public abstract class PlayerConfigBase implements PlayerConfig {
    *
    * @param game - see {@link #getGame()}.
    * @param minHumans - see {@link #getMinHumans()}.
-   * @param players the {@link #getPlayers() players}.
    */
-  public PlayerConfigBase(PlayGame game, int minHumans, Player... players) {
+  public PlayerConfigBase(PlayGame game, int minHumans) {
     super();
     this.game = game;
     this.minPlayers = -1;
     this.maxPlayers = -1;
     this.minHumans = minHumans;
     this.maxHumans = -1;
-    this.players = new ArrayList<>(Arrays.asList(players));
+    this.players = new ArrayList<>();
     this.playersView = Collections.unmodifiableList(this.players);
+    this.playerOptions = new ArrayList<>();
   }
 
   @Override
@@ -77,12 +82,37 @@ public abstract class PlayerConfigBase implements PlayerConfig {
   }
 
   /**
+   * Add the given {@link Player} to the internal {@link List} of {@link Player} options. These will be used for the
+   * {@link #getChoice() choice} to select the actual {@link Player}s for the {@link PlayGame}. Only after the
+   * {@link #getChoice() choice} has been {@link PlayChoice#select(List) selected} the actual {@link Player}s will be
+   * added to the {@link List} returned by {@link #getPlayers()}.
+   *
    * @param player the {@link Player} to add.
    */
   public void addPlayer(Player player) {
 
-    player.setGame(getGame());
-    this.players.add(player);
+    assert (player.getGame() == this.game);
+    this.playerOptions.add(player);
+  }
+
+  /**
+   * @param playersToAdd the {@link Player}s to {@link #addPlayer(Player) add}.
+   */
+  public void addPlayers(Player... playersToAdd) {
+
+    for (Player player : playersToAdd) {
+      addPlayer(player);
+    }
+  }
+
+  /**
+   * @param playersToAdd the {@link Player}s to {@link #addPlayer(Player) add}.
+   */
+  public void addPlayers(Collection<Player> playersToAdd) {
+
+    for (Player player : playersToAdd) {
+      addPlayer(player);
+    }
   }
 
   @Override
@@ -192,7 +222,7 @@ public abstract class PlayerConfigBase implements PlayerConfig {
 
   private int countPlayers(boolean human) {
 
-    return (int) getPlayers().stream().filter(x -> x.isHuman() == human).count();
+    return (int) this.playerOptions.stream().filter(x -> x.isHuman() == human).count();
   }
 
 }

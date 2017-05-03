@@ -23,11 +23,7 @@ public class PlayTranslatorTest extends Assertions {
 
   private static final PlayFigureType MOUSE = new PlayFigureType("Mouse");
 
-  private static final Player STRANGE_PLAYER = new Player(PlayColor.BLUE, MOUSE);
-
-  static {
-    STRANGE_PLAYER.setGame(STRANGE_GAME);
-  }
+  private static final Player STRANGE_PLAYER = new Player(STRANGE_GAME, PlayColor.BLUE, MOUSE);
 
   /** Tests with {@link Locale#ENGLISH}. */
   @Test

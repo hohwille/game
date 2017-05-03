@@ -9,6 +9,7 @@ import io.github.ghosthopper.figure.PlayFigureType;
 import io.github.ghosthopper.game.PlayGame;
 import io.github.ghosthopper.level.PlayLevel;
 import io.github.ghosthopper.player.Player;
+import io.github.ghosthopper.player.PlayerConfigBase;
 
 /**
  * The game <em>chess</em>.
@@ -32,17 +33,15 @@ public class Chess extends PlayGame {
       PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, PAWN, //
   };
 
-  private static final Player WHITE = new Player(PlayColor.WHITE, FIGURE_TYPES);
-
-  private static final Player BLACK = new Player(PlayColor.BLACK, FIGURE_TYPES);
-
   /**
    * The constructor.
    */
   public Chess() {
     super("Chess");
-    getPlayers().add(WHITE);
-    getPlayers().add(BLACK);
+    Player white = new Player(this, PlayColor.WHITE, FIGURE_TYPES);
+    Player black = new Player(this, PlayColor.BLACK, FIGURE_TYPES);
+    PlayerConfigBase playerConfigBase = (PlayerConfigBase) getPlayerConfig();
+    playerConfigBase.addPlayers(white, black);
     PlayLevel level = getCurrentLevel();
     int figureIndex = 0;
     // place black figures
@@ -53,7 +52,7 @@ public class Chess extends PlayGame {
         field.setColor(fieldColor);
         fieldColor = toggleColor(fieldColor);
         if (y <= 2) {
-          PlayFigure playFigure = BLACK.getFigures().get(figureIndex++);
+          PlayFigure playFigure = black.getFigures().get(figureIndex++);
           playFigure.setLocation(field);
         }
       }
@@ -61,7 +60,7 @@ public class Chess extends PlayGame {
     // place white figures
     for (int y = 7; y <= 8; y++) {
       for (int x = 1; x <= 8; x++) {
-        PlayFigure playFigure = WHITE.getFigures().get(getWhiteFigureIndex(figureIndex));
+        PlayFigure playFigure = white.getFigures().get(getWhiteFigureIndex(figureIndex));
         figureIndex--;
         playFigure.setLocation(level.getField(x, y));
       }

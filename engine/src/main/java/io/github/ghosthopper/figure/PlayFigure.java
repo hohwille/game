@@ -7,7 +7,6 @@ import java.util.Objects;
 import java.util.Set;
 
 import io.github.ghosthopper.asset.PlayAssetBase;
-import io.github.ghosthopper.asset.PlayAttributeAsset;
 import io.github.ghosthopper.border.PlayBorder;
 import io.github.ghosthopper.field.PlayField;
 import io.github.ghosthopper.game.PlayGame;

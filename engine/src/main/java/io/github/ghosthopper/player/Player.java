@@ -13,13 +13,16 @@ import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.figure.PlayFigureGroup;
 import io.github.ghosthopper.figure.PlayFigureType;
 import io.github.ghosthopper.game.PlayGame;
-import io.github.ghosthopper.object.PlayObjectType;
+import io.github.ghosthopper.object.PlayAttributeName;
 import io.github.ghosthopper.object.PlayTypedObjectWithItems;
+import io.github.ghosthopper.type.PlayTypeBase;
 
 /**
  * A {@link Player} of the {@link PlayGame}.
  */
-public class Player extends PlayTypedObjectWithItems implements PlayAttributeFigures {
+public class Player extends PlayTypedObjectWithItems implements PlayAttributeFigures, PlayAttributeName {
+
+  private final PlayGame game;
 
   private final List<PlayFigure> figures;
 
@@ -31,8 +34,6 @@ public class Player extends PlayTypedObjectWithItems implements PlayAttributeFig
 
   private final PlayerType type;
 
-  private PlayGame game;
-
   private String name;
 
   private boolean human;
@@ -40,34 +41,38 @@ public class Player extends PlayTypedObjectWithItems implements PlayAttributeFig
   /**
    * The constructor.
    *
+   * @param game - see {@link #getGame()}.
    * @param color - see {@link #getColor()}.
    * @param figureTypes - see {@link #getFigures()}.
    */
-  public Player(PlayColor color, PlayFigureType... figureTypes) {
-    this(color, "Player " + color.getId(), true, PlayerType.DEFAULT, figureTypes);
+  public Player(PlayGame game, PlayColor color, PlayFigureType... figureTypes) {
+    this(game, color, createName(color), true, PlayerType.DEFAULT, figureTypes);
   }
 
   /**
    * The constructor.
    *
+   * @param game - see {@link #getGame()}.
    * @param name - see {@link #getName()}.
    * @param figureTypes - see {@link #getFigures()}.
    */
-  public Player(String name, PlayFigureType... figureTypes) {
-    this(null, name, true, PlayerType.DEFAULT, figureTypes);
+  public Player(PlayGame game, String name, PlayFigureType... figureTypes) {
+    this(game, null, name, true, PlayerType.DEFAULT, figureTypes);
   }
 
   /**
    * The constructor.
    *
+   * @param game - see {@link #getGame()}.
    * @param color - see {@link #getColor()}.
    * @param name - see {@link #getName()}.
    * @param human - see {@link #isHuman()}.
    * @param type - see {@link #getType()}.
    * @param figureTypes - see {@link #getFigures()}.
    */
-  public Player(PlayColor color, String name, boolean human, PlayerType type, PlayFigureType... figureTypes) {
+  public Player(PlayGame game, PlayColor color, String name, boolean human, PlayerType type, PlayFigureType... figureTypes) {
     super();
+    this.game = game;
     this.name = name;
     this.human = human;
     this.type = type;
@@ -87,6 +92,11 @@ public class Player extends PlayTypedObjectWithItems implements PlayAttributeFig
     }
   }
 
+  private static String createName(PlayColor color) {
+
+    return "Player " + color.getId();
+  }
+
   @Override
   public PlayGame getGame() {
 
@@ -96,19 +106,8 @@ public class Player extends PlayTypedObjectWithItems implements PlayAttributeFig
     return super.getGame();
   }
 
-  /**
-   * @param game the new value of {@link #getGame()}.
-   */
-  public void setGame(PlayGame game) {
-
-    if ((this.game != null) && (this.game != game)) {
-      throw new IllegalStateException("Player can not switch games (from '" + this.game + "' to '" + game + "')");
-    }
-    this.game = game;
-  }
-
   @Override
-  public PlayObjectType getType() {
+  public PlayTypeBase getType() {
 
     return this.type;
   }
@@ -122,17 +121,13 @@ public class Player extends PlayTypedObjectWithItems implements PlayAttributeFig
     return this.human;
   }
 
-  /**
-   * @return the name of this {@link Player}.
-   */
+  @Override
   public String getName() {
 
     return this.name;
   }
 
-  /**
-   * @param name the new value of {@link #getName()}.
-   */
+  @Override
   public void setName(String name) {
 
     this.name = name;
@@ -221,6 +216,12 @@ public class Player extends PlayTypedObjectWithItems implements PlayAttributeFig
     if (removed) {
       group.clear();
     }
+  }
+
+  @Override
+  public String toString() {
+
+    return this.name;
   }
 
 }

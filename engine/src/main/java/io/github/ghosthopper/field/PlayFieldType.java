@@ -6,12 +6,12 @@ import io.github.ghosthopper.asset.PlayAsset;
 import io.github.ghosthopper.asset.PlayAttributeAsset;
 import io.github.ghosthopper.figure.PlayFigure;
 import io.github.ghosthopper.item.PlayPickItem;
-import io.github.ghosthopper.object.PlayObjectType;
+import io.github.ghosthopper.type.PlayTypeBase;
 
 /**
  * The type of a {@link PlayField}.
  */
-public class PlayFieldType extends PlayObjectType implements PlayAttributeAsset {
+public class PlayFieldType extends PlayTypeBase implements PlayAttributeAsset {
 
   /** Type of a normal/regular {@link PlayField}. */
   public static final PlayFieldType NORMAL = new PlayFieldType("Normal");

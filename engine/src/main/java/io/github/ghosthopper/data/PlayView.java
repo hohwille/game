@@ -10,6 +10,9 @@ import io.github.ghosthopper.object.PlayObjectWithId;
  */
 public class PlayView extends PlayObjectWithId {
 
+  /** Default {@link PlayView} view for independent graphics. */
+  public static final PlayView VIEW_DEFAULT = new PlayView("ViewDefault");
+
   /** {@link PlayView} from the Sky in 2D from the sky perspective. */
   public static final PlayView VIEW_2D_SKY = new PlayView("View2dSky");
 

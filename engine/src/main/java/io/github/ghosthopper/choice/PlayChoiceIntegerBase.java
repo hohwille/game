@@ -5,9 +5,9 @@ package io.github.ghosthopper.choice;
 import io.github.ghosthopper.game.PlayGame;
 
 /**
- * The abstract base implementation of {@link PlayChoiceInteger}.
+ * Base implementation of {@link PlayChoiceInteger}.
  */
-public abstract class PlayChoiceIntegerBase extends PlayChoiceBase<Integer> implements PlayChoiceInteger {
+public class PlayChoiceIntegerBase extends PlayChoiceSingleBase<Integer> implements PlayChoiceInteger {
 
   private final int minValue;
 

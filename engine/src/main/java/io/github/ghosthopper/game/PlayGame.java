@@ -34,7 +34,7 @@ import io.github.ghosthopper.object.PlayStateObjectWithId;
 import io.github.ghosthopper.player.Player;
 import io.github.ghosthopper.player.PlayerConfig;
 import io.github.ghosthopper.player.PlayerConfigBase;
-import io.github.ghosthopper.player.PlayerConfigImpl;
+import io.github.ghosthopper.player.PlayerConfigChoiceGroup;
 import io.github.ghosthopper.player.PlayerTurnEvent;
 import io.github.ghosthopper.position.PlayPosition;
 
@@ -77,7 +77,7 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
 
   private List<PlayPosition> position;
 
-  private boolean paused;
+  private PlayState state;
 
   /**
    * The constructor.
@@ -204,6 +204,9 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
   public void sendEvent(PlayEvent event) {
 
     Objects.requireNonNull(event, "event");
+    if (!isStarted() && !(event instanceof PlayState)) {
+      return; // prevent infinity loops on initialization
+    }
     Class<? extends PlayEvent> eventType = event.getClass();
     PlayEventDispatcher eventDispatcher = getEventDispatcherOptional(eventType);
     if (eventDispatcher != null) {
@@ -309,7 +312,8 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
       currentGame.end();
     }
     currentGame = this;
-    sendEvent(PlayState.BEGIN);
+    this.state = PlayState.BEGIN;
+    sendEvent(this.state);
   }
 
   /**
@@ -318,7 +322,30 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
   public final void start() {
 
     assert (currentGame == this);
+    this.state = PlayState.START;
     sendEvent(PlayState.START);
+  }
+
+  /**
+   * @return the current {@link PlayState state} of this game.
+   */
+  public PlayState getState() {
+
+    return this.state;
+  }
+
+  /**
+   * @return {@code true} if this game has been {@link #start() started} and has not yet {@link #end() ended}.
+   */
+  public boolean isStarted() {
+
+    if (this.state == PlayState.START) {
+      return true;
+    }
+    if (this.state == PlayState.PAUSE) {
+      return true;
+    }
+    return false;
   }
 
   /**
@@ -330,10 +357,7 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
     if (currentGame != this) {
       return false;
     }
-    if (this.paused) {
-      return false;
-    }
-    return true;
+    return (this.state == PlayState.START);
   }
 
   /**
@@ -341,7 +365,7 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
    */
   public boolean isPaused() {
 
-    return this.paused;
+    return (this.state == PlayState.PAUSE);
   }
 
   /**
@@ -349,11 +373,11 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
    */
   public void pause() {
 
-    if (this.paused) {
+    if (isPaused()) {
       return;
     }
-    this.paused = true;
-    sendEvent(PlayState.PAUSE);
+    this.state = PlayState.PAUSE;
+    sendEvent(this.state);
   }
 
   /**
@@ -361,10 +385,10 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
    */
   public void resume() {
 
-    if (!this.paused) {
+    if (!isPaused()) {
       return;
     }
-    this.paused = false;
+    this.state = PlayState.START;
     sendEvent(PlayState.RESUME);
   }
 
@@ -373,7 +397,8 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
    */
   public final void end() {
 
-    sendEvent(PlayState.END);
+    this.state = PlayState.END;
+    sendEvent(this.state);
     currentGame = PlayGameNone.INSTANCE;
   }
 
@@ -445,7 +470,7 @@ public class PlayGame extends PlayStateObjectWithId implements PlayEventSender<P
    */
   protected PlayerConfigBase createPlayerConfig() {
 
-    return new PlayerConfigImpl(this);
+    return new PlayerConfigChoiceGroup(this);
   }
 
   /**
