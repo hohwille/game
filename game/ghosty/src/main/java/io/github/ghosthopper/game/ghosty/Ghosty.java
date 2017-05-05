@@ -1,51 +1,51 @@
 package io.github.ghosthopper.game.ghosty;
 
-import io.github.ghosthopper.border.PlayBorder;
-import io.github.ghosthopper.border.PlayBorderTypeDoor;
-import io.github.ghosthopper.border.PlayBorderTypeHidden;
-import io.github.ghosthopper.border.PlayBorderTypeHole;
-import io.github.ghosthopper.border.PlayBorderTypeMagicDoor;
-import io.github.ghosthopper.border.PlayBorderTypeOpen;
-import io.github.ghosthopper.border.PlayBorderTypeWall;
-import io.github.ghosthopper.color.PlayColor;
-import io.github.ghosthopper.field.PlayField;
-import io.github.ghosthopper.figure.PlayFigure;
-import io.github.ghosthopper.figure.PlayFigureGroup;
-import io.github.ghosthopper.figure.PlayFigureType;
-import io.github.ghosthopper.game.PlayGame;
-import io.github.ghosthopper.item.PlayPickItem;
-import io.github.ghosthopper.item.PlayPickItemType;
-import io.github.ghosthopper.item.PlayPushItem;
-import io.github.ghosthopper.item.PlayPushItemType;
-import io.github.ghosthopper.level.PlayLevel;
-import io.github.ghosthopper.move.PlayDirection;
-import io.github.ghosthopper.player.Player;
-import io.github.ghosthopper.player.PlayerConfigBase;
-import io.github.ghosthopper.player.PlayerConfigChoiceGroup;
-import io.github.ghosthopper.position.PlayPosition;
+import io.github.ghosthopper.border.GameBorder;
+import io.github.ghosthopper.border.GameBorderTypeDoor;
+import io.github.ghosthopper.border.GameBorderTypeHidden;
+import io.github.ghosthopper.border.GameBorderTypeHole;
+import io.github.ghosthopper.border.GameBorderTypeMagicDoor;
+import io.github.ghosthopper.border.GameBorderTypeOpen;
+import io.github.ghosthopper.border.GameBorderTypeWall;
+import io.github.ghosthopper.color.GameColor;
+import io.github.ghosthopper.direction.GameDirection;
+import io.github.ghosthopper.field.GameField;
+import io.github.ghosthopper.figure.GameFigure;
+import io.github.ghosthopper.figure.GameFigureGroup;
+import io.github.ghosthopper.figure.GameFigureType;
+import io.github.ghosthopper.game.Game;
+import io.github.ghosthopper.item.GamePickItem;
+import io.github.ghosthopper.item.GamePickItemType;
+import io.github.ghosthopper.item.GamePushItem;
+import io.github.ghosthopper.item.GamePushItemType;
+import io.github.ghosthopper.level.GameLevel;
+import io.github.ghosthopper.player.GamePlayer;
+import io.github.ghosthopper.player.GamePlayerConfigBase;
+import io.github.ghosthopper.player.GamePlayerConfigChoiceGroup;
+import io.github.ghosthopper.position.GamePosition;
 
 /**
- * The game <em>ghosty</em>: {@link Player}s of different {@link PlayFigureType}s hunt for the ghost.
+ * The game <em>ghosty</em>: {@link GamePlayer}s of different {@link GameFigureType}s hunt for the ghost.
  */
-public class Ghosty extends PlayGame {
+public class Ghosty extends Game {
 
   /** A frog figure. */
-  public static final PlayFigureType FROG = new PlayFigureType("Frog");
+  public static final GameFigureType FROG = new GameFigureType("Frog");
 
   /** A bug figure. */
-  public static final PlayFigureType BUG = new PlayFigureType("Bug");
+  public static final GameFigureType BUG = new GameFigureType("Bug");
 
   /** A ghost figure. */
-  public static final PlayFigureType GHOST = new PlayFigureType("Ghost", true);
+  public static final GameFigureType GHOST = new GameFigureType("Ghost", true);
 
   /** A hole for frogs. */
-  public static final PlayBorderTypeHole FROG_HOLE = PlayBorderTypeHole.get(FROG);
+  public static final GameBorderTypeHole FROG_HOLE = GameBorderTypeHole.get(FROG);
 
   /** A hole for bugs. */
-  public static final PlayBorderTypeHole BUG_HOLE = PlayBorderTypeHole.get(BUG);
+  public static final GameBorderTypeHole BUG_HOLE = GameBorderTypeHole.get(BUG);
 
   /** A diamond to push around. */
-  public static final PlayPushItemType DIAMOND = new PlayPushItemType("Diamond");
+  public static final GamePushItemType DIAMOND = new GamePushItemType("Diamond");
 
   private static final int WIDTH = 4;
 
@@ -56,129 +56,129 @@ public class Ghosty extends PlayGame {
    */
   public Ghosty() {
     super("Ghosty");
-    PlayLevel level = getCurrentLevel();
+    GameLevel level = getCurrentLevel();
     initLevel(level);
 
-    PlayPushItem pushItem = new PlayPushItem(PlayColor.WHITE, DIAMOND);
+    GamePushItem pushItem = new GamePushItem(GameColor.WHITE, DIAMOND);
     level.getField(3, 4).setPushItem(pushItem);
-    pushItem = new PlayPushItem(PlayColor.WHITE, DIAMOND);
+    pushItem = new GamePushItem(GameColor.WHITE, DIAMOND);
     level.getField(4, 4).setPushItem(pushItem);
   }
 
   @Override
-  protected PlayerConfigBase createPlayerConfig() {
+  protected GamePlayerConfigBase createPlayerConfig() {
 
-    PlayLevel level = getCurrentLevel();
+    GameLevel level = getCurrentLevel();
 
-    Player player1 = new Player(this, PlayColor.GREEN, FROG);
-    PlayFigure figure = player1.getFigures().get(0);
+    GamePlayer player1 = new GamePlayer(this, GameColor.GREEN, FROG);
+    GameFigure figure = player1.getFigures().get(0);
     figure.setLocation(level.getField(0, 0));
-    figure.setPosition(PlayPosition.NORTH_WEST);
+    figure.setPosition(GamePosition.NORTH_WEST);
 
-    Player player2 = new Player(this, PlayColor.RED, BUG);
+    GamePlayer player2 = new GamePlayer(this, GameColor.RED, BUG);
     figure = player2.getFigures().get(0);
     figure.setLocation(level.getField(WIDTH - 1, 0));
-    figure.setPosition(PlayPosition.NORTH_EAST);
+    figure.setPosition(GamePosition.NORTH_EAST);
 
-    Player player3 = new Player(this, PlayColor.BLUE, FROG);
+    GamePlayer player3 = new GamePlayer(this, GameColor.BLUE, FROG);
     figure = player3.getFigures().get(0);
     figure.setLocation(level.getField(WIDTH - 1, HEIGHT - 1));
-    figure.setPosition(PlayPosition.SOUTH_EAST);
+    figure.setPosition(GamePosition.SOUTH_EAST);
 
-    Player player4 = new Player(this, PlayColor.YELLOW, BUG, FROG);
-    PlayFigureGroup group = player4.createGroup();
+    GamePlayer player4 = new GamePlayer(this, GameColor.YELLOW, BUG, FROG);
+    GameFigureGroup group = player4.createGroup();
     figure = player4.getFigures().get(0);
     figure.setLocation(level.getField(0, HEIGHT - 1));
-    figure.setPosition(PlayPosition.NORTH_WEST);
+    figure.setPosition(GamePosition.NORTH_WEST);
     group.addFigure(figure);
     figure = player4.getFigures().get(1);
     figure.setLocation(level.getField(0, HEIGHT - 1));
-    figure.setPosition(PlayPosition.SOUTH);
+    figure.setPosition(GamePosition.SOUTH);
     group.addFigure(figure);
 
-    PlayerConfigBase playerConfig = new PlayerConfigChoiceGroup(this, 2);
+    GamePlayerConfigBase playerConfig = new GamePlayerConfigChoiceGroup(this, 2);
     playerConfig.addPlayers(player1, player2, player3, player4);
     return playerConfig;
   }
 
   @Override
-  protected PlayLevel createFirstLevel() {
+  protected GameLevel createFirstLevel() {
 
-    PlayLevel firstLevel = super.createFirstLevel();
+    GameLevel firstLevel = super.createFirstLevel();
     initLevelAsRectangular(firstLevel, WIDTH + 4, HEIGHT + 2);
     return firstLevel;
   }
 
-  private void initLevel(PlayLevel level) {
+  private void initLevel(GameLevel level) {
 
     // currently hardcoded only for initial testing...
-    PlayField startField = level.getStartField();
-    PlayBorder border = startField.getBorder(PlayDirection.EAST);
-    border.setType(PlayBorderTypeHidden.get(PlayBorderTypeHole.get(FROG)));
-    border = border.getTargetField().getBorder(PlayDirection.EAST);
-    border.setType(PlayBorderTypeHidden.get(PlayBorderTypeMagicDoor.get()));
-    border = border.getTargetField().getBorder(PlayDirection.EAST);
-    border.setType(PlayBorderTypeHidden.get(PlayBorderTypeWall.get()));
+    GameField startField = level.getStartField();
+    GameBorder border = startField.getBorder(GameDirection.EAST);
+    border.setType(GameBorderTypeHidden.get(GameBorderTypeHole.get(FROG)));
+    border = border.getTargetField().getBorder(GameDirection.EAST);
+    border.setType(GameBorderTypeHidden.get(GameBorderTypeMagicDoor.get()));
+    border = border.getTargetField().getBorder(GameDirection.EAST);
+    border.setType(GameBorderTypeHidden.get(GameBorderTypeWall.get()));
 
-    border = startField.getBorder(PlayDirection.SOUTH);
-    border.setType(PlayBorderTypeHidden.get(PlayBorderTypeHole.get(BUG)));
-    PlayField field = border.getTargetField();
-    border = field.getBorder(PlayDirection.SOUTH);
-    PlayPickItem key = new PlayPickItem(PlayColor.GREEN, PlayPickItemType.KEY);
+    border = startField.getBorder(GameDirection.SOUTH);
+    border.setType(GameBorderTypeHidden.get(GameBorderTypeHole.get(BUG)));
+    GameField field = border.getTargetField();
+    border = field.getBorder(GameDirection.SOUTH);
+    GamePickItem key = new GamePickItem(GameColor.GREEN, GamePickItemType.KEY);
     field.addItem(key);
-    border.setType(PlayBorderTypeHidden.get(PlayBorderTypeOpen.get()));
-    border = border.getTargetField().getBorder(PlayDirection.SOUTH);
-    border.setType(PlayBorderTypeHidden.get(PlayBorderTypeWall.get()));
+    border.setType(GameBorderTypeHidden.get(GameBorderTypeOpen.get()));
+    border = border.getTargetField().getBorder(GameDirection.SOUTH);
+    border.setType(GameBorderTypeHidden.get(GameBorderTypeWall.get()));
 
-    border = border.getTargetField().getBorder(PlayDirection.EAST);
-    border.setType(PlayBorderTypeHidden.get(PlayBorderTypeHole.get(BUG)));
-    border = border.getTargetField().getBorder(PlayDirection.EAST);
-    border.setType(PlayBorderTypeHidden.get(PlayBorderTypeOpen.get()));
-    border = border.getTargetField().getBorder(PlayDirection.EAST);
-    border.setType(PlayBorderTypeHidden.get(PlayBorderTypeOpen.get()));
+    border = border.getTargetField().getBorder(GameDirection.EAST);
+    border.setType(GameBorderTypeHidden.get(GameBorderTypeHole.get(BUG)));
+    border = border.getTargetField().getBorder(GameDirection.EAST);
+    border.setType(GameBorderTypeHidden.get(GameBorderTypeOpen.get()));
+    border = border.getTargetField().getBorder(GameDirection.EAST);
+    border.setType(GameBorderTypeHidden.get(GameBorderTypeOpen.get()));
 
-    border = border.getTargetField().getBorder(PlayDirection.NORTH);
-    border.setType(PlayBorderTypeHidden.get(PlayBorderTypeHole.get(BUG)));
+    border = border.getTargetField().getBorder(GameDirection.NORTH);
+    border.setType(GameBorderTypeHidden.get(GameBorderTypeHole.get(BUG)));
     field = border.getSourceField();
-    border = field.getBorder(PlayDirection.WEST);
-    border.setType(PlayBorderTypeHidden.get(PlayBorderTypeWall.get()));
-    border = field.getBorder(PlayDirection.NORTH);
-    border.setType(PlayBorderTypeHidden.get(PlayBorderTypeDoor.get(key)));
+    border = field.getBorder(GameDirection.WEST);
+    border.setType(GameBorderTypeHidden.get(GameBorderTypeWall.get()));
+    border = field.getBorder(GameDirection.NORTH);
+    border.setType(GameBorderTypeHidden.get(GameBorderTypeDoor.get(key)));
     field = border.getSourceField();
-    border = field.getBorder(PlayDirection.NORTH);
-    border.setType(PlayBorderTypeHidden.get(PlayBorderTypeMagicDoor.get()));
+    border = field.getBorder(GameDirection.NORTH);
+    border.setType(GameBorderTypeHidden.get(GameBorderTypeMagicDoor.get()));
 
-    border = field.getBorder(PlayDirection.WEST);
-    border.setType(PlayBorderTypeHidden.get(PlayBorderTypeWall.get()));
+    border = field.getBorder(GameDirection.WEST);
+    border.setType(GameBorderTypeHidden.get(GameBorderTypeWall.get()));
     field = border.getSourceField();
-    field.addItem(new PlayPickItem(PlayColor.BLUE, PlayPickItemType.EMERALD));
-    border = field.getBorder(PlayDirection.NORTH);
-    border.setType(PlayBorderTypeHidden.get(PlayBorderTypeHole.get(BUG)));
-    border = field.getBorder(PlayDirection.SOUTH);
-    border.setType(PlayBorderTypeHidden.get(PlayBorderTypeOpen.get()));
-    border = field.getBorder(PlayDirection.WEST);
-    border.setType(PlayBorderTypeHidden.get(PlayBorderTypeWall.get()));
+    field.addItem(new GamePickItem(GameColor.BLUE, GamePickItemType.EMERALD));
+    border = field.getBorder(GameDirection.NORTH);
+    border.setType(GameBorderTypeHidden.get(GameBorderTypeHole.get(BUG)));
+    border = field.getBorder(GameDirection.SOUTH);
+    border.setType(GameBorderTypeHidden.get(GameBorderTypeOpen.get()));
+    border = field.getBorder(GameDirection.WEST);
+    border.setType(GameBorderTypeHidden.get(GameBorderTypeWall.get()));
     field = border.getSourceField();
-    border = field.getBorder(PlayDirection.NORTH);
-    border.setType(PlayBorderTypeHidden.get(PlayBorderTypeOpen.get()));
-    border = field.getBorder(PlayDirection.WEST);
-    border.setType(PlayBorderTypeHidden.get(PlayBorderTypeWall.get()));
-    border = field.getBorder(PlayDirection.SOUTH);
-    border.setType(PlayBorderTypeHidden.get(PlayBorderTypeOpen.get()));
+    border = field.getBorder(GameDirection.NORTH);
+    border.setType(GameBorderTypeHidden.get(GameBorderTypeOpen.get()));
+    border = field.getBorder(GameDirection.WEST);
+    border.setType(GameBorderTypeHidden.get(GameBorderTypeWall.get()));
+    border = field.getBorder(GameDirection.SOUTH);
+    border.setType(GameBorderTypeHidden.get(GameBorderTypeOpen.get()));
     field = border.getTargetField();
-    border = field.getBorder(PlayDirection.WEST);
-    border.setType(PlayBorderTypeHidden.get(PlayBorderTypeHole.get(FROG)));
-    border = field.getBorder(PlayDirection.SOUTH);
-    border.setType(PlayBorderTypeHidden.get(PlayBorderTypeWall.get()));
-    border = field.getBorder(PlayDirection.EAST);
-    border.setType(PlayBorderTypeHidden.get(PlayBorderTypeOpen.get()));
+    border = field.getBorder(GameDirection.WEST);
+    border.setType(GameBorderTypeHidden.get(GameBorderTypeHole.get(FROG)));
+    border = field.getBorder(GameDirection.SOUTH);
+    border.setType(GameBorderTypeHidden.get(GameBorderTypeWall.get()));
+    border = field.getBorder(GameDirection.EAST);
+    border.setType(GameBorderTypeHidden.get(GameBorderTypeOpen.get()));
     field = border.getTargetField();
-    border = field.getBorder(PlayDirection.SOUTH);
-    border.setType(PlayBorderTypeHidden.get(PlayBorderTypeOpen.get()));
+    border = field.getBorder(GameDirection.SOUTH);
+    border.setType(GameBorderTypeHidden.get(GameBorderTypeOpen.get()));
   }
 
   @Override
-  protected void move(PlayDirection direction) {
+  protected void move(GameDirection direction) {
 
     super.move(direction);
     // nextPlayer();
