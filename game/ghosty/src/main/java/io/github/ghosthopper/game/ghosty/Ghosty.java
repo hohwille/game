@@ -1,5 +1,8 @@
 package io.github.ghosthopper.game.ghosty;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import io.github.ghosthopper.border.GameBorder;
 import io.github.ghosthopper.border.GameBorderTypeDoor;
 import io.github.ghosthopper.border.GameBorderTypeHidden;
@@ -51,6 +54,10 @@ public class Ghosty extends Game {
 
   private static final int HEIGHT = 4;
 
+  private List<GameBorderTypeMagicDoor> magicDoors;
+
+  private boolean ghostActive;
+
   /**
    * The constructor.
    */
@@ -63,6 +70,7 @@ public class Ghosty extends Game {
     level.getField(3, 4).setPushItem(pushItem);
     pushItem = new GamePushItem(GameColor.WHITE, DIAMOND);
     level.getField(4, 4).setPushItem(pushItem);
+    addListener(GameBorder.class, this::onBorderChange);
   }
 
   @Override
@@ -111,12 +119,15 @@ public class Ghosty extends Game {
 
   private void initLevel(GameLevel level) {
 
+    this.magicDoors = new ArrayList<>();
     // currently hardcoded only for initial testing...
     GameField startField = level.getStartField();
     GameBorder border = startField.getBorder(GameDirection.EAST);
     border.setType(GameBorderTypeHidden.get(GameBorderTypeHole.get(FROG)));
     border = border.getTargetField().getBorder(GameDirection.EAST);
-    border.setType(GameBorderTypeHidden.get(GameBorderTypeMagicDoor.get()));
+    GameBorderTypeMagicDoor magicDoor = GameBorderTypeMagicDoor.get();
+    border.setType(GameBorderTypeHidden.get(magicDoor));
+    this.magicDoors.add(magicDoor);
     border = border.getTargetField().getBorder(GameDirection.EAST);
     border.setType(GameBorderTypeHidden.get(GameBorderTypeWall.get()));
 
@@ -146,7 +157,9 @@ public class Ghosty extends Game {
     border.setType(GameBorderTypeHidden.get(GameBorderTypeDoor.get(key)));
     field = border.getSourceField();
     border = field.getBorder(GameDirection.NORTH);
-    border.setType(GameBorderTypeHidden.get(GameBorderTypeMagicDoor.get()));
+    magicDoor = GameBorderTypeMagicDoor.get();
+    border.setType(GameBorderTypeHidden.get(magicDoor));
+    this.magicDoors.add(magicDoor);
 
     border = field.getBorder(GameDirection.WEST);
     border.setType(GameBorderTypeHidden.get(GameBorderTypeWall.get()));
@@ -177,11 +190,39 @@ public class Ghosty extends Game {
     border.setType(GameBorderTypeHidden.get(GameBorderTypeOpen.get()));
   }
 
+  private void onBorderChange(GameBorder border) {
+
+    if (this.ghostActive) {
+      return;
+    }
+    if (areAllMagicDoorsOpened()) {
+      System.out.println("ACHTUNG: Ghosty kommt!");
+      this.ghostActive = true;
+    }
+  }
+
+  private boolean areAllMagicDoorsOpened() {
+
+    for (GameBorderTypeMagicDoor magicDoor : this.magicDoors) {
+      if (!magicDoor.isOpen()) {
+        return false;
+      }
+    }
+    return true;
+  }
+
   @Override
   protected void move(GameDirection direction) {
 
     super.move(direction);
-    // nextPlayer();
+    if (this.ghostActive) {
+      moveGhosty();
+    }
+  }
+
+  private void moveGhosty() {
+
+    // TODO
   }
 
   @Override
