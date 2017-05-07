@@ -5,6 +5,7 @@ package io.github.ghosthopper.ui.fx;
 import io.github.ghosthopper.game.Game;
 import io.github.ghosthopper.game.ghosty.Ghosty;
 import io.github.ghosthopper.ui.fx.choice.GameUiFxChoiceDialog;
+import io.github.ghosthopper.ui.fx.game.GameUiFxGame;
 import javafx.application.Application;
 import javafx.stage.Stage;
 
@@ -31,17 +32,19 @@ public class GameUiFx extends Application implements GameUiFxObject {
     GameUiFxChoiceDialog dialog = new GameUiFxChoiceDialog(fxGame);
     dialog.selectChoice(game.getPlayerConfig().getChoice());
     dialog.setOnHidden(e -> {
-      game.start();
-      stage.setTitle(game.getLocalizedName());
-      stage.setScene(fxGame);
-      stage.show();
+      if (dialog.isSuccess()) {
+        game.start();
+        stage.setTitle(game.getLocalizedName());
+        stage.setScene(fxGame);
+        stage.show();
+      }
     });
   }
 
   /**
    * @return the positionMapper
    */
-  public GameUiFxPositionMapper getPositionMapper() {
+  public GameUiFxPositionMapper getFxPositionMapper() {
 
     if (this.positionMapper == null) {
       this.positionMapper = createPositionMapper();
@@ -65,7 +68,7 @@ public class GameUiFx extends Application implements GameUiFxObject {
   }
 
   @Override
-  public GameUiFx getPlayUiFx() {
+  public GameUiFx getFxUi() {
 
     return this;
   }

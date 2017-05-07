@@ -1,11 +1,16 @@
 /* Copyright (c) The m-m-m Team, Licensed under the Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0 */
-package io.github.ghosthopper.ui.fx;
+package io.github.ghosthopper.ui.fx.asset;
 
 import io.github.ghosthopper.asset.GameAsset;
 import io.github.ghosthopper.field.GameField;
 import io.github.ghosthopper.figure.GameFigure;
 import io.github.ghosthopper.object.GameLocation;
+import io.github.ghosthopper.ui.fx.GameUiFxColor;
+import io.github.ghosthopper.ui.fx.GameUiFxObject;
+import io.github.ghosthopper.ui.fx.field.GameUiFxField;
+import io.github.ghosthopper.ui.fx.game.GameUiFxGame;
+import javafx.scene.Node;
 import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -33,23 +38,29 @@ public abstract class GameUiFxAsset extends ImageView implements GameUiFxObject 
     }
   }
 
+  @Override
+  public Node getFxNode() {
+
+    return this;
+  }
+
   /**
    * @return the {@link GameAsset}.
    */
-  public abstract GameAsset<?> getPlayAsset();
+  public abstract GameAsset<?> getGameAsset();
 
   /**
    * @return the {@link GameUiFxField} where the {@link GameAsset} is currently {@link GameAsset#getLocation() on}.
    */
-  public GameUiFxField getPlayField() {
+  public GameUiFxField getGameField() {
 
     return this.field;
   }
 
   /**
-   * @param newField the new {@link #getPlayField() field} to move this figure to.
+   * @param newField the new {@link #getGameField() field} to move this figure to.
    */
-  public void setPlayField(GameUiFxField newField) {
+  public void setGameField(GameUiFxField newField) {
 
     if (this.field == newField) {
       return;
@@ -59,7 +70,7 @@ public abstract class GameUiFxAsset extends ImageView implements GameUiFxObject 
     }
     this.field = newField;
     if (this.field != null) {
-      assert (getPlayAsset().getLocation() == this.field.getPlayField());
+      assert (getGameAsset().getLocation() == this.field.getGameField());
       newField.addFxAsset(this);
     }
   }
@@ -67,15 +78,15 @@ public abstract class GameUiFxAsset extends ImageView implements GameUiFxObject 
   /**
    * Updates the {@link GameAsset#getPosition() position} of this figure.
    */
-  public void updatePosition() {
+  public void updateGamePosition() {
 
-    GameAsset<?> asset = getPlayAsset();
+    GameAsset<?> asset = getGameAsset();
     GameLocation location = asset.getLocation();
     if (location instanceof GameField) {
       GameUiFxGame fxGame = getFxGame();
       GameUiFxField fxField = fxGame.getFxField((GameField) location);
       GameUiFxAsset fxAsset = fxGame.getFxAsset(asset);
-      fxField.updatePosition(fxAsset);
+      fxField.updateGamePosition(fxAsset);
     }
   }
 

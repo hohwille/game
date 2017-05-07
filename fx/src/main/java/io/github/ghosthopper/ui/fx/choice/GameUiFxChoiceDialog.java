@@ -5,8 +5,8 @@ package io.github.ghosthopper.ui.fx.choice;
 import io.github.ghosthopper.choice.GameChoice;
 import io.github.ghosthopper.choice.GameChoiceGroup;
 import io.github.ghosthopper.game.Game;
-import io.github.ghosthopper.ui.fx.GameUiFxGame;
 import io.github.ghosthopper.ui.fx.GameUiFxObject;
+import io.github.ghosthopper.ui.fx.game.GameUiFxGame;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.Scene;
@@ -29,6 +29,8 @@ public class GameUiFxChoiceDialog extends Stage implements GameUiFxObject {
 
   private GameUiFxChoiceGroup<?> fxChoice;
 
+  private boolean success;
+
   /**
    * The constructor.
    *
@@ -44,33 +46,37 @@ public class GameUiFxChoiceDialog extends Stage implements GameUiFxObject {
     HBox buttonPanel = new HBox(10);
     buttonPanel.setAlignment(Pos.CENTER);
     Button submitButton = new Button("Submit");
-    submitButton.setOnAction(x -> submit());
+    submitButton.setOnAction(x -> onSubmit());
     Button cancelButton = new Button("Cancel");
+    cancelButton.setOnAction(x -> onCancel());
     buttonPanel.getChildren().add(submitButton);
     buttonPanel.getChildren().add(cancelButton);
     vBox.getChildren().addAll(this.gridPane, buttonPanel);
     Scene scene = new Scene(vBox);
+    scene.getStylesheets().add("Game.css");
     setScene(scene);
     this.game = game;
   }
 
-  private void submit() {
+  /**
+   * @return {@code true} if this dialog and its {@link #selectChoice(GameChoice) choice} has been
+   *         {@link GameChoice#select(java.util.List) submitted} successfully.
+   */
+  public boolean isSuccess() {
 
-    boolean success = this.fxChoice.submit();
-    // boolean success = true;
-    // for (PlayChoice<?> choice : this.choiceList) {
-    // PlayUiFxChoice fxChoice = this.choiceMap.get(choice);
-    // boolean choiceSuccess;
-    // if (fxChoice == null) {
-    // choiceSuccess = fxChoice.submit();
-    // } else {
-    // choiceSuccess = ;
-    // }
-    // if (!choiceSuccess) {
-    // success = false;
-    // }
-    // }
-    if (success) {
+    return this.success;
+  }
+
+  private void onCancel() {
+
+    this.success = false;
+    hide();
+  }
+
+  private void onSubmit() {
+
+    this.success = this.fxChoice.submit();
+    if (this.success) {
       hide();
     }
   }

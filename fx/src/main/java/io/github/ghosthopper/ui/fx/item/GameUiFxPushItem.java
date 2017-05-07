@@ -1,8 +1,9 @@
 /* Copyright (c) The m-m-m Team, Licensed under the Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0 */
-package io.github.ghosthopper.ui.fx;
+package io.github.ghosthopper.ui.fx.item;
 
 import io.github.ghosthopper.item.GamePushItem;
+import io.github.ghosthopper.ui.fx.game.GameUiFxGame;
 
 /**
  * JavaFx view for a {@link GamePushItem}.
@@ -23,7 +24,7 @@ public class GameUiFxPushItem extends GameUiFxItem {
   }
 
   @Override
-  public GamePushItem getPlayAsset() {
+  public GamePushItem getGameAsset() {
 
     return this.item;
   }

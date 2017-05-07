@@ -1,8 +1,10 @@
 /* Copyright (c) The m-m-m Team, Licensed under the Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0 */
-package io.github.ghosthopper.ui.fx;
+package io.github.ghosthopper.ui.fx.border;
 
 import io.github.ghosthopper.border.GameBorder;
+import io.github.ghosthopper.ui.fx.GameUiFxObject;
+import io.github.ghosthopper.ui.fx.game.GameUiFxGame;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
@@ -43,7 +45,7 @@ public class GameUiFxBorder extends StackPane implements GameUiFxObject {
   /**
    * @return the {@link GameBorder}.
    */
-  public GameBorder getPlayBorder() {
+  public GameBorder getGameBorder() {
 
     return this.border;
   }

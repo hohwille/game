@@ -36,19 +36,19 @@ public class GameUiFxChoiceInteger extends GameUiFxChoiceSingle<Integer> {
   }
 
   @Override
-  public Slider getControl() {
+  public Slider getFxControl() {
 
     return this.slider;
   }
 
   @Override
-  public GameChoiceInteger getChoice() {
+  public GameChoiceInteger getGameChoice() {
 
     return this.choice;
   }
 
   @Override
-  protected List<Integer> getSelection() {
+  protected List<Integer> getSelectedOptions() {
 
     double value = this.slider.getValue();
     return Collections.singletonList(Integer.valueOf((int) value));

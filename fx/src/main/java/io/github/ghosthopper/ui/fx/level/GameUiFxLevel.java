@@ -1,6 +1,6 @@
 /* Copyright (c) The m-m-m Team, Licensed under the Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0 */
-package io.github.ghosthopper.ui.fx;
+package io.github.ghosthopper.ui.fx.level;
 
 import io.github.ghosthopper.border.GameBorder;
 import io.github.ghosthopper.border.GameEdgeType;
@@ -8,6 +8,10 @@ import io.github.ghosthopper.direction.GameDirection;
 import io.github.ghosthopper.field.GameField;
 import io.github.ghosthopper.game.Game;
 import io.github.ghosthopper.level.GameLevel;
+import io.github.ghosthopper.ui.fx.GameUiFxObject;
+import io.github.ghosthopper.ui.fx.border.GameUiFxBorder;
+import io.github.ghosthopper.ui.fx.field.GameUiFxField;
+import io.github.ghosthopper.ui.fx.game.GameUiFxGame;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.GridPane;
@@ -36,7 +40,10 @@ public class GameUiFxLevel extends GridPane implements GameUiFxObject {
     getStyleClass().add("level");
   }
 
-  void initialize() {
+  /**
+   * Internal method to initialize this level.
+   */
+  public void initialize() {
 
     if (this.initialized) {
       return;

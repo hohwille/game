@@ -43,27 +43,10 @@ public class GameUiFxColor {
     }
   }
 
-  // private static Map<PlayColor, Effect> createColorMap() {
-  //
-  // // Base color of images is magenta!
-  // Map<PlayColor, Effect> map = new HashMap<>();
-  //
-  // map.put(PlayColor.MAGENTA, createColorAdjust(0));
-  // map.put(PlayColor.GREEN, createColorAdjust(-1));
-  // map.put(PlayColor.CYAN, createColorAdjust(-0.625));
-  // map.put(PlayColor.BLUE, createColorAdjust(-0.375));
-  // map.put(PlayColor.RED, createColorAdjust(0.35));
-  // map.put(PlayColor.YELLOW, createColorAdjust(0.6));
-  // map.put(PlayColor.GREY, new ColorAdjust(0, -1, 0, 0));
-  // map.put(PlayColor.WHITE, new ColorAdjust(0, -1, 0.5, 0));
-  // map.put(PlayColor.BLACK, new ColorAdjust(0, -1, -0.5, 0));
-  // return map;
-  // }
-
   /**
    * @return the {@link GameColor}.
    */
-  public GameColor getPlayColor() {
+  public GameColor getGameColor() {
 
     return this.playColor;
   }

@@ -9,6 +9,7 @@ import java.util.List;
 import io.github.ghosthopper.choice.GameChoice;
 import io.github.ghosthopper.choice.GameChoiceGroup;
 import io.github.ghosthopper.type.GameType;
+import javafx.scene.Node;
 import javafx.scene.control.Label;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -27,6 +28,8 @@ public class GameUiFxChoiceGroup<O> extends GameUiFxChoice<O> {
   private final List<GameUiFxChoice<?>> children;
 
   private final HBox topBox;
+
+  private final Label label;
 
   /**
    * The constructor.
@@ -50,7 +53,10 @@ public class GameUiFxChoiceGroup<O> extends GameUiFxChoice<O> {
     }
     String description = choice.getLocalizedDescription();
     if (description != null) {
-      this.topBox.getChildren().add(new Label(description));
+      this.label = new Label(description);
+      this.topBox.getChildren().add(this.label);
+    } else {
+      this.label = null;
     }
     for (GameChoice<?> child : choice.getChoices()) {
       GameUiFxChoice<?> fxChoice = GameUiFxChoice.of(dialog, child);
@@ -69,19 +75,32 @@ public class GameUiFxChoiceGroup<O> extends GameUiFxChoice<O> {
     this.choice = null;
     this.children = new ArrayList<>();
     this.topBox = null;
+    this.label = null;
     this.children.add(choice);
   }
 
   @Override
-  public GameChoiceGroup<O, ?> getChoice() {
+  public GameChoiceGroup<O, ?> getGameChoice() {
 
     return this.choice;
   }
 
   @Override
-  protected List<O> getSelection() {
+  protected List<O> getSelectedOptions() {
 
     return Collections.emptyList();
+  }
+
+  @Override
+  protected Label getFxLabel() {
+
+    return this.label;
+  }
+
+  @Override
+  protected Node getFxChoiceNode() {
+
+    return this.topBox;
   }
 
   @Override
@@ -106,7 +125,7 @@ public class GameUiFxChoiceGroup<O> extends GameUiFxChoice<O> {
     if (this.topBox != null) {
       GridPane grid = getFxParent().getGridPane();
       int rowIndex = getFxParent().nextRowIndex();
-      grid.add(this.topBox, 0, rowIndex);
+      grid.add(getFxNode(), 0, rowIndex, 2, 1);
     }
     for (GameUiFxChoice<?> child : this.children) {
       child.attachView();

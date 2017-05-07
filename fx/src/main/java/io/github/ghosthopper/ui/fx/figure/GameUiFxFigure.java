@@ -1,10 +1,12 @@
 /* Copyright (c) The m-m-m Team, Licensed under the Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0 */
-package io.github.ghosthopper.ui.fx;
+package io.github.ghosthopper.ui.fx.figure;
 
 import io.github.ghosthopper.direction.GameDirection;
 import io.github.ghosthopper.figure.GameFigure;
 import io.github.ghosthopper.figure.GameFigureGroup;
+import io.github.ghosthopper.ui.fx.asset.GameUiFxAsset;
+import io.github.ghosthopper.ui.fx.player.GameUiFxPlayer;
 import javafx.scene.effect.Effect;
 import javafx.scene.effect.Glow;
 
@@ -42,7 +44,7 @@ public class GameUiFxFigure extends GameUiFxAsset {
   /**
    * @return the {@link GameFigure}.
    */
-  public GameFigure getPlayFigure() {
+  public GameFigure getGameFigure() {
 
     return this.figure;
   }
@@ -54,7 +56,7 @@ public class GameUiFxFigure extends GameUiFxAsset {
   }
 
   @Override
-  public GameFigure getPlayAsset() {
+  public GameFigure getGameAsset() {
 
     return this.figure;
   }
@@ -90,7 +92,7 @@ public class GameUiFxFigure extends GameUiFxAsset {
   /**
    * Updates the {@link GameFigure#getDirection() direction} of this figure.
    */
-  public void updateDirectionSingle() {
+  public void updateGameDirectionSingle() {
 
     GameDirection dir = this.figure.getDirection();
     if (dir == this.direction) {
@@ -107,15 +109,15 @@ public class GameUiFxFigure extends GameUiFxAsset {
   /**
    * Updates the {@link GameFigure#getDirection() direction} of this figure.
    */
-  public void updateDirection() {
+  public void updateGameDirection() {
 
     GameFigureGroup group = this.figure.getGroup();
     if (group != null) {
       for (GameFigure groupFigure : group.getFigures()) {
-        getFxGame().getFxFigure(groupFigure).updateDirectionSingle();
+        getFxGame().getFxFigure(groupFigure).updateGameDirectionSingle();
       }
     } else {
-      updateDirectionSingle();
+      updateGameDirectionSingle();
     }
   }
 
@@ -125,7 +127,7 @@ public class GameUiFxFigure extends GameUiFxAsset {
   public void updateAllSingle() {
 
     updateActivitySingle();
-    updateDirectionSingle();
+    updateGameDirectionSingle();
   }
 
 }

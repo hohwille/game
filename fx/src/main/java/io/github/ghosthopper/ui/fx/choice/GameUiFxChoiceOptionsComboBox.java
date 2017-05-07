@@ -33,19 +33,19 @@ public class GameUiFxChoiceOptionsComboBox<O> extends GameUiFxChoiceSingle<O> {
   }
 
   @Override
-  public ComboBox<O> getControl() {
+  public ComboBox<O> getFxControl() {
 
     return this.comboBox;
   }
 
   @Override
-  public GameChoiceOptions<O> getChoice() {
+  public GameChoiceOptions<O> getGameChoice() {
 
     return this.choice;
   }
 
   @Override
-  protected List<O> getSelection() {
+  protected List<O> getSelectedOptions() {
 
     O selection = this.comboBox.getSelectionModel().getSelectedItem();
     return Collections.singletonList(selection);

@@ -1,11 +1,18 @@
 /* Copyright (c) The m-m-m Team, Licensed under the Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0 */
-package io.github.ghosthopper.ui.fx;
+package io.github.ghosthopper.ui.fx.field;
 
 import io.github.ghosthopper.field.GameField;
 import io.github.ghosthopper.item.GamePickItem;
 import io.github.ghosthopper.item.GamePushItem;
 import io.github.ghosthopper.position.GamePosition;
+import io.github.ghosthopper.ui.fx.GameUiFxColor;
+import io.github.ghosthopper.ui.fx.GameUiFxObject;
+import io.github.ghosthopper.ui.fx.asset.GameUiFxAsset;
+import io.github.ghosthopper.ui.fx.game.GameUiFxGame;
+import io.github.ghosthopper.ui.fx.item.GameUiFxPickItem;
+import io.github.ghosthopper.ui.fx.item.GameUiFxPushItem;
+import io.github.ghosthopper.ui.fx.level.GameUiFxLevel;
 import javafx.geometry.Pos;
 import javafx.scene.effect.Effect;
 import javafx.scene.image.Image;
@@ -65,7 +72,7 @@ public class GameUiFxField extends StackPane implements GameUiFxObject {
   /**
    * @return the {@link GameField}.
    */
-  public GameField getPlayField() {
+  public GameField getGameField() {
 
     return this.field;
   }
@@ -84,13 +91,16 @@ public class GameUiFxField extends StackPane implements GameUiFxObject {
   public void addFxAsset(GameUiFxAsset asset) {
 
     getChildren().add(asset);
-    updatePosition(asset);
+    updateGamePosition(asset);
   }
 
-  void updatePosition(GameUiFxAsset asset) {
+  /**
+   * @param asset the {@link GameUiFxAsset} to update.
+   */
+  public void updateGamePosition(GameUiFxAsset asset) {
 
-    GamePosition position = asset.getPlayAsset().getPosition();
-    Pos alignment = getPlayUiFx().getPositionMapper().getFxPosition(position);
+    GamePosition position = asset.getGameAsset().getPosition();
+    Pos alignment = getFxUi().getFxPositionMapper().getFxPosition(position);
     setAlignment(asset, alignment);
   }
 

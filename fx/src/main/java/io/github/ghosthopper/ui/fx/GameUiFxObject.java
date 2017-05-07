@@ -4,6 +4,8 @@ package io.github.ghosthopper.ui.fx;
 
 import io.github.ghosthopper.game.Game;
 import io.github.ghosthopper.ui.fx.data.GameUiFxDataCache;
+import io.github.ghosthopper.ui.fx.game.GameUiFxGame;
+import javafx.scene.Node;
 
 /**
  * The interface for any {@link GameUiFx}-object.
@@ -17,6 +19,17 @@ public interface GameUiFxObject {
   GameUiFxObject getFxParent();
 
   /**
+   * @return the {@link Node} or {@code null} if this is no JavaFx object.
+   */
+  default Node getFxNode() {
+
+    if (this instanceof Node) {
+      return (Node) this;
+    }
+    return null;
+  }
+
+  /**
    * @return the owning {@link GameUiFxGame}.
    */
   default GameUiFxGame getFxGame() {
@@ -27,17 +40,17 @@ public interface GameUiFxObject {
   /**
    * @return the owning {@link Game}.
    */
-  default Game getPlayGame() {
+  default Game getGame() {
 
-    return getFxGame().getPlayGame();
+    return getFxGame().getGame();
   }
 
   /**
    * @return the owning {@link GameUiFx} (root object).
    */
-  default GameUiFx getPlayUiFx() {
+  default GameUiFx getFxUi() {
 
-    return getFxParent().getPlayUiFx();
+    return getFxParent().getFxUi();
   }
 
   /**

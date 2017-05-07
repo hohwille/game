@@ -20,6 +20,9 @@ import io.github.ghosthopper.game.Game;
  */
 public class GamePlayerConfigChoiceGroup extends GamePlayerConfigBase {
 
+  /** I18n key for a choice of the players. */
+  public static final String I18N_CHOICE_PLAYERS = "Choice.Players";
+
   private final List<GamePlayer> selectedPlayers;
 
   private final Set<GamePlayer> selectedPlayersSet;
@@ -50,7 +53,8 @@ public class GamePlayerConfigChoiceGroup extends GamePlayerConfigBase {
 
     Game game = getGame();
     List<GameChoice<GamePlayer>> choices = createChoices();
-    GameChoiceGroupBase<GamePlayer, GamePlayer> group = new GameChoiceGroupBase<>(game, "Players", "ChoosePlayers", GamePlayerType.DEFAULT, choices);
+    GameChoiceGroupBase<GamePlayer, GamePlayer> group = new GameChoiceGroupBase<>(game, GamePlayer.I18N_PLAYERS, I18N_CHOICE_PLAYERS, GamePlayerType.DEFAULT,
+        choices);
     group.setSelectionCallback(this::onSelectChoices);
     group.addValidator(this::onValidateChoices);
     return group;
@@ -62,7 +66,8 @@ public class GamePlayerConfigChoiceGroup extends GamePlayerConfigBase {
   protected List<GameChoice<GamePlayer>> createChoices() {
 
     List<GameChoice<GamePlayer>> choices = new ArrayList<>();
-    GameChoiceOptionsBase<GamePlayer> playerChoice = new GameChoiceOptionsBase<>(getGame(), "Players", null, this.playerOptions, getMinPlayers(), getMaxPlayers());
+    GameChoiceOptionsBase<GamePlayer> playerChoice = new GameChoiceOptionsBase<>(getGame(), "Players", null, this.playerOptions, getMinPlayers(),
+        getMaxPlayers());
     playerChoice.addValidator(this::onValidateSelection);
     choices.add(playerChoice);
     return choices;
@@ -96,10 +101,11 @@ public class GamePlayerConfigChoiceGroup extends GamePlayerConfigBase {
    */
   protected String onValidateSelection(List<? extends GamePlayer> selection) {
 
-    String error = GameValidator.validateRange(selection.size(), getMinPlayers(), getMaxPlayers(), "Players");
-    if (error != null) {
-      return error;
-    }
+    String error = null;
+    // error = GameValidator.validateRange(selection.size(), getMinPlayers(), getMaxPlayers(), "Players");
+    // if (error != null) {
+    // return error;
+    // }
     int humans = 0;
     int bots = 0;
     for (GamePlayer player : selection) {

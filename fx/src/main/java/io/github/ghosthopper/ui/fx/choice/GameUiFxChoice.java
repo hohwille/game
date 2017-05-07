@@ -9,7 +9,12 @@ import io.github.ghosthopper.choice.GameChoiceGroup;
 import io.github.ghosthopper.choice.GameChoiceInteger;
 import io.github.ghosthopper.choice.GameChoiceOptions;
 import io.github.ghosthopper.choice.GameChoiceSingle;
+import io.github.ghosthopper.data.GameSeverity;
 import io.github.ghosthopper.ui.fx.GameUiFxObject;
+import javafx.geometry.Pos;
+import javafx.scene.Node;
+import javafx.scene.control.Label;
+import javafx.scene.layout.StackPane;
 
 /**
  * JavaFx view for {@link GameChoiceSingle}.
@@ -18,7 +23,13 @@ import io.github.ghosthopper.ui.fx.GameUiFxObject;
  */
 public abstract class GameUiFxChoice<O> implements GameUiFxObject {
 
+  private static final String STYLE_INVALID = "invalid";
+
   private final GameUiFxChoiceDialog dialog;
+
+  private GameUiFxSeverityDecoration decoration;
+
+  private StackPane errorPane;
 
   /**
    * The constructor.
@@ -39,7 +50,42 @@ public abstract class GameUiFxChoice<O> implements GameUiFxObject {
   /**
    * @return the represented {@link GameChoice}.
    */
-  public abstract GameChoice<O> getChoice();
+  public abstract GameChoice<O> getGameChoice();
+
+  /**
+   * @return the {@link StackPane} used to decorate the actual choice view with potential error messages.
+   */
+  @Override
+  public StackPane getFxNode() {
+
+    if (this.errorPane == null) {
+      this.errorPane = new StackPane();
+      this.errorPane.getChildren().addAll(getFxChoiceNode(), getFxDecoration());
+      StackPane.setAlignment(this.decoration, Pos.CENTER_RIGHT);
+    }
+    return this.errorPane;
+  }
+
+  /**
+   * @return the {@link GameUiFxSeverityDecoration}.
+   */
+  private GameUiFxSeverityDecoration getFxDecoration() {
+
+    if (this.decoration == null) {
+      this.decoration = new GameUiFxSeverityDecoration(GameSeverity.ERROR, this);
+    }
+    return this.decoration;
+  }
+
+  /**
+   * @return the {@link Label} or {@code null} if none exists.
+   */
+  protected abstract Label getFxLabel();
+
+  /**
+   * @return the main {@link Node} to decorate via {@link #getFxNode()}.
+   */
+  protected abstract Node getFxChoiceNode();
 
   /**
    * Submits this {@link GameChoice} and performs the {@link GameChoice#select(java.util.List) selection}.
@@ -48,7 +94,7 @@ public abstract class GameUiFxChoice<O> implements GameUiFxObject {
    */
   public boolean submit() {
 
-    String error = getChoice().select(getSelection());
+    String error = getGameChoice().select(getSelectedOptions());
     handleError(error);
     return (error == null);
   }
@@ -60,17 +106,21 @@ public abstract class GameUiFxChoice<O> implements GameUiFxObject {
    */
   protected void handleError(String error) {
 
-    if (error == null) {
-
-    } else {
-
+    getFxDecoration().setMessage(error);
+    Label fxLabel = getFxLabel();
+    if (fxLabel != null) {
+      if (error == null) {
+        fxLabel.getStyleClass().remove(STYLE_INVALID);
+      } else {
+        fxLabel.getStyleClass().add(STYLE_INVALID);
+      }
     }
   }
 
   /**
    * @return the currently selected options.
    */
-  protected abstract List<O> getSelection();
+  protected abstract List<O> getSelectedOptions();
 
   abstract void attachView();
 

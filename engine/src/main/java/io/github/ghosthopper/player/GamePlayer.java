@@ -22,6 +22,9 @@ import io.github.ghosthopper.type.GameTypeBase;
  */
 public class GamePlayer extends GameTypedObjectWithItems implements GameAttributeFigures, GameAttributeName {
 
+  /** I18N key for the plural term "players". */
+  public static final String I18N_PLAYERS = "Players";
+
   private final Game game;
 
   private final List<GameFigure> figures;
@@ -46,7 +49,7 @@ public class GamePlayer extends GameTypedObjectWithItems implements GameAttribut
    * @param figureTypes - see {@link #getFigures()}.
    */
   public GamePlayer(Game game, GameColor color, GameFigureType... figureTypes) {
-    this(game, color, createName(color), true, GamePlayerType.DEFAULT, figureTypes);
+    this(game, color, createName(game, color), true, GamePlayerType.DEFAULT, figureTypes);
   }
 
   /**
@@ -92,9 +95,9 @@ public class GamePlayer extends GameTypedObjectWithItems implements GameAttribut
     }
   }
 
-  private static String createName(GameColor color) {
+  private static String createName(Game game, GameColor color) {
 
-    return "Player " + color.getId();
+    return game.getTranslator().translate("Player " + color.getId());
   }
 
   @Override
@@ -113,8 +116,8 @@ public class GamePlayer extends GameTypedObjectWithItems implements GameAttribut
   }
 
   /**
-   * @return {@code true} if this {@link GamePlayer} is human, {@code false} otherwise ({@link GamePlayer} is controlled by the
-   *         computer).
+   * @return {@code true} if this {@link GamePlayer} is human, {@code false} otherwise ({@link GamePlayer} is controlled
+   *         by the computer).
    */
   public boolean isHuman() {
 

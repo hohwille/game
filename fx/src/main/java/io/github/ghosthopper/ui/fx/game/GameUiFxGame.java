@@ -1,6 +1,6 @@
 /* Copyright (c) The m-m-m Team, Licensed under the Apache License, Version 2.0
  * http://www.apache.org/licenses/LICENSE-2.0 */
-package io.github.ghosthopper.ui.fx;
+package io.github.ghosthopper.ui.fx.game;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -23,7 +23,19 @@ import io.github.ghosthopper.item.GamePushItem;
 import io.github.ghosthopper.level.GameLevel;
 import io.github.ghosthopper.object.GameLocation;
 import io.github.ghosthopper.player.GamePlayer;
+import io.github.ghosthopper.ui.fx.GameUiFx;
+import io.github.ghosthopper.ui.fx.GameUiFxObject;
+import io.github.ghosthopper.ui.fx.asset.GameUiFxAsset;
+import io.github.ghosthopper.ui.fx.border.GameUiFxBorder;
 import io.github.ghosthopper.ui.fx.data.GameUiFxDataCache;
+import io.github.ghosthopper.ui.fx.event.GameUiFxKeyEventMapper;
+import io.github.ghosthopper.ui.fx.field.GameUiFxField;
+import io.github.ghosthopper.ui.fx.figure.GameUiFxFigure;
+import io.github.ghosthopper.ui.fx.item.GameUiFxItem;
+import io.github.ghosthopper.ui.fx.item.GameUiFxPickItem;
+import io.github.ghosthopper.ui.fx.item.GameUiFxPushItem;
+import io.github.ghosthopper.ui.fx.level.GameUiFxLevel;
+import io.github.ghosthopper.ui.fx.player.GameUiFxPlayer;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyEvent;
 import javafx.scene.layout.VBox;
@@ -94,7 +106,7 @@ public class GameUiFxGame extends Scene implements GameUiFxObject {
         if (field != null) {
           GameUiFxField playField = getFxField(field);
           if (playField != null) {
-            fxFigure.setPlayField(playField);
+            fxFigure.setGameField(playField);
           }
         }
         fxFigure.updateAllSingle();
@@ -109,7 +121,7 @@ public class GameUiFxGame extends Scene implements GameUiFxObject {
   }
 
   @Override
-  public Game getPlayGame() {
+  public Game getGame() {
 
     return this.game;
   }
@@ -145,13 +157,13 @@ public class GameUiFxGame extends Scene implements GameUiFxObject {
 
     GameUiFxAsset fxAsset = getFxAsset(moveAsset.getAsset());
     if (moveAsset.isPositionChange()) {
-      fxAsset.updatePosition();
+      fxAsset.updateGamePosition();
     }
     if (moveAsset.isLocationChange()) {
       GameLocation newLocation = moveAsset.getNewLocation();
       if (newLocation instanceof GameField) {
         GameUiFxField fxField = getFxField((GameField) newLocation);
-        fxAsset.setPlayField(fxField);
+        fxAsset.setGameField(fxField);
         return;
       }
       GameLocation oldLocation = moveAsset.getOldLocation();
@@ -165,7 +177,7 @@ public class GameUiFxGame extends Scene implements GameUiFxObject {
   private void onFigureDirection(GameFigureDirectionEvent figureDirection) {
 
     GameUiFxFigure fxFigure = getFxFigure(figureDirection.getFigure());
-    fxFigure.updateDirectionSingle();
+    fxFigure.updateGameDirectionSingle();
   }
 
   private void onFigureTurn(GameFigureTurnEvent turnFigure) {

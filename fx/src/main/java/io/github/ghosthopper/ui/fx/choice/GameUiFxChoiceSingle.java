@@ -4,6 +4,7 @@ package io.github.ghosthopper.ui.fx.choice;
 
 import io.github.ghosthopper.choice.GameChoice;
 import io.github.ghosthopper.choice.GameChoiceSingle;
+import javafx.scene.Node;
 import javafx.scene.control.Control;
 import javafx.scene.control.Label;
 import javafx.scene.control.Tooltip;
@@ -38,10 +39,8 @@ public abstract class GameUiFxChoiceSingle<O> extends GameUiFxChoice<O> {
     }
   }
 
-  /**
-   * @return the {@link Label}.
-   */
-  protected Label getLabel() {
+  @Override
+  protected Label getFxLabel() {
 
     return this.label;
   }
@@ -49,21 +48,27 @@ public abstract class GameUiFxChoiceSingle<O> extends GameUiFxChoice<O> {
   /**
    * @return the {@link Tooltip} or {@code null} if no description was available.
    */
-  protected Tooltip getTooltip() {
+  protected Tooltip getFxTooltip() {
 
     return this.tooltip;
   }
 
+  @Override
+  protected Node getFxChoiceNode() {
+
+    return getFxControl();
+  }
+
   /**
-   * @return the JavaFx {@link Control} used to
+   * @return the JavaFx {@link Control} used to view and edit the choice.
    */
-  public abstract Control getControl();
+  protected abstract Control getFxControl();
 
   /**
    * @return the represented {@link GameChoice}.
    */
   @Override
-  public abstract GameChoiceSingle<O> getChoice();
+  public abstract GameChoiceSingle<O> getGameChoice();
 
   @Override
   protected void handleError(String error) {
@@ -78,11 +83,11 @@ public abstract class GameUiFxChoiceSingle<O> extends GameUiFxChoice<O> {
     GridPane grid = getFxParent().getGridPane();
     int rowIndex = getFxParent().nextRowIndex();
     grid.add(this.label, 0, rowIndex);
-    Control control = getControl();
+    Control control = getFxControl();
     if ((this.tooltip != null) && (control.getTooltip() == null)) {
       control.setTooltip(this.tooltip);
     }
-    grid.add(control, 1, rowIndex);
+    grid.add(getFxNode(), 1, rowIndex);
   }
 
 }
