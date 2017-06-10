@@ -1,0 +1,37 @@
+= mmm-game
+
+You have an idea for a board- or field-game? Always wanted to implement your game idea but did not find the time? Then mmm-game is your friend.
+
+== About
+This project provides a flexible link:../../tree/master/game-engine[game-engine] for board- and field-games. It ships with a link:../../tree/master/fx[JavaFx UI] that allows to play the games on any desktop computer. Further there a plans to implement an link:../../tree/master/android[android UI] as well.
+
+== Features
+
+This project offers the following featues:
+
+* Customizable number of _players_ with any number of play _figures_ each.
+* Support for action and strategic round games.
+* A _game_ may have any number of _levels_.
+* A level consists of any number of _fields_ connected via _borders_ in according directions
+* There are _pick items_ (e.g. gems or keys) that can be picked up and _push items_ (e.g. rocks) that can be pushed around (like bolder-dash, emerald mine, sokoban, rocksNdiamonds, etc.).
+* Each object that is part of the game has a type so e.g. a border can be a door, wall, etc. and you can create your own types with custom behaviour within minutes.
+* Event bus build in for loose coupling and high flexibility.
+* Generic UI build in - simply concentrate on your game idea, no waste of time for writing UI code.
+* Shipped with lots of images.
+* Automatic rotation and coloring of images so if you paint your own images you only have to do it in default rotation and color but can use it in any direction, color, overlay size, etc.
+* Internationalization (I18N) support build in and shipped with many localized terms.
+* Support for choices to ask questions that will raise a dialog with options to choose from including validation.
+
+The following features are planned for the future (contributors are most welcome):
+
+* Support for additional platforms - especially android
+* Support for different views (e.g. 3D isometric in game view like Dungeon-Master, currently only 2D sky view supported) and allow switching views on the fly.
+
+With this you will really get "write your game once - run it on different platforms, views, etc. for free".
+
+== Summary
+
+Most existing game engines are extremely flexible but also low-level and complex. If you plan to implement a game where you can move free-scale in a 3d world you need to do all this complex world. However, if you plan a simple board-game, where a level is rasterized into fields this project can really help you. With _mmm-game_ you can implement a game within a few hours or even minutes. It is really easy and fun so give it a try right now. 
+
+== License
+Licensed under link:../../tree/master/LICENSE[Apache Software License 2.0].
