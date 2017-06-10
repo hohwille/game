@@ -3,7 +3,7 @@
 You have an idea for a board- or field-game? Always wanted to implement your game idea but did not find the time? Then mmm-game is your friend.
 
 == About
-This project provides a flexible link:../../tree/master/game-engine[game-engine] for board- and field-games. It ships with a link:../../tree/master/fx[JavaFx UI] that allows to play the games on any desktop computer. Further there a plans to implement an link:../../tree/master/android[android UI] as well.
+This project provides a flexible link:../../tree/master/engine[game-engine] for board- and field-games. It ships with a link:../../tree/master/fx[JavaFx UI] that allows to play the games on any desktop computer. Further there a plans to implement an link:../../tree/master/android[android UI] as well.
 
 == Features
 
