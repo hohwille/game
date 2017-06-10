@@ -8,11 +8,11 @@
   <artifactId>ghosthopper-android</artifactId>
   <version>${ghosthopper.version}</version>
   <packaging>jar</packaging>
-  
+
   <dependencies>
     <dependency>
       <groupId>${project.groupId}</groupId>
-      <artifactId>ghosthopper-games</artifactId>
+      <artifactId>ghosthopper-game-all</artifactId>
       <version>${project.version}</version>
     </dependency>
   </dependencies>
