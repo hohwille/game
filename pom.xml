@@ -5,21 +5,21 @@
     <artifactId>spring-boot-starter-parent</artifactId>
     <version>1.5.2.RELEASE</version>
   </parent>
-  <groupId>io.github.ghosthopper</groupId>
-  <artifactId>ghosthopper</artifactId>
+  <groupId>net.sf.m-m-m</groupId>
+  <artifactId>mmm-game</artifactId>
   <version>dev-SNAPSHOT</version>
   <packaging>pom</packaging>
-  <description>The data for the game-engine (images and sounds).</description>
+  <description>The game project providing a generic game engine with ui and different games.</description>
 
   <properties>
     <java.version>1.8</java.version>
-    <ghosthopper.version>1.0.0-SNAPSHOT</ghosthopper.version>
+    <game.version>1.0.0-SNAPSHOT</game.version>
   </properties>
 
   <modules>
     <module>data</module>
     <module>engine</module>
-    <module>game</module>
+    <module>games</module>
     <module>fx</module>
     <module>android</module>
   </modules>
