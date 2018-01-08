@@ -16,7 +16,7 @@ public final class GamePropertyValueDouble extends GamePropertyContainerImpl<Gam
    * {@link GameProperties#get(GameProperty) accidentally create} this {@link GameProperty} overriding with a default
    * value of {@code 0}.
    */
-  public static final GamePropertyValueDouble WEIGHT = new GamePropertyValueDouble("Maximum Weight", 0);
+  public static final GamePropertyValueDouble WEIGHT = new GamePropertyValueDouble("Weight", 0);
 
   /**
    * The maximum {@link #WEIGHT weight} (e.g. for the {@link net.sf.mmm.game.engine.figure.GameFigure#getItems() items}
@@ -33,6 +33,7 @@ public final class GamePropertyValueDouble extends GamePropertyContainerImpl<Gam
    * @param value the {@link #getValue() value} used for {@link #getDefaultValue()}.
    */
   public GamePropertyValueDouble(String name, double value) {
+
     super(name);
     this.value = value;
   }
@@ -44,6 +45,7 @@ public final class GamePropertyValueDouble extends GamePropertyContainerImpl<Gam
    * @param defaultValue - see {@link #getDefaultValue()}.
    */
   private GamePropertyValueDouble(GamePropertyValueDouble defaultValue) {
+
     super(defaultValue);
     this.value = defaultValue.value;
   }

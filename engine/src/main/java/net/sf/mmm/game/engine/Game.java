@@ -2,6 +2,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package net.sf.mmm.game.engine;
 
+import java.time.Instant;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -39,6 +40,10 @@ import net.sf.mmm.game.engine.player.GamePlayerConfigBase;
 import net.sf.mmm.game.engine.player.GamePlayerConfigChoiceGroup;
 import net.sf.mmm.game.engine.player.GamePlayerTurnEvent;
 import net.sf.mmm.game.engine.position.GamePosition;
+import net.sf.mmm.game.engine.time.GameAttributeTime;
+import net.sf.mmm.game.engine.time.GameTime;
+import net.sf.mmm.game.engine.time.GameTimeBean;
+import net.sf.mmm.game.engine.time.GameTimeType;
 
 /**
  * This is the main object and represents an actual game with its rules. To implement your own game, simply extend this
@@ -59,7 +64,7 @@ import net.sf.mmm.game.engine.position.GamePosition;
  * <li>Implement a strategy to {@link #moveBotPlayer(GamePlayer) move bot players}.</li>
  * </ul>
  */
-public class Game extends GameStateObjectWithId implements GameEventSender<GameEvent> {
+public class Game extends GameStateObjectWithId implements GameEventSender<GameEvent>, GameAttributeTime {
 
   /** @see #getCurrentGame() */
   private static Game currentGame = GameNone.INSTANCE;
@@ -67,6 +72,10 @@ public class Game extends GameStateObjectWithId implements GameEventSender<GameE
   private final GameTranslator translator;
 
   private final Map<Class<?>, GameEventDispatcher<?>> dispatcherMap;
+
+  private final GameTimeBean time;
+
+  private long nanoseconds;
 
   private GamePlayerConfigBase playerConfig;
 
@@ -88,10 +97,12 @@ public class Game extends GameStateObjectWithId implements GameEventSender<GameE
    * @param id - see {@link #getId()}.
    */
   public Game(String id) {
+
     super(id);
     this.translator = new GameTranslator(this);
     this.dispatcherMap = new HashMap<>();
     addListener(GameKeyEvent.class, this::onKeyPressed);
+    this.time = new GameTimeBean();
   }
 
   /**
@@ -322,6 +333,8 @@ public class Game extends GameStateObjectWithId implements GameEventSender<GameE
 
     assert (currentGame == this);
     this.state = GameState.START;
+    this.time.setStart(Instant.now());
+    this.nanoseconds = System.nanoTime();
     sendEvent(GameState.START);
   }
 
@@ -372,11 +385,22 @@ public class Game extends GameStateObjectWithId implements GameEventSender<GameE
    */
   public void pause() {
 
-    if (isPaused()) {
+    if (this.state != GameState.START) {
+      // either paused, not even started or already ended.
       return;
     }
     this.state = GameState.PAUSE;
+    updateDuration();
     sendEvent(this.state);
+  }
+
+  private void updateDuration() {
+
+    // JVM or Game will not run for longer than 292 years so no worries about long overflow
+    long nanoTime = System.nanoTime();
+    long nanos = nanoTime - this.nanoseconds;
+    this.time.addDurationNanosconds(nanos);
+    this.nanoseconds = nanoTime;
   }
 
   /**
@@ -388,6 +412,7 @@ public class Game extends GameStateObjectWithId implements GameEventSender<GameE
       return;
     }
     this.state = GameState.START;
+    this.nanoseconds = System.nanoTime();
     sendEvent(GameState.RESUME);
   }
 
@@ -397,8 +422,18 @@ public class Game extends GameStateObjectWithId implements GameEventSender<GameE
   public final void end() {
 
     this.state = GameState.END;
+    updateDuration();
     sendEvent(this.state);
     currentGame = GameNone.INSTANCE;
+  }
+
+  @Override
+  public GameTime getCurrentTime() {
+
+    if (isActive()) {
+      updateDuration();
+    }
+    return new GameTimeType(this.time.getTurnCount(), this.time.getRoundCount(), this.time.getDuration(), this.time.getStart());
   }
 
   /**
@@ -426,9 +461,12 @@ public class Game extends GameStateObjectWithId implements GameEventSender<GameE
   }
 
   /**
-   * @return {@code true} if this game is played in turns (rounds), where only one {@link GamePlayer} can act at a time
-   *         (for strategic games like chess, Ludo, etc.), {@code false} if all {@link GamePlayer}s can play in parallel
-   *         (for action games where speed matters).
+   * @return {@code true} if this game is played in turns, where only one {@link GamePlayer} can act at a time (for
+   *         strategic games like chess, Ludo, etc.). A <em>turn</em> lasts until a single player has completed all his
+   *         actions until the next player starts his turn. The period of turns from the first to the last
+   *         {@link #getPlayers() player} is called a <em>round</em>.<br>
+   *         Otherwise, if this method returns {@code false} all {@link GamePlayer}s can play in parallel (for action
+   *         games where speed matters).
    */
   public boolean isTurnGame() {
 
@@ -507,8 +545,10 @@ public class Game extends GameStateObjectWithId implements GameEventSender<GameE
       oldPlayer = oldFigure.getPlayer();
     }
     this.currentPlayer++;
+    this.time.incrementTurnCount();
     if (this.currentPlayer >= getPlayers().size()) {
       this.currentPlayer = 0;
+      this.time.incrementRoundCount();
     }
     this.currentFigure = 0;
     GameFigure newFigure = getCurrentFigure();

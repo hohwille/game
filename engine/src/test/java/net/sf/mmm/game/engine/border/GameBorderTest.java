@@ -5,13 +5,6 @@ import org.junit.Test;
 
 import net.sf.mmm.game.engine.Game;
 import net.sf.mmm.game.engine.GameNone;
-import net.sf.mmm.game.engine.border.GameBorder;
-import net.sf.mmm.game.engine.border.GameBorderType;
-import net.sf.mmm.game.engine.border.GameBorderTypeDoor;
-import net.sf.mmm.game.engine.border.GameBorderTypeHole;
-import net.sf.mmm.game.engine.border.GameBorderTypeMagicDoor;
-import net.sf.mmm.game.engine.border.GameBorderTypeOpen;
-import net.sf.mmm.game.engine.border.GameBorderTypeWall;
 import net.sf.mmm.game.engine.color.GameColor;
 import net.sf.mmm.game.engine.direction.GameDirection;
 import net.sf.mmm.game.engine.field.GameField;
@@ -42,7 +35,7 @@ public class GameBorderTest extends Assertions {
 
   private static final GameFigure GREEN_RABBIT_FIGURE = GREEN_RABBIT.getFigures().get(0);
 
-  private static final GamePickItem RED_KEY = new GamePickItem(GameColor.RED, GamePickItemType.KEY);
+  private static final GamePickItem RED_KEY = new GamePickItem(GameNone.INSTANCE, GamePickItemType.KEY, GameColor.RED);
 
   /**
    * Test of {@link GameBorder} with {@link GameBorderTypeHole}.

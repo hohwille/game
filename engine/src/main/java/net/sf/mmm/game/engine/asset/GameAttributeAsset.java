@@ -5,16 +5,15 @@ package net.sf.mmm.game.engine.asset;
 import net.sf.mmm.game.engine.figure.GameAttributeFiguresAdvanced;
 import net.sf.mmm.game.engine.figure.GameFigure;
 import net.sf.mmm.game.engine.item.GameAttributePickItems;
-import net.sf.mmm.game.engine.item.GameAttributePushItem;
+import net.sf.mmm.game.engine.item.GameAttributeFieldItem;
 import net.sf.mmm.game.engine.item.GamePickItem;
-import net.sf.mmm.game.engine.item.GamePushItem;
+import net.sf.mmm.game.engine.item.GameFieldItem;
 import net.sf.mmm.game.engine.item.GameShotItem;
-import net.sf.mmm.game.engine.object.GameLocation;
 
 /**
  * Interface for the holder of {@link GameAsset}s.
  */
-public interface GameAttributeAsset extends GameLocation {
+public interface GameAttributeAsset {
 
   /**
    * @param asset the {@link GameAsset} to check.
@@ -31,9 +30,9 @@ public interface GameAttributeAsset extends GameLocation {
       if (this instanceof GameAttributeFiguresAdvanced) {
         return ((GameAttributeFiguresAdvanced) this).canAddFigure((GameFigure) asset);
       }
-    } else if (asset instanceof GamePushItem) {
-      if (this instanceof GameAttributePushItem) {
-        return ((GameAttributePushItem) this).canAddPushItem((GamePushItem) asset);
+    } else if (asset instanceof GameFieldItem) {
+      if (this instanceof GameAttributeFieldItem) {
+        return ((GameAttributeFieldItem) this).canAddItem((GameFieldItem) asset);
       }
     } else if (asset instanceof GameShotItem) {
       return true;
@@ -43,7 +42,7 @@ public interface GameAttributeAsset extends GameLocation {
 
   /**
    * @param asset the {@link GameAsset} to add to this holder (e.g. field). This happens when a {@link GameFigure} is
-   *        moved to this field, a {@link GamePickItem} is {@link GameFigure#dropItem() dropped}, a {@link GamePushItem}
+   *        moved to this field, a {@link GamePickItem} is {@link GameFigure#dropItem() dropped}, a {@link GameFieldItem}
    *        is pushed, etc. Unlike {@link #canAddAsset(GameAsset)} this method changes the state of this holder.
    * @return {@code true} if the {@link GameAsset} {@link #canAddAsset(GameAsset) can be hold}, {@code false} otherwise.
    */
@@ -57,9 +56,9 @@ public interface GameAttributeAsset extends GameLocation {
       if (this instanceof GameAttributeFiguresAdvanced) {
         return ((GameAttributeFiguresAdvanced) this).addFigure((GameFigure) asset);
       }
-    } else if (asset instanceof GamePushItem) {
-      if (this instanceof GameAttributePushItem) {
-        return ((GameAttributePushItem) this).setPushItem((GamePushItem) asset);
+    } else if (asset instanceof GameFieldItem) {
+      if (this instanceof GameAttributeFieldItem) {
+        return ((GameAttributeFieldItem) this).setItem((GameFieldItem) asset);
       }
     } else if (asset instanceof GameShotItem) {
       return true;
@@ -69,7 +68,7 @@ public interface GameAttributeAsset extends GameLocation {
 
   /**
    * @param asset the {@link GameAsset} to remove from this holder (field). Called when a {@link GameFigure} is moved
-   *        from this field, a {@link GamePickItem} is {@link GameFigure#dropItem() dropped}, a {@link GamePushItem} is
+   *        from this field, a {@link GamePickItem} is {@link GameFigure#dropItem() dropped}, a {@link GameFieldItem} is
    *        pushed, etc.
    * @return {@code true} if the {@link GameAsset} could successfully be removed, {@code false} otherwise (exotic case
    *         but field might be glued, magnetic or whatever).
@@ -81,7 +80,7 @@ public interface GameAttributeAsset extends GameLocation {
 
   /**
    * @param asset the {@link GameAsset} to remove from this holder (field). Called when a {@link GameFigure} is moved
-   *        from this field, a {@link GamePickItem} is {@link GameFigure#dropItem() dropped}, a {@link GamePushItem} is
+   *        from this field, a {@link GamePickItem} is {@link GameFigure#dropItem() dropped}, a {@link GameFieldItem} is
    *        pushed, etc.
    * @param updateLocation - {@code true} if the {@link GameAsset#getLocation() location} shall also be
    *        {@link GameAsset#setLocation(net.sf.mmm.game.engine.object.GameLocation) updated} and a
@@ -101,9 +100,9 @@ public interface GameAttributeAsset extends GameLocation {
       if (this instanceof GameAttributeFiguresAdvanced) {
         return ((GameAttributeFiguresAdvanced) this).removeFigure((GameFigure) asset);
       }
-    } else if (asset instanceof GamePushItem) {
-      if (this instanceof GameAttributePushItem) {
-        return ((GameAttributePushItem) this).setPushItem(null);
+    } else if (asset instanceof GameFieldItem) {
+      if (this instanceof GameAttributeFieldItem) {
+        return ((GameAttributeFieldItem) this).setItem(null);
       }
     } else if (asset instanceof GameShotItem) {
       return true;

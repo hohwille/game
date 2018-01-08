@@ -2,19 +2,22 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package net.sf.mmm.game.engine.properties;
 
-import net.sf.mmm.game.engine.figure.GameFigure;
-import net.sf.mmm.game.engine.item.GamePickItem;
-
 /**
  * Implementation of {@link GamePropertyValueMutable} as Java Bean with primitive {@code int} value.
  */
 public final class GamePropertyValueInt extends GamePropertyContainerImpl<GamePropertyValueInt>
     implements GamePropertyValueMutable<Integer, GamePropertyValueInt> {
 
-  /** The maximum number of {@link GamePickItem items} (e.g. inventory size of {@link GameFigure}). */
+  /**
+   * The maximum number of {@link net.sf.mmm.game.engine.item.GamePickItem items} (e.g. inventory size of
+   * {@link net.sf.mmm.game.engine.figure.GameFigure}).
+   */
   public static final GamePropertyValueInt MAX_ITEMS = new GamePropertyValueInt("Maximum Items", Integer.MAX_VALUE);
 
-  /** The maximum number of {@link GamePickItem items} (e.g. inventory size of {@link GameFigure}). */
+  /**
+   * The maximum number of {@link net.sf.mmm.game.engine.figure.GameFigure figures} (e.g. figure capacity of
+   * {@link net.sf.mmm.game.engine.field.GameField}).
+   */
   public static final GamePropertyValueInt MAX_FIGURES = new GamePropertyValueInt("Maximum Figures", 9);
 
   private int value;
@@ -26,6 +29,7 @@ public final class GamePropertyValueInt extends GamePropertyContainerImpl<GamePr
    * @param value the {@link #getValue() value} used for {@link #getDefaultValue()}.
    */
   public GamePropertyValueInt(String name, int value) {
+
     super(name);
     this.value = value;
   }

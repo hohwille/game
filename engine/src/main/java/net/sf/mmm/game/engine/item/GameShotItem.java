@@ -14,9 +14,7 @@ import net.sf.mmm.game.engine.position.GamePosition;
  * exists only temporary. To mark a shot as "gone" its {@link #getLocation() location} as well as its
  * {@link #getDirection() direction} are both set to {@code null}.
  */
-public class GameShotItem extends GameItem<GameField, GameShotItem> implements GameAttributeDirection {
-
-  private final GameShotItemType type;
+public class GameShotItem extends GameItem<GameShotItemType, GameField, GameShotItem> implements GameAttributeDirection {
 
   private GameDirection direction;
 
@@ -29,6 +27,7 @@ public class GameShotItem extends GameItem<GameField, GameShotItem> implements G
    * @param direction the {@link #getDirection() direction}.
    */
   public GameShotItem(GameShotItemType type, GameField location, GamePosition position, GameDirection direction) {
+
     this(type, location, position, direction, null);
   }
 
@@ -42,22 +41,10 @@ public class GameShotItem extends GameItem<GameField, GameShotItem> implements G
    * @param color - see {@link #getColor()}.
    */
   public GameShotItem(GameShotItemType type, GameField location, GamePosition position, GameDirection direction, GameColor color) {
-    super();
-    this.type = type;
+
+    super(location.getGame(), type, color);
     this.direction = direction;
     setLocation(location, position);
-    if (color != null) {
-      setColor(color);
-    }
-  }
-
-  /**
-   * @return the {@link GameShotItemType} of this {@link GameShotItem}.
-   */
-  @Override
-  public GameShotItemType getType() {
-
-    return this.type;
   }
 
   @Override

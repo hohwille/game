@@ -9,7 +9,7 @@ import javafx.scene.image.ImageView;
 import javafx.scene.layout.StackPane;
 import net.sf.mmm.game.engine.field.GameField;
 import net.sf.mmm.game.engine.item.GamePickItem;
-import net.sf.mmm.game.engine.item.GamePushItem;
+import net.sf.mmm.game.engine.item.GameFieldItem;
 import net.sf.mmm.game.engine.position.GamePosition;
 import net.sf.mmm.game.fx.GameUiFxColor;
 import net.sf.mmm.game.fx.GameUiFxGame;
@@ -56,7 +56,7 @@ public class GameUiFxField extends StackPane implements GameUiFxObject {
       GameUiFxPickItem fxItem = fxGame.getFxPickItem(item);
       addFxAsset(fxItem);
     }
-    GamePushItem pushItem = this.field.getPushItem();
+    GameFieldItem pushItem = this.field.getItem();
     if (pushItem != null) {
       GameUiFxPushItem fxItem = fxGame.getFxPushItem(pushItem);
       addFxAsset(fxItem);

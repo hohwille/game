@@ -1,16 +1,15 @@
 package net.sf.mmm.game.engine.border;
 
 import net.sf.mmm.game.engine.asset.GameAsset;
-import net.sf.mmm.game.engine.figure.GameFigure;
 import net.sf.mmm.game.engine.type.GameTypeBase;
 
 /**
  * The abstract class for the {@link GameBorder#getType() type} of a {@link GameBorder}.
- * {@link GameBorder#canPass(GameAsset)} and {@link GameBorder#pass(GameAsset)} delegate to
- * {@link #canPass(GameAsset, GameBorder, boolean)} what makes the actual decision according to this
+ * {@link GameBorder#isPassable(GameAsset)} and {@link GameBorder#pass(GameAsset)} delegate to
+ * {@link #isPassable(GameAsset, boolean, GameBorder)} what makes the actual decision according to this
  * {@link GameBorderType} and its potential state.
  */
-public abstract class GameBorderType extends GameTypeBase {
+public abstract class GameBorderType extends GameTypeBase implements GameAttributePassable {
 
   /** The {@link #getTypeName() type name}. */
   public static final String TYPE_NAME = "Border";
@@ -21,6 +20,7 @@ public abstract class GameBorderType extends GameTypeBase {
    * @param id - see {@link #getId()}.
    */
   public GameBorderType(String id) {
+
     super(id);
   }
 
@@ -36,15 +36,24 @@ public abstract class GameBorderType extends GameTypeBase {
     return true;
   }
 
+  @Override
+  public boolean isPassable(GameAsset<?> asset, boolean move) {
+
+    return isPassable(asset, move, null);
+  }
+
   /**
-   * @see GameBorder#canPass(GameAsset)
+   * @see GameBorder#isPassable(GameAsset)
+   * @see GameBorder#pass(GameAsset)
    *
-   * @param asset the {@link GameFigure}.
-   * @param border the {@link GameBorder}.
-   * @param move {@code true} if the {@link GameFigure} actually {@link GameBorder#pass(GameAsset) performs the move} if
-   *        possible, {@code false} otherwise (only to {@link GameBorder#canPass(GameAsset) check a simulated move}).
-   * @return {@code true} if the given {@link GameFigure} can pass this border, {@code false} otherwise.
+   * @param asset the {@link GameAsset} that will potentially pass this object. Typically a
+   *        {@link net.sf.mmm.game.engine.figure.GameFigure}.
+   * @param move {@code true} if the {@link GameAsset} actually {@link #pass(GameAsset) performs the move to enter} if
+   *        possible, {@code false} otherwise (only to {@link #isPassable(GameAsset) check a simulated entering}).
+   * @param border the {@link GameBorder} to pass.
+   * @return {@code true} if this object (or objects of this type) can be passed by the given {@link GameAsset},
+   *         {@code false} otherwise.
    */
-  public abstract boolean canPass(GameAsset<?> asset, GameBorder border, boolean move);
+  public abstract boolean isPassable(GameAsset<?> asset, boolean move, GameBorder border);
 
 }

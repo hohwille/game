@@ -6,7 +6,7 @@ import net.sf.mmm.game.engine.properties.GameAttributeProperties;
 import net.sf.mmm.game.engine.properties.GamePropertyValueDouble;
 
 /**
- * This is the interface for an item that may have a {@link #getWeight() weight}.
+ * Interface for an item that may have a {@link #getWeight() weight}.
  *
  * @param <S> this {@link GameAttributeWeight} itself.
  */

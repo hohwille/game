@@ -7,7 +7,7 @@ import net.sf.mmm.game.engine.type.GameTypeBase;
 
 /**
  * The {@link GameItem#getType() type} of a {@link GameItem}. It is either a {@link GamePickItemType} or a
- * {@link GamePushItemType}.
+ * {@link GameFieldItemType}.
  *
  * @param <S> this {@link GameItemType} itself.
  */

@@ -20,7 +20,8 @@ public abstract class GameUiFxItem extends GameUiFxAsset {
    * @param item the {@link GameItem}.
    * @param fxGame the {@link #getFxParent() parent} {@link GameUiFxGame game}.
    */
-  public GameUiFxItem(GameItem<?, ?> item, GameUiFxGame fxGame) {
+  public GameUiFxItem(GameItem<?, ?, ?> item, GameUiFxGame fxGame) {
+
     super(item, fxGame);
     this.fxGame = fxGame;
   }

@@ -9,27 +9,27 @@ import java.util.Set;
 import net.sf.mmm.game.engine.Game;
 import net.sf.mmm.game.engine.asset.GameAssetBase;
 import net.sf.mmm.game.engine.border.GameBorder;
+import net.sf.mmm.game.engine.color.GameColor;
 import net.sf.mmm.game.engine.direction.GameAttributeDirection;
 import net.sf.mmm.game.engine.direction.GameDirection;
 import net.sf.mmm.game.engine.field.GameField;
+import net.sf.mmm.game.engine.item.GameFieldItem;
+import net.sf.mmm.game.engine.item.GameFieldItemType;
 import net.sf.mmm.game.engine.item.GamePickItem;
-import net.sf.mmm.game.engine.item.GamePushItem;
 import net.sf.mmm.game.engine.player.GamePlayer;
 import net.sf.mmm.game.engine.position.GamePosition;
 import net.sf.mmm.game.engine.properties.GamePropertyValueDouble;
 import net.sf.mmm.game.engine.properties.GamePropertyValueInt;
 
 /**
- * Any figure of an {@link GamePlayer#getFigures() owning} {@link GamePlayer}. Each {@link GameFigure} has a {@link #getType()
- * type} that represents its characteristics and influences its visualization in the UI of the game. For the current
- * moment in time of the {@link Game} each {@link GameFigure} is {@link #getLocation() located on} a specific
- * {@link GameField}.
+ * Any figure of an {@link GamePlayer#getFigures() owning} {@link GamePlayer}. Each {@link GameFigure} has a
+ * {@link #getType() type} that represents its characteristics and influences its visualization in the UI of the game.
+ * For the current moment in time of the {@link Game} each {@link GameFigure} is {@link #getLocation() located on} a
+ * specific {@link GameField}.
  */
-public class GameFigure extends GameAssetBase<GameField> implements GameAttributeDirection {
+public class GameFigure extends GameAssetBase<GameFigureType, GameField> implements GameAttributeDirection {
 
   private final GamePlayer player;
-
-  private final GameFigureType type;
 
   private GameDirection direction;
 
@@ -42,19 +42,25 @@ public class GameFigure extends GameAssetBase<GameField> implements GameAttribut
    * @param type - see {@link #getType()}.
    */
   public GameFigure(GamePlayer player, GameFigureType type) {
-    super();
+
+    this(player, type, null);
+  }
+
+  /**
+   * The constructor.
+   *
+   * @param player - see {@link #getPlayer()}.
+   * @param type - see {@link #getType()}.
+   * @param color - see {@link #getColor()}.
+   */
+  public GameFigure(GamePlayer player, GameFigureType type, GameColor color) {
+
+    super(type, color);
     this.player = player;
-    this.type = type;
     this.direction = GameDirection.NORTH;
     if (player != null) {
       setColor(player.getColor());
     }
-  }
-
-  @Override
-  public GameFigureType getType() {
-
-    return this.type;
   }
 
   @Override
@@ -133,8 +139,8 @@ public class GameFigure extends GameAssetBase<GameField> implements GameAttribut
   }
 
   /**
-   * @return {@code true} if this is an active {@link GameFigure} (the {@link Game#getCurrentFigure() current
-   *         figure} or in its {@link #getGroup() group}), {@code false} otherwise.
+   * @return {@code true} if this is an active {@link GameFigure} (the {@link Game#getCurrentFigure() current figure} or
+   *         in its {@link #getGroup() group}), {@code false} otherwise.
    */
   public boolean isActiveFigure() {
 
@@ -220,7 +226,7 @@ public class GameFigure extends GameAssetBase<GameField> implements GameAttribut
       return moveGrouped(dir);
     }
     GameBorder border = location.getBorder(dir);
-    if ((border == null) || !border.canPass(this)) {
+    if ((border == null) || !border.isPassable(this)) {
       return null;
     }
     GameField targetField = border.getField(dir);
@@ -291,7 +297,7 @@ public class GameFigure extends GameAssetBase<GameField> implements GameAttribut
       if (pass) {
         success = border.pass(figure);
       } else {
-        success = border.canPass(figure);
+        success = border.isPassable(figure);
       }
       if (!success) {
         figuresUngroup.add(figure);
@@ -320,17 +326,24 @@ public class GameFigure extends GameAssetBase<GameField> implements GameAttribut
 
   private boolean push(GameField sourceField, GameDirection dir, Set<GameFigure> figuresGroup) {
 
-    GamePushItem item = sourceField.getPushItem();
+    GameFieldItem item = sourceField.getItem();
     if (item == null) {
       return true;
+    }
+    GameFieldItemType itemType = item.getType();
+    if (!itemType.isBlocking()) {
+      return true;
+    }
+    if (!item.isPushable()) {
+      return false;
     }
     return push(item, sourceField, dir, figuresGroup, 0);
   }
 
-  private boolean push(GamePushItem item, GameField sourceField, GameDirection dir, Set<GameFigure> figuresGroup, double weight) {
+  private boolean push(GameFieldItem item, GameField sourceField, GameDirection dir, Set<GameFigure> figuresGroup, double weight) {
 
     GameBorder border = sourceField.getBorder(dir);
-    if (!border.canPass(item)) {
+    if (!border.isPassable(item)) {
       return false;
     }
     GameField targetField = border.getField(dir);
@@ -339,7 +352,7 @@ public class GameFigure extends GameAssetBase<GameField> implements GameAttribut
     }
     double itemWeight = item.getWeight();
     double totalWeight = weight + itemWeight;
-    GamePushItem nextItem = targetField.getPushItem();
+    GameFieldItem nextItem = targetField.getItem();
     boolean success;
     if (nextItem == null) {
       double maxWeight;
@@ -361,8 +374,8 @@ public class GameFigure extends GameAssetBase<GameField> implements GameAttribut
       success = push(nextItem, targetField, dir, figuresGroup, totalWeight);
     }
     if (success) {
-      targetField.setPushItem(item);
-      sourceField.setPushItem(null);
+      targetField.setItem(item);
+      sourceField.setItem(null);
     }
     return success;
   }
@@ -451,7 +464,7 @@ public class GameFigure extends GameAssetBase<GameField> implements GameAttribut
   private GamePickItem dropItem(GamePickItem item, int itemIndex) {
 
     GameField location = getLocation();
-    if ((itemIndex >= 0) && item.getType().isDroppable(location)) {
+    if ((itemIndex >= 0) && item.getType().isPlaceable(location)) {
       if (location.addItem(item)) {
         return item;
       }

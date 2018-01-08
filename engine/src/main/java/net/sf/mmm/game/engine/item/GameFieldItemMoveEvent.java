@@ -6,11 +6,11 @@ import net.sf.mmm.game.engine.field.GameField;
 import net.sf.mmm.game.engine.position.GamePosition;
 
 /**
- * A {@link GameItemMoveEvent} that notifies about a {@link #getAsset() push item} that has changed its
- * {@link GamePushItem#getLocation() location} from an {@link #getOldLocation() old location} to a
+ * A {@link GameItemMoveEvent} that notifies about a {@link #getAsset() field item} that has changed its
+ * {@link GameFieldItem#getLocation() location} from an {@link #getOldLocation() old location} to a
  * {@link #getNewLocation() new location}.
  */
-public class GamePushItemMoveEvent extends GameItemMoveEvent<GameField, GamePushItem> {
+public class GameFieldItemMoveEvent extends GameItemMoveEvent<GameField, GameFieldItem> {
 
   /**
    * The constructor.
@@ -19,7 +19,8 @@ public class GamePushItemMoveEvent extends GameItemMoveEvent<GameField, GamePush
    * @param oldPosition the {@link #getOldPosition() old position}.
    * @param asset the {@link #getAsset() item}.
    */
-  public GamePushItemMoveEvent(GameField oldLocation, GamePosition oldPosition, GamePushItem asset) {
+  public GameFieldItemMoveEvent(GameField oldLocation, GamePosition oldPosition, GameFieldItem asset) {
+
     super(oldLocation, oldPosition, asset);
   }
 
@@ -32,7 +33,8 @@ public class GamePushItemMoveEvent extends GameItemMoveEvent<GameField, GamePush
    * @param newLocation the {@link #getNewLocation() new location}.
    * @param newPosition the {@link #getNewPosition() new position}.
    */
-  public GamePushItemMoveEvent(GameField oldLocation, GamePosition oldPosition, GamePushItem asset, GameField newLocation, GamePosition newPosition) {
+  public GameFieldItemMoveEvent(GameField oldLocation, GamePosition oldPosition, GameFieldItem asset, GameField newLocation, GamePosition newPosition) {
+
     super(oldLocation, oldPosition, asset, newLocation, newPosition);
   }
 

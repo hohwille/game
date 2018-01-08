@@ -14,9 +14,9 @@ import net.sf.mmm.game.engine.border.GameBorderTypeWall;
 import net.sf.mmm.game.engine.direction.GameDirection;
 import net.sf.mmm.game.engine.figure.GameAttributeFiguresAdvanced;
 import net.sf.mmm.game.engine.figure.GameFigure;
-import net.sf.mmm.game.engine.item.GameAttributePushItem;
+import net.sf.mmm.game.engine.item.GameAttributeFieldItem;
+import net.sf.mmm.game.engine.item.GameFieldItem;
 import net.sf.mmm.game.engine.item.GamePickItem;
-import net.sf.mmm.game.engine.item.GamePushItem;
 import net.sf.mmm.game.engine.level.GameLevel;
 import net.sf.mmm.game.engine.object.GameTypedObjectWithItems;
 import net.sf.mmm.game.engine.player.GamePlayer;
@@ -27,7 +27,7 @@ import net.sf.mmm.game.engine.properties.GamePropertyValueInt;
  * {@link GameField}s. Each {@link GameField} has {@link GameBorder}s that can be navigated via
  * {@link #getBorder(GameDirection)} and also {@link #getField(GameDirection)}.
  */
-public class GameField extends GameTypedObjectWithItems implements GameAttributePushItem, GameAttributeFiguresAdvanced {
+public class GameField extends GameTypedObjectWithItems<GameFieldType> implements GameAttributeFieldItem, GameAttributeFiguresAdvanced {
 
   private final GameLevel level;
 
@@ -37,9 +37,7 @@ public class GameField extends GameTypedObjectWithItems implements GameAttribute
 
   private final List<GameFigure> figuresView;
 
-  private GameFieldType type;
-
-  private GamePushItem pushItem;
+  private GameFieldItem item;
 
   /**
    * The constructor.
@@ -47,6 +45,7 @@ public class GameField extends GameTypedObjectWithItems implements GameAttribute
    * @param level the owning {@link GameLevel}.
    */
   public GameField(GameLevel level) {
+
     this(level, GameFieldType.NORMAL);
   }
 
@@ -57,9 +56,9 @@ public class GameField extends GameTypedObjectWithItems implements GameAttribute
    * @param type the {@link #getType() type}.
    */
   public GameField(GameLevel level, GameFieldType type) {
-    super();
+
+    super(type);
     this.level = level;
-    this.type = type;
     this.direction2borderMap = new HashMap<>();
     this.figures = new ArrayList<>();
     this.figuresView = Collections.unmodifiableList(this.figures);
@@ -79,52 +78,44 @@ public class GameField extends GameTypedObjectWithItems implements GameAttribute
     return this.level;
   }
 
-  @Override
-  public GameFieldType getType() {
-
-    if (this.type == null) {
-      return GameFieldType.NORMAL;
-    }
-    return this.type;
-  }
-
   /**
    * @param type the new value of {@link #getType()}.
    */
+  @Override
   public void setType(GameFieldType type) {
 
-    this.type = type;
+    setType(type);
   }
 
   /**
-   * @return the {@link GamePushItem} that is on this {@link GameField} or {@code null} if there is no such item here.
+   * @return the {@link GameFieldItem} that is on this {@link GameField} or {@code null} if there is no such item here.
    */
   @Override
-  public GamePushItem getPushItem() {
+  public GameFieldItem getItem() {
 
-    return this.pushItem;
+    return this.item;
   }
 
   /**
-   * @param pushItem the new value of {@link #getPushItem()}.
-   * @return {@code true} if the {@link GamePushItem} has been set successfully, {@code false} otherwise.
+   * @param pushItem the new value of {@link #getItem()}.
+   * @return {@code true} if the {@link GameFieldItem} has been set successfully, {@code false} otherwise.
    */
   @Override
-  public boolean setPushItem(GamePushItem pushItem) {
+  public boolean setItem(GameFieldItem pushItem) {
 
-    if (this.pushItem == pushItem) {
+    if (this.item == pushItem) {
       return true;
     }
     boolean success;
-    if (this.pushItem == null) {
-      success = this.type.addAsset(pushItem);
+    if (this.item == null) {
+      success = getType().addAsset(pushItem);
     } else if (pushItem == null) {
-      success = this.type.removeAsset(this.pushItem);
+      success = getType().removeAsset(this.item);
     } else {
       success = false; // PlayField can only hold a single push item
     }
     if (success) {
-      this.pushItem = pushItem;
+      this.item = pushItem;
       if (pushItem != null) {
         pushItem.setLocation(this, pushItem.getPosition(), false);
       }
@@ -160,7 +151,7 @@ public class GameField extends GameTypedObjectWithItems implements GameAttribute
     if (figureCount >= maxFigures) {
       return false;
     }
-    return this.type.canAddAsset(figure);
+    return getType().canAddAsset(figure);
   }
 
   @Override
@@ -352,33 +343,33 @@ public class GameField extends GameTypedObjectWithItems implements GameAttribute
     } else if (asset instanceof GameFigure) {
       return canAddFigure((GameFigure) asset);
     } else {
-      return this.type.addAsset(asset);
+      return getType().addAsset(asset);
     }
   }
 
   @Override
   public boolean addAsset(GameAsset<?> asset) {
 
-    if (asset instanceof GamePushItem) {
-      return setPushItem((GamePushItem) asset);
+    if (asset instanceof GameFieldItem) {
+      return setItem((GameFieldItem) asset);
     } else if (asset instanceof GamePickItem) {
       return addItem((GamePickItem) asset);
     } else if (asset instanceof GameFigure) {
       return addFigure((GameFigure) asset);
     } else {
-      return this.type.addAsset(asset);
+      return getType().addAsset(asset);
     }
   }
 
   @Override
   public boolean removeAsset(GameAsset<?> asset, boolean updateLocation) {
 
-    if (asset instanceof GamePushItem) {
-      return setPushItem(null);
+    if (asset instanceof GameFieldItem) {
+      return setItem(null);
     } else if (asset instanceof GamePickItem) {
       return removeItem((GamePickItem) asset, updateLocation);
     } else {
-      return this.type.removeAsset(asset, updateLocation);
+      return getType().removeAsset(asset, updateLocation);
     }
   }
 

@@ -8,11 +8,14 @@ import java.util.List;
 
 import net.sf.mmm.game.engine.item.GameAttributePickItems;
 import net.sf.mmm.game.engine.item.GamePickItem;
+import net.sf.mmm.game.engine.type.GameType;
 
 /**
- * This is the abstract base class for an object that optionally can have a {@link #getColor() color}.
+ * This is the abstract base class for an object that optionally can have {@link #getItems() items}.
+ *
+ * @param <T> generic type of {@link #getType()}.
  */
-public abstract class GameTypedObjectWithItems extends GameTypedObjectBase implements GameAttributePickItems {
+public abstract class GameTypedObjectWithItems<T extends GameType> extends GameTypedObjectBase<T> implements GameAttributePickItems {
 
   private final List<GamePickItem> items;
 
@@ -20,9 +23,12 @@ public abstract class GameTypedObjectWithItems extends GameTypedObjectBase imple
 
   /**
    * The constructor.
+   * 
+   * @param type the {@link #getType() type} of this object.
    */
-  public GameTypedObjectWithItems() {
-    super();
+  public GameTypedObjectWithItems(T type) {
+
+    super(type);
     this.items = new ArrayList<>();
     this.itemsView = Collections.unmodifiableList(this.items);
   }

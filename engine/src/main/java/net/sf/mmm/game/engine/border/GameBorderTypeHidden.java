@@ -61,13 +61,13 @@ public class GameBorderTypeHidden extends GameBorderType {
   }
 
   @Override
-  public boolean canPass(GameAsset<?> asset, GameBorder border, boolean move) {
+  public boolean isPassable(GameAsset<?> asset, boolean move, GameBorder border) {
 
     if (this.hidden) {
       this.hidden = false;
       getGame().sendEvent(border);
     }
-    return this.delegate.canPass(asset, border, move);
+    return this.delegate.isPassable(asset, move, border);
   }
 
   /**

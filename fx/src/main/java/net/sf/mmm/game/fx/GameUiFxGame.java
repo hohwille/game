@@ -20,9 +20,9 @@ import net.sf.mmm.game.engine.figure.GameFigure;
 import net.sf.mmm.game.engine.figure.GameFigureDirectionEvent;
 import net.sf.mmm.game.engine.figure.GameFigureGroupEvent;
 import net.sf.mmm.game.engine.figure.GameFigureTurnEvent;
+import net.sf.mmm.game.engine.item.GameFieldItem;
 import net.sf.mmm.game.engine.item.GameItem;
 import net.sf.mmm.game.engine.item.GamePickItem;
-import net.sf.mmm.game.engine.item.GamePushItem;
 import net.sf.mmm.game.engine.level.GameLevel;
 import net.sf.mmm.game.engine.object.GameLocation;
 import net.sf.mmm.game.engine.player.GamePlayer;
@@ -63,7 +63,7 @@ public class GameUiFxGame extends Scene implements GameUiFxObject {
 
   private final Map<GamePickItem, GameUiFxPickItem> pickItemMap;
 
-  private final Map<GamePushItem, GameUiFxPushItem> pushItemMap;
+  private final Map<GameFieldItem, GameUiFxPushItem> pushItemMap;
 
   /**
    * The constructor.
@@ -72,6 +72,7 @@ public class GameUiFxGame extends Scene implements GameUiFxObject {
    * @param fx the {@link GameUiFx}.
    */
   public GameUiFxGame(Game game, GameUiFx fx) {
+
     super(new VBox());
     this.game = game;
     this.fx = fx;
@@ -280,10 +281,10 @@ public class GameUiFxGame extends Scene implements GameUiFxObject {
   }
 
   /**
-   * @param item the {@link GamePushItem}.
+   * @param item the {@link GameFieldItem}.
    * @return the corresponding {@link GameUiFxPushItem}.
    */
-  public GameUiFxPushItem getFxPushItem(GamePushItem item) {
+  public GameUiFxPushItem getFxPushItem(GameFieldItem item) {
 
     if (item == null) {
       return null;
@@ -295,15 +296,15 @@ public class GameUiFxGame extends Scene implements GameUiFxObject {
    * @param item the {@link GamePickItem}.
    * @return the corresponding {@link GameUiFxPickItem}.
    */
-  public GameUiFxItem getFxItem(GameItem<?, ?> item) {
+  public GameUiFxItem getFxItem(GameItem<?, ?, ?> item) {
 
     if (item == null) {
       return null;
     }
     if (item instanceof GamePickItem) {
       return getFxPickItem((GamePickItem) item);
-    } else if (item instanceof GamePushItem) {
-      return getFxPushItem((GamePushItem) item);
+    } else if (item instanceof GameFieldItem) {
+      return getFxPushItem((GameFieldItem) item);
     } else {
       throw new IllegalStateException(item.getClass().getName());
     }
@@ -319,7 +320,7 @@ public class GameUiFxGame extends Scene implements GameUiFxObject {
       return null;
     }
     if (asset instanceof GameItem) {
-      return getFxItem((GameItem<?, ?>) asset);
+      return getFxItem((GameItem<?, ?, ?>) asset);
     } else if (asset instanceof GameFigure) {
       return getFxFigure((GameFigure) asset);
     } else {

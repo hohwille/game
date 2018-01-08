@@ -7,23 +7,21 @@ import net.sf.mmm.game.engine.asset.GameAsset;
 import net.sf.mmm.game.engine.direction.GameAttributeDirection;
 import net.sf.mmm.game.engine.direction.GameDirection;
 import net.sf.mmm.game.engine.field.GameField;
-import net.sf.mmm.game.engine.figure.GameFigure;
 import net.sf.mmm.game.engine.object.GameTypedObjectBase;
 
 /**
- * A {@link GameBorder} connects two {@link GameField}s. A {@link #getSourceField() source field} is leading in the
- * {@link #getDirection() direction} towards the {@link #getTargetField() target field}. The {@link GameBorder} has a
- * {@link #getType() type} that decides if a figure {@link #canPass(GameAsset) can pass} the border.
+ * A {@link GameBorder} connects two {@link GameField}s (typically bidirectional). A {@link #getSourceField() source
+ * field} is leading in the {@link #getDirection() direction} towards the {@link #getTargetField() target field}. The
+ * {@link GameBorder} has a {@link #getType() type} that decides if a figure {@link #isPassable(GameAsset) can}
+ * {@link #pass(GameAsset) pass} the border.
  */
-public class GameBorder extends GameTypedObjectBase implements GameAttributeDirection {
+public class GameBorder extends GameTypedObjectBase<GameBorderType> implements GameAttributeDirection, GameAttributePassable {
 
   private final GameField sourceField;
 
   private final GameDirection direction;
 
   private final GameField targetField;
-
-  private GameBorderType type;
 
   /**
    * The constructor.
@@ -34,11 +32,11 @@ public class GameBorder extends GameTypedObjectBase implements GameAttributeDire
    * @param type - see {@link #getType()}.
    */
   public GameBorder(GameField sourceField, GameDirection direction, GameField targetField, GameBorderType type) {
-    super();
+
+    super(type);
     assert direction.isNatural();
     this.sourceField = sourceField;
     this.targetField = targetField;
-    this.type = type;
     this.direction = direction;
   }
 
@@ -93,21 +91,10 @@ public class GameBorder extends GameTypedObjectBase implements GameAttributeDire
     }
   }
 
-  /**
-   * @return the {@link GameBorderType} of this border.
-   */
   @Override
-  public GameBorderType getType() {
-
-    return this.type;
-  }
-
-  /**
-   * @param type the new value of {@link #getType()}.
-   */
   public void setType(GameBorderType type) {
 
-    this.type = type;
+    super.setType(type);
   }
 
   /**
@@ -120,31 +107,10 @@ public class GameBorder extends GameTypedObjectBase implements GameAttributeDire
     return this.direction;
   }
 
-  /**
-   * Unlike {@link #pass(GameAsset)} this method only checks if the {@link GameAsset} can potentially pass this
-   * {@link GameBorder} without changing its state.
-   *
-   * @param asset the {@link GameAsset}.
-   * @return {@code true} if the given {@link GameAsset} can pass this border, {@code false} otherwise.
-   */
-  public boolean canPass(GameAsset<?> asset) {
+  @Override
+  public boolean isPassable(GameAsset<?> asset, boolean move) {
 
-    assert (asset != null);
-    return this.type.canPass(asset, this, false);
-  }
-
-  /**
-   * Unlike {@link #canPass(GameAsset)} this method actually lets the {@link GameFigure} pass this {@link GameBorder}
-   * what may change its state (or more precisely the state of its {@link #getType() type}).
-   *
-   * @param asset the {@link GameAsset} to {@link GameFigure#move() move}.
-   * @return {@code true} if the given {@link GameFigure} passed this border, {@code false} otherwise (figure was
-   *         blocked and move has to be cancelled).
-   */
-  public boolean pass(GameAsset<?> asset) {
-
-    assert (asset != null);
-    return this.type.canPass(asset, this, true);
+    return getType().isPassable(asset, move, this);
   }
 
   /**

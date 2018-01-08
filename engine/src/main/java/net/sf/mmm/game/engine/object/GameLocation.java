@@ -7,7 +7,7 @@ import net.sf.mmm.game.engine.asset.GameAsset;
 /**
  * Interface for the {@link GameAsset#getLocation() location} of a {@link GameAsset}.
  */
-public interface GameLocation {
+public interface GameLocation extends GameObject {
 
   // nothing to add...
 

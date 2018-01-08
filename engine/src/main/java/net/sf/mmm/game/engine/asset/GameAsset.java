@@ -61,10 +61,10 @@ public interface GameAsset<L extends GameLocation> extends GameTypedObject, Game
    * @param location the new {@link #getLocation() location} of this asset.
    * @param position the new {@link #getPosition() position} of this asset (allows to move assets in smaller steps than
    *        fields via position).
-   * @param addOrRemove - {@code true} if this asset shall also be {@link GameAttributeAsset#removeAsset(GameAsset)
-   *        removed from the original location} and {@link GameAttributeAsset#addAsset(GameAsset) added to the new
-   *        location} automatically, {@code false} otherwise (if called from
-   *        {@link GameAttributeAsset#addAsset(GameAsset)}).
+   * @param addOrRemove - {@code true} if this asset shall automatically be
+   *        {@link GameAttributeAsset#addAsset(GameAsset) added to the new location} or
+   *        {@link GameAttributeAsset#removeAsset(GameAsset) removed from the original location} if the new location is
+   *        {@code null}, {@code false} otherwise (if called from {@link GameAttributeAsset#addAsset(GameAsset)}).
    * @return {@code true} if the {@link GameAttributeAsset#addAsset(GameAsset) operation succeeded}, {@code false}
    *         otherwise.
    */

@@ -7,20 +7,21 @@ import net.sf.mmm.game.engine.item.GamePickItem;
 import net.sf.mmm.game.engine.type.GameTypeAccess;
 
 /**
- * A {@link GameBorderType} that is a door that {@link #canPass(GameAsset, GameBorder, boolean) can only be passed} by
- * {@link GameFigure}s having the proper key.
+ * A {@link GameBorderType} that is a door that {@link #isPassable(GameAsset, boolean, GameBorder) can only be passed}
+ * by {@link GameFigure}s having the proper key.
  */
 public class GameBorderTypeDoor extends GameBorderType {
 
   private final GamePickItem key;
 
   private GameBorderTypeDoor(GamePickItem key) {
+
     super("Door");
     this.key = key;
   }
 
   @Override
-  public boolean canPass(GameAsset<?> asset, GameBorder border, boolean move) {
+  public boolean isPassable(GameAsset<?> asset, boolean move, GameBorder border) {
 
     if (asset instanceof GameAttributePickItems) {
       return ((GameAttributePickItems) asset).getItems().contains(this.key);

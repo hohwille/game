@@ -2,8 +2,8 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package net.sf.mmm.game.engine.item;
 
-import net.sf.mmm.game.engine.field.GameField;
 import net.sf.mmm.game.engine.figure.GameFigure;
+import net.sf.mmm.game.engine.object.GameTypedObjectWithItems;
 
 /**
  * The {@link GamePickItem#getType() type} of a {@link GamePickItem}. Such as {@link #KEY} or {@link #GEM}.
@@ -28,6 +28,7 @@ public class GamePickItemType extends GameItemType<GamePickItemType> {
    * @param id - see {@link #getId()}.
    */
   public GamePickItemType(String id) {
+
     super(id);
   }
 
@@ -43,11 +44,12 @@ public class GamePickItemType extends GameItemType<GamePickItemType> {
   }
 
   /**
-   * @param field the {@link GameField} where the {@link GamePickItem} shall be {@link GameFigure#dropItem() dropped}.
-   * @return {@code true} if the {@link GamePickItem} can be {@link GameFigure#dropItem() dropped} to the given
-   *         {@link GameField}, {@code false} otherwise.
+   * @param place the {@link GameTypedObjectWithItems} where the {@link GamePickItem} shall be
+   *        {@link GameTypedObjectWithItems#addItem(GamePickItem) added}.
+   * @return {@code true} if this {@link GamePickItem} can be placed (e.g. {@link GameFigure#dropItem() dropped}) to the
+   *         given {@link GameTypedObjectWithItems place}, {@code false} otherwise.
    */
-  public boolean isDroppable(GameField field) {
+  public boolean isPlaceable(GameTypedObjectWithItems<?> place) {
 
     // override to customize
     return true;

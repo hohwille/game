@@ -19,8 +19,8 @@ import net.sf.mmm.game.engine.figure.GameFigureGroup;
 import net.sf.mmm.game.engine.figure.GameFigureType;
 import net.sf.mmm.game.engine.item.GamePickItem;
 import net.sf.mmm.game.engine.item.GamePickItemType;
-import net.sf.mmm.game.engine.item.GamePushItem;
-import net.sf.mmm.game.engine.item.GamePushItemType;
+import net.sf.mmm.game.engine.item.GameFieldItem;
+import net.sf.mmm.game.engine.item.GameFieldItemType;
 import net.sf.mmm.game.engine.level.GameLevel;
 import net.sf.mmm.game.engine.player.GamePlayer;
 import net.sf.mmm.game.engine.player.GamePlayerConfigBase;
@@ -48,7 +48,7 @@ public class Ghosty extends Game {
   public static final GameBorderTypeHole BUG_HOLE = GameBorderTypeHole.get(BUG);
 
   /** A diamond to push around. */
-  public static final GamePushItemType DIAMOND = new GamePushItemType("Diamond");
+  public static final GameFieldItemType DIAMOND = new GameFieldItemType("Diamond");
 
   private static final int WIDTH = 4;
 
@@ -62,14 +62,15 @@ public class Ghosty extends Game {
    * The constructor.
    */
   public Ghosty() {
+
     super("Ghosty");
     GameLevel level = getCurrentLevel();
     initLevel(level);
 
-    GamePushItem pushItem = new GamePushItem(GameColor.WHITE, DIAMOND);
-    level.getField(3, 4).setPushItem(pushItem);
-    pushItem = new GamePushItem(GameColor.WHITE, DIAMOND);
-    level.getField(4, 4).setPushItem(pushItem);
+    GameFieldItem pushItem = new GameFieldItem(this, DIAMOND, GameColor.WHITE);
+    level.getField(3, 4).setItem(pushItem);
+    pushItem = new GameFieldItem(this, DIAMOND, GameColor.WHITE);
+    level.getField(4, 4).setItem(pushItem);
     addListener(GameBorder.class, this::onBorderChange);
   }
 
@@ -135,7 +136,7 @@ public class Ghosty extends Game {
     border.setType(GameBorderTypeHidden.get(GameBorderTypeHole.get(BUG)));
     GameField field = border.getTargetField();
     border = field.getBorder(GameDirection.SOUTH);
-    GamePickItem key = new GamePickItem(GameColor.GREEN, GamePickItemType.KEY);
+    GamePickItem key = new GamePickItem(this, GamePickItemType.KEY, GameColor.GREEN);
     field.addItem(key);
     border.setType(GameBorderTypeHidden.get(GameBorderTypeOpen.get()));
     border = border.getTargetField().getBorder(GameDirection.SOUTH);
@@ -164,7 +165,7 @@ public class Ghosty extends Game {
     border = field.getBorder(GameDirection.WEST);
     border.setType(GameBorderTypeHidden.get(GameBorderTypeWall.get()));
     field = border.getSourceField();
-    field.addItem(new GamePickItem(GameColor.BLUE, GamePickItemType.EMERALD));
+    field.addItem(new GamePickItem(this, GamePickItemType.EMERALD, GameColor.BLUE));
     border = field.getBorder(GameDirection.NORTH);
     border.setType(GameBorderTypeHidden.get(GameBorderTypeHole.get(BUG)));
     border = field.getBorder(GameDirection.SOUTH);

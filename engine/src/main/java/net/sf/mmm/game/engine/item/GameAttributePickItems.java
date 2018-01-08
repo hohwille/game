@@ -5,11 +5,12 @@ package net.sf.mmm.game.engine.item;
 import java.util.List;
 
 import net.sf.mmm.game.engine.asset.GameAttributeAsset;
+import net.sf.mmm.game.engine.object.GameLocation;
 
 /**
  * This is the interface for an object that may have {@link #getItems() items}.
  */
-public interface GameAttributePickItems extends GameAttributeAsset {
+public interface GameAttributePickItems extends GameAttributeAsset, GameLocation {
 
   /**
    * @return an {@link java.util.Collections#unmodifiableList(List) unmodifiable list} of {@link GamePickItem}s

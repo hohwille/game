@@ -26,10 +26,10 @@ public interface GameAttributeFiguresAdvanced extends GameAttributeFigures, Game
   /**
    * @param figure the {@link GameFigure} to {@link List#remove(Object) remove} from the {@link #getFigures() figures}.
    * @param updateLocation - {@code true} if the {@link GameFigure#getLocation() location} shall also be
-   *        {@link GameFigure#setLocation(io.github.ghosthopper.field.GameField) updated} and a
+   *        {@link GameFigure#setLocation(net.sf.mmm.game.engine.field.GameField) updated} and a
    *        {@link GameFigureMoveEvent} should be send, {@code false} otherwise (if called from
    *        {@link #addFigure(GameFigure)} or from
-   *        {@link GameFigure#setLocation(io.github.ghosthopper.field.GameField)}).
+   *        {@link GameFigure#setLocation(net.sf.mmm.game.engine.field.GameField)}).
    * @return {@code true} if the operation was successful, {@code false} otherwise (e.g. this object can not take the
    *         given {@link GameFigure}).
    */

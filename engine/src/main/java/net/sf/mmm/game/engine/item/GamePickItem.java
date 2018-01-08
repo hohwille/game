@@ -2,6 +2,7 @@
  * http://www.apache.org/licenses/LICENSE-2.0 */
 package net.sf.mmm.game.engine.item;
 
+import net.sf.mmm.game.engine.Game;
 import net.sf.mmm.game.engine.color.GameColor;
 import net.sf.mmm.game.engine.position.GamePosition;
 
@@ -9,39 +10,29 @@ import net.sf.mmm.game.engine.position.GamePosition;
  * A {@link GameItem} that can be {@link net.sf.mmm.game.engine.figure.GameFigure#pickItem(GamePickItem) picked} such as
  * a {@link GamePickItemType#KEY key} or a {@link GamePickItemType#GEM gem}.
  */
-public class GamePickItem extends GameItem<GameAttributePickItems, GamePickItem> {
-
-  private final GamePickItemType type;
+public class GamePickItem extends GameItem<GamePickItemType, GameAttributePickItems, GamePickItem> {
 
   /**
    * The constructor.
    *
+   * @param game the owning {@link #getGame() game}.
    * @param type the {@link GamePickItemType} of this item.
    */
-  public GamePickItem(GamePickItemType type) {
-    super();
-    this.type = type;
+  public GamePickItem(Game game, GamePickItemType type) {
+
+    this(game, type, null);
   }
 
   /**
    * The constructor.
    *
+   * @param game the owning {@link #getGame() game}.
+   * @param type the {@link GamePickItemType} of this item.
    * @param color - see {@link #getColor()}.
-   * @param type the {@link GamePickItemType} of this item.
    */
-  public GamePickItem(GameColor color, GamePickItemType type) {
-    super();
-    this.type = type;
-    setColor(color);
-  }
+  public GamePickItem(Game game, GamePickItemType type, GameColor color) {
 
-  /**
-   * @return the {@link GamePickItemType} of this {@link GamePickItem}.
-   */
-  @Override
-  public GamePickItemType getType() {
-
-    return this.type;
+    super(game, type, color);
   }
 
   @Override

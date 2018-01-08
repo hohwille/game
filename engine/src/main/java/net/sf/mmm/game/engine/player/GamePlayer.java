@@ -15,12 +15,11 @@ import net.sf.mmm.game.engine.figure.GameFigureGroup;
 import net.sf.mmm.game.engine.figure.GameFigureType;
 import net.sf.mmm.game.engine.object.GameAttributeName;
 import net.sf.mmm.game.engine.object.GameTypedObjectWithItems;
-import net.sf.mmm.game.engine.type.GameTypeBase;
 
 /**
  * A {@link GamePlayer} of the {@link Game}.
  */
-public class GamePlayer extends GameTypedObjectWithItems implements GameAttributeFigures, GameAttributeName {
+public class GamePlayer extends GameTypedObjectWithItems<GamePlayerType> implements GameAttributeFigures, GameAttributeName {
 
   /** I18N key for the plural term "players". */
   public static final String I18N_PLAYERS = "Players";
@@ -35,8 +34,6 @@ public class GamePlayer extends GameTypedObjectWithItems implements GameAttribut
 
   private final List<GameFigureGroup> groupsView;
 
-  private final GamePlayerType type;
-
   private String name;
 
   private boolean human;
@@ -49,6 +46,7 @@ public class GamePlayer extends GameTypedObjectWithItems implements GameAttribut
    * @param figureTypes - see {@link #getFigures()}.
    */
   public GamePlayer(Game game, GameColor color, GameFigureType... figureTypes) {
+
     this(game, color, createName(game, color), true, GamePlayerType.DEFAULT, figureTypes);
   }
 
@@ -60,6 +58,7 @@ public class GamePlayer extends GameTypedObjectWithItems implements GameAttribut
    * @param figureTypes - see {@link #getFigures()}.
    */
   public GamePlayer(Game game, String name, GameFigureType... figureTypes) {
+
     this(game, null, name, true, GamePlayerType.DEFAULT, figureTypes);
   }
 
@@ -74,11 +73,11 @@ public class GamePlayer extends GameTypedObjectWithItems implements GameAttribut
    * @param figureTypes - see {@link #getFigures()}.
    */
   public GamePlayer(Game game, GameColor color, String name, boolean human, GamePlayerType type, GameFigureType... figureTypes) {
-    super();
+
+    super(type);
     this.game = game;
     this.name = name;
     this.human = human;
-    this.type = type;
     this.figures = new ArrayList<>();
     this.figuresView = Collections.unmodifiableList(this.figures);
     this.groups = new ArrayList<>();
@@ -107,12 +106,6 @@ public class GamePlayer extends GameTypedObjectWithItems implements GameAttribut
       return this.game;
     }
     return super.getGame();
-  }
-
-  @Override
-  public GameTypeBase getType() {
-
-    return this.type;
   }
 
   /**

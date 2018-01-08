@@ -8,14 +8,16 @@ import net.sf.mmm.game.engine.object.GameTypedObject;
 /**
  * Interface for the {@link GameTypedObject#getType() type} of a {@link GameTypedObject}.<br>
  * <b>Attention:</b><br>
- * A {@link GameType} may only be modified (e.g. its {@link #getProperties() properties}) to setup a {@link Game}
- * but <b>never</b> during a {@link Game} to track status information. During the game modify the instances of
- * {@link GameTypedObject} instead. These should be re-created when-ever a {@link Game} is {@link Game#begin()
- * begun}.
+ * A {@link GameType} may only be modified (e.g. its {@link #getProperties() properties}) to setup a {@link Game} but
+ * <b>never</b> during a {@link Game} to track status information. During the game modify the instances of
+ * {@link GameTypedObject} instead. These should be re-created when-ever a {@link Game} is {@link Game#begin() begun}.
  *
  * @see GameTypedObject#getType()
  */
 public interface GameType extends GameTypeAccess, GameAttributeOverlay {
+
+  /** {@link #getId() ID} used as wildcard for matching type templates. */
+  String ID_WILDCARD = "*";
 
   /**
    * @return the name of this type.

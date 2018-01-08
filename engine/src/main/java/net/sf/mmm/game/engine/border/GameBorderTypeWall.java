@@ -5,7 +5,7 @@ import net.sf.mmm.game.engine.figure.GameFigure;
 
 /**
  * A {@link GameBorderType} that is an open gate so no {@link GameFigure}
- * {@link #canPass(GameAsset, GameBorder, boolean) can ever pass through}.
+ * {@link #isPassable(GameAsset, boolean, GameBorder) can ever pass through}.
  */
 public class GameBorderTypeWall extends GameBorderType {
 
@@ -16,7 +16,7 @@ public class GameBorderTypeWall extends GameBorderType {
   }
 
   @Override
-  public boolean canPass(GameAsset<?> asset, GameBorder border, boolean move) {
+  public boolean isPassable(GameAsset<?> asset, boolean move, GameBorder border) {
 
     return false;
   }

@@ -1,6 +1,7 @@
 package net.sf.mmm.game.engine.asset;
 
 import net.sf.mmm.game.engine.Game;
+import net.sf.mmm.game.engine.color.GameColor;
 import net.sf.mmm.game.engine.field.GameField;
 import net.sf.mmm.game.engine.object.GameLocation;
 import net.sf.mmm.game.engine.object.GameTypedObjectWithItems;
@@ -10,12 +11,13 @@ import net.sf.mmm.game.engine.position.GamePosition;
 /**
  * Any figure of an {@link GamePlayer#getFigures() owning} {@link GamePlayer}. Each {@link GameAssetBase} has a
  * {@link #getType() type} that represents its characteristics and influences its visualization in the UI of the game.
- * For the current moment in time of the {@link Game} each {@link GameAssetBase} is {@link #getLocation() located
- * on} a specific {@link GameField}.
+ * For the current moment in time of the {@link Game} each {@link GameAssetBase} is {@link #getLocation() located on} a
+ * specific {@link GameField}.
  *
+ * @param <T> generic type of {@link #getType()}.
  * @param <L> the generic type of the {@link #getLocation() location}.
  */
-public abstract class GameAssetBase<L extends GameLocation> extends GameTypedObjectWithItems implements GameAsset<L> {
+public abstract class GameAssetBase<T extends GameAssetType, L extends GameLocation> extends GameTypedObjectWithItems<T> implements GameAsset<L> {
 
   private GamePosition position;
 
@@ -23,10 +25,17 @@ public abstract class GameAssetBase<L extends GameLocation> extends GameTypedObj
 
   /**
    * The constructor.
+   *
+   * @param type the {@link #getType() type} of this object.
+   * @param color the optional {@link #getColor() color}. May be {@code null} for default.
    */
-  public GameAssetBase() {
-    super();
+  public GameAssetBase(T type, GameColor color) {
+
+    super(type);
     this.position = GamePosition.CENTER;
+    if (color != null) {
+      setColor(color);
+    }
   }
 
   @Override

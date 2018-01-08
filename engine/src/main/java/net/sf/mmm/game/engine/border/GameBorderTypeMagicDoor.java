@@ -5,9 +5,9 @@ import net.sf.mmm.game.engine.field.GameField;
 import net.sf.mmm.game.engine.figure.GameFigure;
 
 /**
- * A {@link GameBorderType} that is a magic door that {@link #canPass(GameAsset, GameBorder, boolean) can only be
+ * A {@link GameBorderType} that is a magic door that {@link #isPassable(GameAsset, boolean, GameBorder) can only be
  * passed} after it has been opened. Therefore a {@link GameFigure} has to
- * {@link #canPass(GameAsset, GameBorder, boolean) pass} whilst another {@link GameFigure} is on the other side.
+ * {@link #isPassable(GameAsset, boolean, GameBorder) pass} whilst another {@link GameFigure} is on the other side.
  */
 public class GameBorderTypeMagicDoor extends GameBorderType {
 
@@ -35,7 +35,7 @@ public class GameBorderTypeMagicDoor extends GameBorderType {
   }
 
   @Override
-  public boolean canPass(GameAsset<?> asset, GameBorder border, boolean move) {
+  public boolean isPassable(GameAsset<?> asset, boolean move, GameBorder border) {
 
     if (this.open) {
       return true;
